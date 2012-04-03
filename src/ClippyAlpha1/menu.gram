@@ -1,0 +1,17 @@
+#JSGF V1.0;
+
+/**
+ * JSGF Grammar for dialog manager example
+ */
+
+grammar menu;
+
+public <command> =      
+                        play music       { goto_music } |
+                        open games             { goto_games } |
+                        read books             { goto_books } |
+                        open my mail           { goto_email } |
+                        open newspapers        { goto_news } |
+                        view films           { goto_movies } |
+                        computer control     {goto_desktop} |
+                        close the program        { exit } ;

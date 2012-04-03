@@ -27,7 +27,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.LayoutManager;
-import java.awt.Font;
 import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -62,36 +61,29 @@ import org.apache.commons.io.FileUtils;
 
 /**
  * A JFrame class to demonstrate word recognition and organisation
- * @author Marzipan
+ * @author Marcus Ball
  */
 public class WordCollection extends JFrame implements HotkeyListener, IntellitypeListener {
     private final static Color backgroundColor = new Color(0x42, 0x42, 0x42);
-    private final static Color NORM_COLOR = new Color(0x72, 0x72, 0x82);
-    private final static Color HIGHLIGHT_COLOR = new Color(0xAA, 0xBB, 0x33);
-    private final static Font labelFont = new Font("SanSerif", Font.BOLD, 16);
 
     private JTextArea messageTextField;
     private JScrollPane messageScroll;
     private JButton speakButton;
     private String menu;
 
-    private WordRecognizer wordsRecognizer;
-    private boolean continuousMode;
-    
+    private WordRecognizer wordsRecognizer;    
     private static final int WINDOWS_A = 88;
 
     /**
-     * Constructs a ZipCity with the given title.
+     * WordCollection constructor
      *
-     * @param continuousMode if true recognition is continuous
      */
-    public WordCollection(boolean continuousMode) {
+    public WordCollection() {
         super("Clippy");
         this.setUndecorated(true);
         this.setAlwaysOnTop(true);
         this.setOpacity(0.5f);
-        
-        this.continuousMode = continuousMode;
+
         setSize(200, 250);
         System.out.println((int)java.awt.Toolkit.getDefaultToolkit().getScreenSize().getWidth());
         this.setLocation((int)java.awt.Toolkit.getDefaultToolkit().getScreenSize().getWidth()-200, (int)java.awt.Toolkit.getDefaultToolkit().getScreenSize().getHeight()-280);
@@ -138,7 +130,7 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
     }
 
     /**
-     * Starts listening for zipcodes
+     * Starts listening for words
      */
     private void startListening() {
         if (wordsRecognizer.microphoneOn()) {
@@ -174,20 +166,15 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
             
             setMessage("Starting recognizer...");
             wordsRecognizer.startup();
-            
-
+           
             System.out.println("Loading IntelliJ");
             
             initJIntellitype();
-            
             
             System.out.println("Loading dialogs ...");
             wordsRecognizer.allocate();
 
             System.out.println("Running  ...");
-            
-            
-            
 
             wordsRecognizer.addWordListener(new WordsListener() {
                 public void notify(String word) {
@@ -200,10 +187,9 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
         } 
 
     /**
-     * Update the display with the new zip code information. The
-     * zip info is retrieved and if available disabled on the gui
+     * Update the display with the new menu information.
      *
-     * @param zip the zip code (in the form XXXX)
+     * @param The word recognised
      */
     private void updateMenu(final String word) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -292,9 +278,8 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
         mainPanel.add(createMessagePanel(), BorderLayout.CENTER);
         messageScroll = new JScrollPane(messageTextField);
         mainPanel.add(messageScroll,BorderLayout.CENTER);
-        if (!continuousMode) {
-            mainPanel.add(speakButton, BorderLayout.SOUTH);
-        }
+        mainPanel.add(speakButton, BorderLayout.SOUTH);
+        
         return mainPanel;
     }
 
@@ -365,36 +350,12 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
         }
     }
 
-    /**
-     * Displays the usage message
-     */
-    private static void usage() {
-        System.out.println("Usage:  ZipCity [-continuous] [-help]");
-    }
 
     /**
-     * The main program for zip city.  Creates the ZipCity frame,
-     * displays it, and  runs it.
-     *
-     * Usage:
-     *
-     *   java -mx200m ZipCity [-continuous]
-     *
-     * @param args program arguments 
+     * Main Method
      */
     public static void main(String[] args) throws IOException {
-        boolean continuous = false;
-
-        for (String arg : args) {
-            if (arg.equals("-continuous")) {
-                continuous = true;
-            } else {
-                usage();
-                System.exit(0);
-            }
-        }
-
-        WordCollection wordCollect = new WordCollection(continuous);
+        WordCollection wordCollect = new WordCollection();
         wordCollect.setVisible(true);
         wordCollect.go();
     }
