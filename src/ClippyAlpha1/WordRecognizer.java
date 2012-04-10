@@ -9,7 +9,6 @@
  * WARRANTIES.
  *
  */
-
 package ClippyAlpha1;
 
 import com.sun.speech.engine.recognition.BaseRecognizer;
@@ -36,14 +35,13 @@ import javax.speech.recognition.RuleParse;
 /**
  * @author Marcus Ball
  */
-
-
-/** Manages the speech recognition for Word Collection */
+/**
+ * Manages the speech recognition for Word Collection
+ */
 public class WordRecognizer implements Runnable, Configurable {
 
-
     public static boolean recording = false;
-    public static boolean waitingForStop = false;   
+    public static boolean waitingForStop = false;
     private DialogNode initialNode;
     private Map<String, DialogNode> nodeMap = new HashMap<String, DialogNode>();
     private String name;
@@ -52,154 +50,208 @@ public class WordRecognizer implements Runnable, Configurable {
     private DialogNode curNode;
     public static boolean initialRun;
 
-
     /**
      * Creates the WordRecognizer.
      *
      * @throws IOException if an error occurs while loading resources
      */
-    public WordRecognizer() throws IOException {
+    public WordRecognizer() throws IOException
+    {
         initialRun = true;
-        try {
-        URL url = WordCollection.class.getResource("dialog.config.xml");
-            if (url == null) {
+        try
+        {
+            URL url = WordCollection.class.getResource("dialog.config.xml");
+            if (url == null)
+            {
                 throw new IOException("Can't find config xml file");
             }
             ConfigurationManager cm = new ConfigurationManager(url);
             recognizer = (Recognizer) cm.lookup("recognizer");
             microphone = (Microphone) cm.lookup("microphone");
-        } catch (PropertyException e) {
+        }
+        catch (PropertyException e)
+        {
             throw new IOException("Problem configuring WordRecognizer " + e);
         }
     }
 
-
-    /** Turns on the microphone and starts recognition */
-    public boolean microphoneOn() {
-        if (microphone.getAudioFormat() == null) {
+    /**
+     * Turns on the microphone and starts recognition
+     */
+    public boolean microphoneOn()
+    {
+        if (microphone.getAudioFormat() == null)
+        {
             return false;
-        } else {
+        }
+        else
+        {
             new Thread(this).start();
             return true;
         }
     }
 
-
-    /** Turns off the microphone, ending the current recognition in progress */
-    public void microphoneOff() {
+    /**
+     * Turns off the microphone, ending the current recognition in progress
+     */
+    public void microphoneOff()
+    {
         microphone.stopRecording();
     }
 
-
-    /** Allocates resources necessary for recognition. */
-    public void startup() throws IOException {
+    /**
+     * Allocates resources necessary for recognition.
+     */
+    public void startup() throws IOException
+    {
         //recognizer.allocate();
     }
 
-
-    /** Releases recognition resources */
-    public void shutdown() {
+    /**
+     * Releases recognition resources
+     */
+    public void shutdown()
+    {
         microphoneOff();
-        if (recognizer.getState() == State.ALLOCATED) {
+        if (recognizer.getState() == State.ALLOCATED)
+        {
             recognizer.deallocate();
         }
     }
 
-
-    /** Performs a single recognition */
+    /**
+     * Performs a single recognition
+     */
     @Override
-    public void run() {
+    public void run()
+    {
         microphone.clear();
         microphone.startRecording();
-        try {    
+        try
+        {
             System.out.println("5." + curNode.getName());
-                    if (curNode != lastNode) {
-                        if (lastNode != null) {
-                            lastNode.exit();
-                        }
-                    curNode.enter();
+            if (curNode != lastNode)
+            {
+                if (lastNode != null)
+                {
+                    lastNode.exit();
+                }
+                curNode.enter();
 
-                        lastNode = curNode;
+                lastNode = curNode;
+            }
+            String nextStateName = " ";
+            try
+            {
+
+                nextStateName = curNode.recognize();
+            }
+            catch (NullPointerException e)
+            {
+            }
+            if (nextStateName == null || nextStateName.isEmpty())
+            {
+                fireListeners(null);
+            }
+            else
+            {
+                fireListeners(nextStateName);
+                System.out.println("next state name " + nextStateName);
+                DialogNode node = nodeMap.get(nextStateName);
+
+                if (node == null)
+                {
+                    System.out.println("Can't transition to unknown state "
+                            + nextStateName);
+
+                }
+                else
+                {
+                    try
+                    {
+                        AePlayWave aw = new AePlayWave("./models/siri_tone.wav");
+                        aw.start();
                     }
-                    String nextStateName = " ";
-                    try{
-                        
-                    nextStateName  = curNode.recognize();
-                    }catch(NullPointerException e){}
-                    if (nextStateName == null || nextStateName.isEmpty()) {
-                         fireListeners(null);
-                    } else {
-                        fireListeners(nextStateName);
-                        System.out.println("next state name " + nextStateName);
-                        DialogNode node = nodeMap.get(nextStateName);
-                        
-                        if (node == null) {
-                            System.out.println("Can't transition to unknown state " 
-                                    + nextStateName);
-                            
-                        } else 
-                        {
-                                try {
-                                AePlayWave aw = new AePlayWave("./models/siri_tone.wav");
-                                aw.start();
-                            } catch (Exception e) {} // Satisfy the catch
-                                System.out.println(nextStateName); 
-                            curNode = node;
-                        calculate(null);
-                     
-                        }
-                    } 
-                    
-                    
-        }  catch (IOException ioe) {
-            error("problem loading grammar in state " + curNode.getName() 
+                    catch (Exception e)
+                    {
+                    } // Satisfy the catch
+                    System.out.println(nextStateName);
+                    curNode = node;
+                    calculate(null);
+
+                }
+            }
+
+
+        }
+        catch (IOException ioe)
+        {
+            error("problem loading grammar in state " + curNode.getName()
                     + ' ' + ioe);
-        } catch (JSGFGrammarParseException ex) {
-                    } catch (JSGFGrammarException ex) {
-                    } catch (GrammarException ex) {
-                    }
+        }
+        catch (JSGFGrammarParseException ex)
+        {
+        }
+        catch (JSGFGrammarException ex)
+        {
+        }
+        catch (GrammarException ex)
+        {
+        }
         microphone.stopRecording();
-  
+
     }
-        
 
     private void calculate(String nodeName) throws JSGFGrammarParseException, JSGFGrammarException, GrammarException
     {
-        try {    
-                    if (curNode != lastNode) {
-                        if (lastNode != null) {
-                            lastNode.exit();
-                        }
-                        curNode.enter();
-                        lastNode = curNode;
-                    } 
-                    String nextStateName = nodeName;
+        try
+        {
+            if (curNode != lastNode)
+            {
+                if (lastNode != null)
+                {
+                    lastNode.exit();
+                }
+                curNode.enter();
+                lastNode = curNode;
+            }
+            String nextStateName = nodeName;
 
 //                    nextStateName  = curNode.recognize();
-                    if (nextStateName == null || nextStateName.isEmpty()) {
+            if (nextStateName == null || nextStateName.isEmpty())
+            {
+            }
+            else
+            {
+                System.out.println(nodeName);
+                DialogNode node = nodeMap.get(nodeName);
 
-                    } else {
-                        System.out.println(nodeName);
-                        DialogNode node = nodeMap.get(nodeName);
-                        
-                        if (node == null) {
-                            System.out.println("Can't transition to unknown state " 
-                                    + nodeName);
-                            
-                        } else 
-                        {
-                                try {
-                                AePlayWave aw = new AePlayWave("./models/siri_tone.wav");
-                                aw.start();
-                            } catch (Exception e) {} // Satisfy the catch
-                                System.out.println(nextStateName); 
-                            curNode = node;
-                            calculate(null);
+                if (node == null)
+                {
+                    System.out.println("Can't transition to unknown state "
+                            + nodeName);
 
-                        }    
+                }
+                else
+                {
+                    try
+                    {
+                        AePlayWave aw = new AePlayWave("./models/siri_tone.wav");
+                        aw.start();
                     }
-        }  catch (IOException ioe) {
-            error("problem loading grammar in state " + curNode.getName() 
+                    catch (Exception e)
+                    {
+                    } // Satisfy the catch
+                    System.out.println(nextStateName);
+                    curNode = node;
+                    calculate(null);
+
+                }
+            }
+        }
+        catch (IOException ioe)
+        {
+            error("problem loading grammar in state " + curNode.getName()
                     + ' ' + ioe);
         }
     }
@@ -209,46 +261,48 @@ public class WordRecognizer implements Runnable, Configurable {
      *
      * @param new wordlistener
      */
-    public synchronized void addWordListener(WordsListener wordListener) {
+    public synchronized void addWordListener(WordsListener wordListener)
+    {
         wordListeners.add(wordListener);
     }
-
 
     /**
      * Removes a previously added wordlistener
      *
      * @param wordlistener to remove
      */
-    public synchronized void removeWordListener(WordsListener wordListener) {
+    public synchronized void removeWordListener(WordsListener wordListener)
+    {
         wordListeners.remove(wordListener);
     }
-
 
     /**
      * Invoke all added word listeners
      *
      * @param the recognised word listener
      */
-    private synchronized void fireListeners(String recogWord) {
+    private synchronized void fireListeners(String recogWord)
+    {
         for (WordsListener word : wordListeners)
+        {
             word.notify(recogWord);
+        }
     }
-    
     /**
-     * The property that defines the name of the grammar component 
-     * to be used by this dialog manager
+     * The property that defines the name of the grammar component to be used by
+     * this dialog manager
      */
     @S4Component(type = JSGFGrammar.class)
     public final static String PROP_JSGF_GRAMMAR = "jsgfGrammar";
     /**
-     * The property that defines the name of the microphone to be used 
-     * by this dialog manager
+     * The property that defines the name of the microphone to be used by this
+     * dialog manager
      */
     @S4Component(type = Microphone.class)
     public final static String PROP_MICROPHONE = "microphone";
     /**
-     * The property that defines the name of the recognizer to be used by
-     * this dialog manager
+     * The property that defines the name of the recognizer to be used by this
+     * dialog manager
      */
     @S4Component(type = Recognizer.class)
     public final static String PROP_RECOGNIZER = "recognizer";
@@ -267,10 +321,12 @@ public class WordRecognizer implements Runnable, Configurable {
     /*
      * (non-Javadoc)
      *
-     * @see edu.cmu.sphinx.util.props.Configurable#newProperties(edu.cmu.sphinx.util.props.PropertySheet)
+     * @see
+     * edu.cmu.sphinx.util.props.Configurable#newProperties(edu.cmu.sphinx.util.props.PropertySheet)
      */
     @Override
-    public void newProperties(PropertySheet ps) throws PropertyException {
+    public void newProperties(PropertySheet ps) throws PropertyException
+    {
         logger = ps.getLogger();
         grammar =
                 (JSGFGrammar) ps.getComponent(PROP_JSGF_GRAMMAR);
@@ -281,14 +337,14 @@ public class WordRecognizer implements Runnable, Configurable {
     }
 
     /**
-     * Adds a new node to the dialog manager. The dialog manager
-     * maintains a set of dialog nodes. When a new node is added the
-     * application specific beh
+     * Adds a new node to the dialog manager. The dialog manager maintains a set
+     * of dialog nodes. When a new node is added the application specific beh
      *
      * @param name the name of the node
      * @param behavior the application specified behavior for the node
      */
-    public void addNode(String name, DialogNodeBehavior behavior) {
+    public void addNode(String name, DialogNodeBehavior behavior)
+    {
         DialogNode node = new DialogNode(name, behavior);
         putNode(node);
     }
@@ -299,8 +355,10 @@ public class WordRecognizer implements Runnable, Configurable {
      * @param name the name of the initial node. Must be the name of a
      * previously added dialog node.
      */
-    public void setInitialNode(String name) {
-        if (getNode(name) == null) {
+    public void setInitialNode(String name)
+    {
+        if (getNode(name) == null)
+        {
             throw new IllegalArgumentException("Unknown node " + name);
         }
         initialNode = getNode(name);
@@ -310,13 +368,14 @@ public class WordRecognizer implements Runnable, Configurable {
     /**
      * Gets the recognizer and the dialog nodes ready to run
      *
-     * @throws IOException if an error occurs while allocating the
-     * recognizer.
+     * @throws IOException if an error occurs while allocating the recognizer.
      */
-    public void allocate() throws IOException {
+    public void allocate() throws IOException
+    {
         recognizer.allocate();
-        
-        for (DialogNode node : nodeMap.values()) {          
+
+        for (DialogNode node : nodeMap.values())
+        {
             node.init();
         }
     }
@@ -324,30 +383,30 @@ public class WordRecognizer implements Runnable, Configurable {
     /**
      * Releases all resources allocated by the dialog manager
      */
-    public void deallocate() {
+    public void deallocate()
+    {
         recognizer.deallocate();
     }
 
     /**
-     * Invokes the dialog manager. The dialog manager begin to process
-     * the dialog states starting at the initial node. This method
-     * will not return until the dialog manager is finished processing
-     * states
-     * @throws JSGFGrammarException 
-     * @throws JSGFGrammarParseException 
+     * Invokes the dialog manager. The dialog manager begin to process the
+     * dialog states starting at the initial node. This method will not return
+     * until the dialog manager is finished processing states
+     *
+     * @throws JSGFGrammarException
+     * @throws JSGFGrammarParseException
      */
-    public void go() throws JSGFGrammarParseException, JSGFGrammarException {
-        
+    public void go() throws JSGFGrammarParseException, JSGFGrammarException
+    {
     }
 
-    
-    
     /**
      * Returns the name of this component
      *
      * @return the name of the component.
      */
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
@@ -356,7 +415,8 @@ public class WordRecognizer implements Runnable, Configurable {
      *
      * @param name the name of the node
      */
-    private DialogNode getNode(String name) {
+    private DialogNode getNode(String name)
+    {
         return nodeMap.get(name);
     }
 
@@ -365,7 +425,8 @@ public class WordRecognizer implements Runnable, Configurable {
      *
      * @param node the node to place into the node map
      */
-    private void putNode(DialogNode node) {
+    private void putNode(DialogNode node)
+    {
         nodeMap.put(node.getName(), node);
     }
 
@@ -374,7 +435,8 @@ public class WordRecognizer implements Runnable, Configurable {
      *
      * @param s the message
      */
-    private void warn(String s) {
+    private void warn(String s)
+    {
         System.out.println("Warning: " + s);
     }
 
@@ -383,7 +445,8 @@ public class WordRecognizer implements Runnable, Configurable {
      *
      * @param s the message
      */
-    private void error(String s) {
+    private void error(String s)
+    {
         System.out.println("Error: " + s);
     }
 
@@ -392,12 +455,14 @@ public class WordRecognizer implements Runnable, Configurable {
      *
      * @parma s the message
      */
-    private void trace(String s) {
+    private void trace(String s)
+    {
         System.out.println(s);
         logger.info(s);
     }
 
-    public Recognizer getRecognizer() {
+    public Recognizer getRecognizer()
+    {
         return recognizer;
     }
 
@@ -406,10 +471,10 @@ public class WordRecognizer implements Runnable, Configurable {
      *
      * @param recognizer the recognizer
      */
-    public void setRecognizer(Recognizer recognizer) {
+    public void setRecognizer(Recognizer recognizer)
+    {
         this.recognizer = recognizer;
     }
-    
 
     /**
      * Represents a node in the dialog
@@ -420,15 +485,15 @@ public class WordRecognizer implements Runnable, Configurable {
         private String name;
 
         /**
-         * Creates a dialog node with the given name an application
-         * behavior
+         * Creates a dialog node with the given name an application behavior
          *
          * @param name the name of the node
          *
          * @param behavior the application behavor for the node
          *
          */
-        DialogNode(String name, DialogNodeBehavior behavior) {
+        DialogNode(String name, DialogNodeBehavior behavior)
+        {
             this.behavior = behavior;
             this.name = name;
         }
@@ -436,16 +501,19 @@ public class WordRecognizer implements Runnable, Configurable {
         /**
          * Initializes the node
          */
-        void init() {
+        void init()
+        {
             behavior.onInit(this);
         }
 
         /**
          * Enters the node, prepares it for recognition
-         * @throws JSGFGrammarException 
-         * @throws JSGFGrammarParseException 
+         *
+         * @throws JSGFGrammarException
+         * @throws JSGFGrammarParseException
          */
-        void enter() throws IOException, JSGFGrammarParseException, JSGFGrammarException {
+        void enter() throws IOException, JSGFGrammarParseException, JSGFGrammarException
+        {
             trace("Entering " + name);
             behavior.onEntry();
             behavior.onReady();
@@ -456,13 +524,14 @@ public class WordRecognizer implements Runnable, Configurable {
          *
          * @return the result tag
          */
-        String recognize() throws GrammarException {
+        String recognize() throws GrammarException
+        {
             trace("Recognize " + name);
             Result result = recognizer.recognize();
             System.out.println("3." + result);
             return behavior.onRecognize(result);
         }
-        
+
         String recognize(Result result) throws GrammarException
         {
             trace("Recognize " + name);
@@ -473,7 +542,8 @@ public class WordRecognizer implements Runnable, Configurable {
         /**
          * Exits the node
          */
-        void exit() {
+        void exit()
+        {
             trace("Exiting " + name);
             behavior.onExit();
         }
@@ -483,17 +553,19 @@ public class WordRecognizer implements Runnable, Configurable {
          *
          * @return the name of the node
          */
-        public String getName() {
+        public String getName()
+        {
             return name;
         }
 
         /**
-         * Returns the JSGF Grammar for the dialog manager that
-         * contains this node
+         * Returns the JSGF Grammar for the dialog manager that contains this
+         * node
          *
          * @return the grammar
          */
-        public JSGFGrammar getGrammar() {
+        public JSGFGrammar getGrammar()
+        {
             return grammar;
         }
 
@@ -502,18 +574,21 @@ public class WordRecognizer implements Runnable, Configurable {
          *
          * @param msg the message to trace
          */
-        public void trace(String msg) {
+        public void trace(String msg)
+        {
             WordRecognizer.this.trace(msg);
         }
 
-        public WordRecognizer getDialogManager() {
+        public WordRecognizer getDialogManager()
+        {
             return WordRecognizer.this;
         }
     }
 }
+
 /**
- * Provides the default behavior for dialog node. Applications will
- * typically extend this class and override methods as appropriate
+ * Provides the default behavior for dialog node. Applications will typically
+ * extend this class and override methods as appropriate
  */
 class DialogNodeBehavior {
 
@@ -524,44 +599,48 @@ class DialogNodeBehavior {
      *
      * @param node the dialog node that the behavior is attached to
      */
-    public void onInit(WordRecognizer.DialogNode node) {
+    public void onInit(WordRecognizer.DialogNode node)
+    {
         this.node = node;
     }
 
     /**
      * Called when this node becomes the active node
-     * @throws JSGFGrammarException 
-     * @throws JSGFGrammarParseException 
+     *
+     * @throws JSGFGrammarException
+     * @throws JSGFGrammarParseException
      */
-    public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException {
+    public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
+    {
         trace("Entering " + getName());
     }
 
     /**
      * Called when this node is ready to perform recognition
      */
-    public void onReady() {
+    public void onReady()
+    {
         trace("Ready " + getName());
     }
 
     /*
-     * Called with the recognition results. Should return a string
-     * representing the name of the next node.
+     * Called with the recognition results. Should return a string representing
+     * the name of the next node.
      */
-    public String onRecognize(Result result) throws GrammarException {
+    public String onRecognize(Result result) throws GrammarException
+    {
         String tagString = getTagString(result);
-        System.out.println("23. " +tagString + "  " + result.getBestFinalResultNoFiller());
+        System.out.println("23. " + tagString + "  " + result.getBestFinalResultNoFiller());
         trace("Recognize result: " + result.getBestFinalResultNoFiller());
         trace("Recognize tag   : " + tagString);
         return tagString;
     }
-    
-    
 
     /**
      * Called when this node is no lnoger the active node
      */
-    public void onExit() {
+    public void onExit()
+    {
         trace("Exiting " + getName());
     }
 
@@ -570,7 +649,8 @@ class DialogNodeBehavior {
      *
      * @return the name of the node
      */
-    public String getName() {
+    public String getName()
+    {
         return node.getName();
     }
 
@@ -579,7 +659,8 @@ class DialogNodeBehavior {
      *
      * @return the string representation of this object
      */
-    public String toString() {
+    public String toString()
+    {
         return "Node " + getName();
     }
 
@@ -588,7 +669,8 @@ class DialogNodeBehavior {
      *
      * @return the grammar
      */
-    public JSGFGrammar getGrammar() {
+    public JSGFGrammar getGrammar()
+    {
         return node.getGrammar();
     }
 
@@ -597,15 +679,18 @@ class DialogNodeBehavior {
      *
      * @param the recognition result
      * @return the rule parse for the result
-     * @throws GrammarException if there is an error while parsing the
-     * result
+     * @throws GrammarException if there is an error while parsing the result
      */
-    RuleParse getRuleParse(Result result) throws GrammarException {
+    RuleParse getRuleParse(Result result) throws GrammarException
+    {
         String resultText = result.getBestFinalResultNoFiller();
         BaseRecognizer jsapiRecognizer = new BaseRecognizer(getGrammar().getGrammarManager());
-        try {
+        try
+        {
             jsapiRecognizer.allocate();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
         RuleGrammar ruleGrammar = new BaseRuleGrammar(jsapiRecognizer, getGrammar().getRuleGrammar());
@@ -618,20 +703,23 @@ class DialogNodeBehavior {
      *
      * @param result the recognition result
      * @return the tag string
-     * @throws GrammarException if there is an error while parsing the
-     * result
+     * @throws GrammarException if there is an error while parsing the result
      */
-    String getTagString(Result result) throws GrammarException {
+    String getTagString(Result result) throws GrammarException
+    {
         RuleParse ruleParse = getRuleParse(result);
-        if (ruleParse == null) {
+        if (ruleParse == null)
+        {
             return null;
         }
         String[] tags = ruleParse.getTags();
-        if (tags == null) {
+        if (tags == null)
+        {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        for (String tag : tags) {
+        for (String tag : tags)
+        {
             sb.append(tag).append(' ');
         }
         return sb.toString().trim();
@@ -642,31 +730,35 @@ class DialogNodeBehavior {
      *
      * @param the trace message
      */
-    void trace(String msg) {
+    void trace(String msg)
+    {
         node.trace(msg);
     }
 }
 
 /**
- * A Dialog node behavior that loads a completely new
- * grammar upon entry into the node
+ * A Dialog node behavior that loads a completely new grammar upon entry into
+ * the node
  */
 class NewGrammarDialogNodeBehavior extends DialogNodeBehavior {
 
     /**
-     * creates a  NewGrammarDialogNodeBehavior 
+     * creates a NewGrammarDialogNodeBehavior
      *
      * @param grammarName the grammar name
      */
-    public NewGrammarDialogNodeBehavior() {
+    public NewGrammarDialogNodeBehavior()
+    {
     }
 
     /**
      * Called with the dialog manager enters this entry
-     * @throws JSGFGrammarException 
-     * @throws JSGFGrammarParseException 
+     *
+     * @throws JSGFGrammarException
+     * @throws JSGFGrammarParseException
      */
-    public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException {
+    public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
+    {
         super.onEntry();
         getGrammar().loadJSGF(getGrammarName());
     }
@@ -677,15 +769,19 @@ class NewGrammarDialogNodeBehavior extends DialogNodeBehavior {
      *
      * @return the grammar name
      */
-    public String getGrammarName() {
+    public String getGrammarName()
+    {
         return getName();
     }
-    
 }
-/** An interface for word listeners */
+
+/**
+ * An interface for word listeners
+ */
 interface WordsListener {
 
-    /** Invoked when a new word is recognized */
+    /**
+     * Invoked when a new word is recognized
+     */
     void notify(String word);
 }
-

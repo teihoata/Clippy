@@ -3,7 +3,7 @@
     <type>org.netbeans.modules.java.j2seproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
-            <name>VoiceTest2</name>
+            <name>ClippyAlpha1</name>
             <source-roots>
                 <root id="src.JIntelliType.dir"/>
                 <root id="src.voice.dir" name="Voice Packages"/>
