@@ -11,6 +11,7 @@
  */
 package edu.cmu.sphinx.linguist.language.grammar;
 
+import ModelPackages.AddGrammar;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
 import edu.cmu.sphinx.linguist.dictionary.Word;
 import edu.cmu.sphinx.util.Timer;
@@ -74,6 +75,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
     private int maxIdentity;
     private boolean postProcessed;
     private boolean idCheck;
+    private PropertySheet ps;
 
     public Grammar(boolean showGrammar,boolean optimizeGrammar,boolean addSilenceWords, boolean addFillerWords, Dictionary dictionary ) {
         this.logger = Logger.getLogger(getClass().getName());
@@ -95,6 +97,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
     */
     @Override
     public void newProperties(PropertySheet ps) throws PropertyException {
+        this.ps = ps;
         logger = ps.getLogger();
         showGrammar = ps.getBoolean(PROP_SHOW_GRAMMAR);
         optimizeGrammar = ps.getBoolean(PROP_OPTIMIZE_GRAMMAR);
@@ -419,10 +422,28 @@ public abstract class Grammar implements Configurable, GrammarInterface {
      * @param identity the id for this node
      * @param word     the word for this grammar node
      */
-    protected GrammarNode createGrammarNode(int identity, String word) {
+    protected GrammarNode createGrammarNode(int identity, String word){
         GrammarNode node;
         Word[][] alternatives = EMPTY_ALTERNATIVE;
         Word wordObject = getDictionary().getWord(word);
+        if(wordObject == null)
+        {
+            System.out.println("Making up pronunciation");
+            try
+            {
+                
+                System.out.println("Word to translate: " + word);
+                AddGrammar gram = new AddGrammar();
+                gram.changeWordToGrammar(word);
+                dictionary.deallocate();
+                dictionary.allocate();
+                wordObject = getDictionary().getWord(word);
+            }
+            catch (IOException ex)
+            {
+                System.out.println("Could not find dictionary file");
+            }
+        }
         // Pronunciation[] pronunciation = wordObject.getPronunciations(null);
         if (wordObject != null) {
             alternatives = new Word[1][];

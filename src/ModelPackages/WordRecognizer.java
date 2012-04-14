@@ -763,6 +763,7 @@ class NewGrammarDialogNodeBehavior extends DialogNodeBehavior {
     {
         super.onEntry();
         getGrammar().loadJSGF(getGrammarName());
+        
     }
 
     /**
