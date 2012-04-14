@@ -1,8 +1,10 @@
+package ModelPackages;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ClippyAlpha1;
+
 import java.io.File; 
 import java.io.IOException; 
 import javax.sound.sampled.AudioFormat; 

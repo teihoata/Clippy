@@ -29,7 +29,7 @@
     <!-- dialog manager                                           -->
     <!-- ******************************************************** --> 
     
-    <component name="dialogManager" type="ClippyAlpha1.WordRecognizer">
+    <component name="dialogManager" type="ModelPackages.WordRecognizer">
         <property name="microphone" value="microphone"/>
         <property name="jsgfGrammar" value="jsgfGrammar"/>
         <property name="recognizer" value="recognizer"/>
@@ -104,7 +104,7 @@
     <component name="jsgfGrammar" type="edu.cmu.sphinx.jsgf.JSGFGrammar">
         <property name="dictionary" value="dictionary"/>
         <property name="grammarLocation" 
-             value="src/ClippyAlpha1"/>
+             value="src/MenuLanguages/"/>
         <property name="grammarName" value="menu"/>
 	<property name="logMath" value="logMath"/>
     </component>

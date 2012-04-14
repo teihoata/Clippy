@@ -1,3 +1,5 @@
+package ModelPackages;
+
 /*
  * Copyright 1999-2004 Carnegie Mellon University.
  * Portions Copyright 2004 Sun Microsystems, Inc.
@@ -9,7 +11,7 @@
  * WARRANTIES.
  *
  */
-package ClippyAlpha1;
+
 
 import com.sun.speech.engine.recognition.BaseRecognizer;
 import com.sun.speech.engine.recognition.BaseRuleGrammar;
@@ -43,9 +45,9 @@ public class WordRecognizer implements Runnable, Configurable {
     public static boolean recording = false;
     public static boolean waitingForStop = false;
     private DialogNode initialNode;
-    private Map<String, DialogNode> nodeMap = new HashMap<String, DialogNode>();
+    private Map<String, DialogNode> nodeMap = new HashMap<>();
     private String name;
-    private List<WordsListener> wordListeners = new ArrayList<WordsListener>();
+    private List<WordsListener> wordListeners = new ArrayList<>();
     private DialogNode lastNode = null;
     private DialogNode curNode;
     public static boolean initialRun;

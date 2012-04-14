@@ -1,5 +1,4 @@
-
-package ClippyAlpha1;
+package ModelPackages;
 
 import com.melloware.jintellitype.HotkeyListener;
 import com.melloware.jintellitype.IntellitypeListener;
@@ -19,8 +18,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.speech.recognition.GrammarException;
 import javax.speech.recognition.Rule;
 import javax.speech.recognition.RuleGrammar;
@@ -91,9 +88,9 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
     }
 
     /**
-     * Replaces the splash s4 logo with the map
+     * updates the button on the gui
      */
-    public void displayMap()
+    public void updateGui()
     {
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -166,7 +163,7 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
             }
         });
 
-        displayMap();
+        updateGui();
         setMessage("Ready when you are :)");
     }
 
@@ -243,19 +240,8 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
      */
     private JPanel getJPanel(LayoutManager layout)
     {
-        JPanel panel = getJPanel();
-        panel.setLayout(layout);
-        return panel;
-    }
-
-    /**
-     * Returns a JPanel with the custom background color.
-     *
-     * @return a JPanel
-     */
-    private JPanel getJPanel()
-    {
         JPanel panel = new JPanel();
+        panel.setLayout(layout);
         panel.setBackground(backgroundColor);
         return panel;
     }
@@ -355,16 +341,6 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
         {
             return null;
         }
-    }
-
-    /**
-     * Main Method
-     */
-    public static void main(String[] args) throws IOException
-    {
-        WordCollection wordCollect = new WordCollection();
-        wordCollect.setVisible(true);
-        wordCollect.go();
     }
 
     /**
@@ -631,7 +607,7 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
             songList.add("play next song");
             songList.add("volume up");
             songList.add("volume down");
-            File playList = new File("./src/ClippyAlpha1/playlist.txt");
+            File playList = new File("./src/PersistantData/playlist.txt");
             FileWriter write = new FileWriter(playList);
             System.out.println("C:\\Users\\" + System.getProperty("user.name") + "\\Music\\");
             File file = new File("C:\\Users\\" + System.getProperty("user.name") + "\\Music\\musicTest\\");
