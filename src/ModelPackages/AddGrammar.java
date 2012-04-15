@@ -4,16 +4,13 @@
  */
 package ModelPackages;
 
-import com.sun.speech.freetts.Voice;
-import com.sun.speech.freetts.VoiceManager;
 import java.io.*;
 import com.sun.speech.freetts.lexicon.LetterToSound;
 import com.sun.speech.freetts.lexicon.LetterToSoundImpl;
-import org.apache.commons.lang3.StringUtils;
 
 
 public class AddGrammar {
-    private static LetterToSound lts = null;
+    LetterToSound lts = null;
     
     public AddGrammar()
     {
@@ -25,52 +22,30 @@ public class AddGrammar {
         }
     }
     
-    public void changeWordToGrammar(String word) throws IOException 
+    private void writeToDictionary(String word) throws IOException
     {
         File dictionary = new File("./models/acoustic/voxforge/etc/cmudict.0.7a");
         PrintWriter out = new PrintWriter(new FileWriter(dictionary,true));
-        
-        
+        out.write(word);
+        out.close();
+    }
+    
+    public void changeWordToGrammar(String word) throws IOException 
+    {
         String[] ltspM_phone_array;
         ltspM_phone_array = lts.getPhones(word, null);
 
         String result = "\n" + word.toUpperCase() + "\t";
-        for (int i = 0; i < ltspM_phone_array.length; i++) {        
-
-            if(ltspM_phone_array[i].toString().toUpperCase().indexOf("1") != 0)
-            {
-                ltspM_phone_array[i] = StringUtils.strip(ltspM_phone_array[i].toString(), "1");
-            }
+        for (int i = 0; i < ltspM_phone_array.length; i++) 
+        {        
+            ltspM_phone_array[i] = ltspM_phone_array[i].toString().replaceAll("[^A-Za-z]", " ");
             if(ltspM_phone_array[i].toString().equalsIgnoreCase("AX"))
             {      
                 ltspM_phone_array[i] = "AH";
             }
-            result +=   " " + ltspM_phone_array[i].toString().toUpperCase();
+            result +=  ltspM_phone_array[i].toString().toUpperCase() + " ";
+//            System.out.print(result);
         }
-        out.write(result);
-        out.close();
+        writeToDictionary(result);
     }
-
-//        public static void main(String[] args) {
-//        
-//    }
-//
-//    
-// 
-//    public static void main(String[] args) {
-// 
-//        AddGrammar ltspM = new AddGrammar();
-//        
-//        String voiceName = "kevin16"; 
-//        VoiceManager voiceManager = VoiceManager.getInstance();        
-//        Voice voice = voiceManager.getVoice(voiceName);
-// 
-//         voice.setPitch(130f);
-//         voice.setDurationStretch(0.7f);
-//         voice.setVolume(1.0f);
-//         
-//        voice.allocate();        
-//        voice.speak("starships");
-//        voice.deallocate();
-//    }
 }

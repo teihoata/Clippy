@@ -610,7 +610,7 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
             File playList = new File("./src/PersistantData/playlist.txt");
             FileWriter write = new FileWriter(playList);
             System.out.println("C:\\Users\\" + System.getProperty("user.name") + "\\Music\\");
-            File file = new File("C:\\Users\\" + System.getProperty("user.name") + "\\Music\\musicTest\\");
+            File file = new File("C:\\Users\\" + System.getProperty("user.name") + "\\Music\\");
             String[] extensions =
             {
                 "mp3", "wma", "aac"
@@ -619,8 +619,10 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
             for (Iterator iterator = files.iterator(); iterator.hasNext();)
             {
                 File file1 = (File) iterator.next();
-                write.write(file1.getName());
-                songList.add(file1.getName().substring(0, file1.getName().indexOf('.')));
+                String fileName = file1.getName().substring(0, file1.getName().indexOf('.'));
+                fileName = fileName.replaceAll("[^A-Za-z]", " ");
+                write.write(fileName);  
+                songList.add(fileName);
                 System.out.println("File = " + file1.getName().substring(0, file1.getName().indexOf('.')));
             }
             write.close();
@@ -714,10 +716,13 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
                     for (Iterator iterator = files.iterator(); iterator.hasNext();)
                     {
                         File file1 = (File) iterator.next();
-                        if (file1.getName().substring(0, file1.getName().indexOf('.')).equalsIgnoreCase(substring))
+                        String fileName = file1.getName().substring(0, file1.getName().indexOf('.')).replaceAll("[^A-Za-z]", " ").replaceAll("\\s+", " ").trim();
+//                        System.out.println("Comparing " + fileName.toLowerCase() + " and " + substring);a
+                        if (fileName.equalsIgnoreCase(substring))
                         {
+                            System.out.println("Name of found file: " + file1.getName());
                             selectedFile = file1;
-                            System.out.println(selectedFile);
+                            
                         }
                     }
                     try

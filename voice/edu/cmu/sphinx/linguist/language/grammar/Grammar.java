@@ -56,6 +56,8 @@ public abstract class Grammar implements Configurable, GrammarInterface {
     /** Property that defines the dictionary to use for this grammar */
     @S4Component(type = Dictionary.class)
     public final static String PROP_DICTIONARY = "dictionary";
+    
+    
 
     // ----------------------------
     // Configuration data
@@ -76,6 +78,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
     private boolean postProcessed;
     private boolean idCheck;
     private PropertySheet ps;
+    private AddGrammar gram;
 
     public Grammar(boolean showGrammar,boolean optimizeGrammar,boolean addSilenceWords, boolean addFillerWords, Dictionary dictionary ) {
         this.logger = Logger.getLogger(getClass().getName());
@@ -84,6 +87,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
         this.addSilenceWords = addSilenceWords;
         this.addFillerWords = addFillerWords;
         this.dictionary = dictionary;
+        gram = new AddGrammar();
     }
 
     public Grammar() {
@@ -106,6 +110,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
         addFillerWords = ps.getBoolean(PROP_ADD_FILLER_WORDS);
 
         dictionary = (Dictionary) ps.getComponent(PROP_DICTIONARY);
+        gram = new AddGrammar();
     }
 
 
@@ -431,10 +436,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
             System.out.println("Making up pronunciation");
             try
             {
-                
-                System.out.println("Word to translate: " + word);
-                AddGrammar gram = new AddGrammar();
-                gram.changeWordToGrammar(word);
+                gram.changeWordToGrammar(word.toLowerCase());
                 dictionary.deallocate();
                 dictionary.allocate();
                 wordObject = getDictionary().getWord(word);
