@@ -343,7 +343,6 @@
                 type="edu.cmu.sphinx.linguist.lextree.LexTreeLinguist">
         <property name="logMath" value="logMath"/>
         <property name="acousticModel" value="wsj"/>
-        <property name="languageModel" value="trigramModel"/>
         <property name="dictionary" value="dictionary"/>
         <property name="addFillerWords" value="false"/>
         <property name="fillerInsertionProbability" value="1E-10"/>
@@ -354,19 +353,5 @@
         <property name="silenceInsertionProbability" value=".1"/>
         <property name="languageWeight" value="7.0"/>
         <property name="unitManager" value="unitManager"/>
-    </component>
-    
-
-    <!-- ******************************************************** -->
-    <!-- The Language Model configuration                         -->
-    <!-- ******************************************************** -->
-    <component name="trigramModel" 
-        type="edu.cmu.sphinx.linguist.language.ngram.SimpleNGramModel">
-        <property name="location" 
-            value="models/language/hub/language_model.arpaformat.DMP"/>
-        <property name="logMath" value="logMath"/>
-        <property name="dictionary" value="dictionary"/>
-        <property name="maxDepth" value="3"/>
-        <property name="unigramWeight" value=".7"/>
     </component>
 </config>

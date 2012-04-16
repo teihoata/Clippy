@@ -130,6 +130,14 @@ public class WordRecognizer implements Runnable, Configurable {
         microphone.clear();
         microphone.startRecording();
         try
+                    {
+                        AePlayWave aw = new AePlayWave("./models/siri_entry.wav");
+                        aw.start();
+                    }
+                    catch (Exception e)
+                    {
+                    } 
+        try
         {
             System.out.println("5." + curNode.getName());
             if (curNode != lastNode)
@@ -145,7 +153,6 @@ public class WordRecognizer implements Runnable, Configurable {
             String nextStateName = " ";
             try
             {
-
                 nextStateName = curNode.recognize();
             }
             catch (NullPointerException e)
@@ -153,6 +160,14 @@ public class WordRecognizer implements Runnable, Configurable {
             }
             if (nextStateName == null || nextStateName.isEmpty())
             {
+                try
+                    {
+                        AePlayWave aw = new AePlayWave("./models/siri_notHeard.wav");
+                        aw.start();
+                    }
+                    catch (Exception e)
+                    {
+                    }
                 fireListeners(null);
             }
             else
@@ -165,7 +180,7 @@ public class WordRecognizer implements Runnable, Configurable {
                 {
                     System.out.println("Can't transition to unknown state "
                             + nextStateName);
-
+                    
                 }
                 else
                 {
