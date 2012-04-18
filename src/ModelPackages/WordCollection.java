@@ -148,7 +148,7 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
         wordsRecognizer.addNode("games", new MyBehavior());
         wordsRecognizer.addNode("news", new MyBehavior());
         wordsRecognizer.addNode("music", new MyMusicBehavior());
-        wordsRecognizer.addNode("movies", new MyBehavior());
+        wordsRecognizer.addNode("movies", new MyMovieBehavior());
         wordsRecognizer.addNode("books", new MyBehavior());
         wordsRecognizer.addNode("desktop", new MyDesktopBehavior());
 

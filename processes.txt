@@ -1,14 +1,12 @@
 java.exe	Clippy
 javaw.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-explorer.exe	bld
-explorer.exe	acoustic
-javaw.exe	Sphinx-4 - NetBeans IDE 7.0.1
-chrome.exe	sphinx 4 acoustic model - Google Search - Google Chrome
+wordpad.exe	cmudict.0.7a - WordPad
 wmplayer.exe	Windows Media Player
-cmd.exe	cmd
-SciTE.exe	C:\Users\Marzipan\Desktop\OpenProg.au3 * SciTE4AutoIt3
-vlc.exe	VLC media player
+chrome.exe	Grammar Format Specification - Google Chrome
 TM.exe	Task Manager
+explorer.exe	etc
+vlc.exe	VLC media player
+cmd.exe	cmd
 firefox.exe	Mozilla Firefox Start Page - Mozilla Firefox
 firefox.exe	Mozilla Firefox Start Page - Mozilla Firefox
 explorer.exe	Program Manager

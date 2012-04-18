@@ -9,7 +9,10 @@ import com.sun.speech.engine.recognition.BaseRuleGrammar;
 import edu.cmu.sphinx.jsgf.JSGFGrammarException;
 import edu.cmu.sphinx.jsgf.JSGFGrammarParseException;
 import edu.cmu.sphinx.result.Result;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -116,9 +119,9 @@ public class MyDesktopBehavior extends MyBehavior {
     @Override
     public String onRecognize(Result result) throws GrammarException
     {
-        //String tag = super.onRecognize(result);
+        String tag = super.onRecognize(result);
         String listen = result.getBestFinalResultNoFiller();
-        String tag = "";
+        //String tag = "";
         if (listen.equalsIgnoreCase("main menu") || listen.equalsIgnoreCase("menu"))
         {
             tag = "menu";
