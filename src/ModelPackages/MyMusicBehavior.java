@@ -194,7 +194,7 @@ import org.apache.commons.io.FileUtils;
                     {
                         try
                         {
-                            Process process = new ProcessBuilder("./UniversalMediaRemote.exe", "Play").start();
+                            Process process = new ProcessBuilder("./Windows Control/UniversalMediaRemote.exe", "Play").start();
                         }
                         catch (IOException ex)
                         {
@@ -208,7 +208,7 @@ import org.apache.commons.io.FileUtils;
                             {
                                 for (int i = 0; i < 10; i++)
                                 {
-                                    Process process = new ProcessBuilder("./UniversalMediaRemote.exe", "VUp").start();
+                                    Process process = new ProcessBuilder("./Windows Control/UniversalMediaRemote.exe", "VUp").start();
                                 }
 
                             }

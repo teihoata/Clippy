@@ -1,16 +1,8 @@
 #JSGF V1.0;
 
-/**
- * JSGF Grammar for dialog manager example
- */
-
-grammar news;
+grammar application;
 
 import <commands.standard_commands>;
 
 public <commands> = <standard_commands> ;
-
-public <desktop> =    change window |
-                      close window |
-                       stop ;
 

@@ -1,9 +1,5 @@
 #JSGF V1.0;
 
-/**
- * JSGF Grammar for dialog manager demo
- */
-
 grammar email;
 import <commands.standard_commands>;
 

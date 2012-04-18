@@ -124,6 +124,12 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
     {
         WordCollection.menu = menu;
     }
+    
+    public static void addToCurrentMenu(String menu)
+    {
+        WordCollection.menu += menu;
+    }
+            
 
     /**
      * Perform any needed initializations and then enable the 'speak' button,
@@ -217,6 +223,18 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
             public void run()
             {
                 messageTextField.setText(message);
+            }
+        });
+    }
+    
+    public static void addToMessage(final String message)
+    {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run()
+            {
+                messageTextField.setText(menu + "\n" + message);
+                
             }
         });
     }

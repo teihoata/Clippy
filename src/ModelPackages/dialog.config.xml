@@ -137,7 +137,7 @@
     <component name="wsjLoader" type="edu.cmu.sphinx.linguist.acoustic.tiedstate.Sphinx3Loader">
         <property name="logMath" value="logMath"/>
         <property name="unitManager" value="unitManager"/>
-        <property name="location" value="models/acoustic/hub"/>
+        <property name="location" value="models/acoustic/wsj"/>
     </component>
     
     <!-- ******************************************************** -->
