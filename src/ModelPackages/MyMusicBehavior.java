@@ -1,6 +1,5 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Class that handles the music behavior of Clippy
  */
 package ModelPackages;
 
@@ -224,7 +223,7 @@ import org.apache.commons.io.FileUtils;
                                 {
                                     for (int i = 0; i < 10; i++)
                                     {
-                                        Process process = new ProcessBuilder("./UniversalMediaRemote.exe", "VDown").start();
+                                        Process process = new ProcessBuilder("./Windows Control/UniversalMediaRemote.exe", "VDown").start();
                                     }
 
                                 }

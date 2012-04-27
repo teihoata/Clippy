@@ -3,27 +3,13 @@ package ModelPackages;
 import com.melloware.jintellitype.HotkeyListener;
 import com.melloware.jintellitype.IntellitypeListener;
 import com.melloware.jintellitype.JIntellitype;
-import com.sun.speech.engine.recognition.BaseRecognizer;
-import com.sun.speech.engine.recognition.BaseRuleGrammar;
-import edu.cmu.sphinx.jsgf.JSGFGrammarException;
-import edu.cmu.sphinx.jsgf.JSGFGrammarParseException;
-import edu.cmu.sphinx.result.Result;
-import edu.cmu.sphinx.util.TimerPool;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
-import java.util.*;
-import javax.speech.recognition.GrammarException;
-import javax.speech.recognition.Rule;
-import javax.speech.recognition.RuleGrammar;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import org.apache.commons.io.FileUtils;
 
 /**
  * A JFrame class to demonstrate word recognition and organisation
@@ -38,7 +24,6 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
     private JButton speakButton;
     private static String menu;
     private WordRecognizer wordsRecognizer;
-    private static final int WINDOWS_A = 88;
 
     /**
      * WordCollection constructor
@@ -149,7 +134,6 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
         wordsRecognizer.addNode("news", new MyBehavior());
         wordsRecognizer.addNode("music", new MyMusicBehavior());
         wordsRecognizer.addNode("movies", new MyMovieBehavior());
-        wordsRecognizer.addNode("books", new MyBehavior());
         wordsRecognizer.addNode("desktop", new MyDesktopBehavior());
 
         wordsRecognizer.setInitialNode("menu");
@@ -319,12 +303,14 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
             // be attached to this window
             JIntellitype.getInstance().addHotKeyListener(this);
             JIntellitype.getInstance().addIntellitypeListener(this);
-            JIntellitype.getInstance().registerHotKey(WINDOWS_A, JIntellitype.MOD_WIN, 'A');
+            JIntellitype.getInstance().registerHotKey(1, JIntellitype.MOD_WIN + JIntellitype.MOD_CONTROL , 0);
             System.out.println("JIntellitype initialized");
         }
         catch (RuntimeException ex)
         {
             System.out.println("Either you are not on Windows, or there is a problem with the JIntellitype library!");
+            System.out.println("Replace JIntellitype.dll in the root of the project with the corresponding dll"
+                    + " in the Jintellitype 32bit or 64bit folders");
         }
     }
 

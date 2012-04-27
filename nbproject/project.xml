@@ -4,7 +4,6 @@
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>ClippyAlpha1</name>
-            <explicit-platform explicit-source-supported="true"/>
             <source-roots>
                 <root id="src.JIntelliType.dir"/>
                 <root id="src.JavaDB%20Packages.dir"/>

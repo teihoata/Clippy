@@ -1,12 +1,9 @@
 java.exe	Clippy
-javaw.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-wordpad.exe	cmudict.0.7a - WordPad
+explorer.exe	Start
+netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
 wmplayer.exe	Windows Media Player
-chrome.exe	Grammar Format Specification - Google Chrome
-TM.exe	Task Manager
-explorer.exe	etc
-vlc.exe	VLC media player
-cmd.exe	cmd
-firefox.exe	Mozilla Firefox Start Page - Mozilla Firefox
-firefox.exe	Mozilla Firefox Start Page - Mozilla Firefox
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+chrome.exe	Twitter / Home - Google Chrome
 explorer.exe	Program Manager
