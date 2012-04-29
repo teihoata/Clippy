@@ -54,7 +54,7 @@ import org.apache.commons.io.FileUtils;
             {
                 File file1 = (File) iterator.next();
                 String fileName = file1.getName().substring(0, file1.getName().indexOf('.'));
-                fileName = fileName.replaceAll("[^A-Za-z]", " ");
+                fileName = fileName.replaceAll("[^A-Za-z&&[^']]", " ");
                 write.write(fileName);  
                 songList.add(fileName);
                 System.out.println("File = " + file1.getName().substring(0, file1.getName().indexOf('.')));
@@ -150,7 +150,7 @@ import org.apache.commons.io.FileUtils;
                     for (Iterator iterator = files.iterator(); iterator.hasNext();)
                     {
                         File file1 = (File) iterator.next();
-                        String fileName = file1.getName().substring(0, file1.getName().indexOf('.')).replaceAll("[^A-Za-z]", " ").replaceAll("\\s+", " ").trim();
+                        String fileName = file1.getName().substring(0, file1.getName().indexOf('.')).replaceAll("[^A-Za-z&&[^']]", " ").replaceAll("\\s+", " ").trim();
 //                        System.out.println("Comparing " + fileName.toLowerCase() + " and " + substring);a
                         if (fileName.equalsIgnoreCase(substring))
                         {
@@ -173,7 +173,7 @@ import org.apache.commons.io.FileUtils;
                         }
                         catch (IOException ex1)
                         {
-                            System.out.println("Didn't work :( Trying one last option");
+                            System.out.println("Didn't work, Trying one last option");
                             try
                             {
                                 Process process = new ProcessBuilder("C:\\Program Files\\Windows Media Player\\wmplayer.exe", selectedFile.getAbsolutePath()).start();
@@ -197,6 +197,7 @@ import org.apache.commons.io.FileUtils;
                         }
                         catch (IOException ex)
                         {
+                            System.out.println("Couldn't find Media Control Program in root/windows control/");
                         }
                     }
                     else

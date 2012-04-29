@@ -4,13 +4,11 @@ wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
-netbeans.exe	NetBeans IDE 7.1.1
-firefox.exe	Mozilla Firefox Start Page - Mozilla Firefox
-vlc.exe	VLC media player
+netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
+chrome.exe	End of April Games & Collectibles Sale - save up to 70% off! at Mighty Ape NZ - Google Chrome
+explorer.exe	NetBeansProjects
 Aut2exe.exe	Aut2Exe v3 - AutoIt Script to EXE Converter
 cmd.exe	C:\Windows\system32\cmd.exe
 SciTE.exe	C:\Users\Marzipan\Desktop\ClippyAlpha2.au3 - SciTE4AutoIt3
-chrome.exe	Facebook - Google Chrome
-explorer.exe	Downloads
 explorer.exe	Program Manager
 SynTPEnh.exe	Default IME
