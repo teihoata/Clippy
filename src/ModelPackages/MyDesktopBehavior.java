@@ -41,7 +41,7 @@ public class MyDesktopBehavior extends MyBehavior {
         try
         {
             System.out.println("Finding open windows");
-            Process process = new ProcessBuilder("./Windows Control/OpenProg.exe", "get open windows").start();
+            Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", "get open windows").start();
             try
             {
                 while (process.waitFor() != 0)
@@ -57,7 +57,7 @@ public class MyDesktopBehavior extends MyBehavior {
             while ((detail = empdtil.readLine()) != null)
             {
                 System.out.println(detail);
-                detail = detail.substring(detail.indexOf("exe")).substring(4);
+                detail = detail.substring(0, detail.indexOf("exe"));
                 String[] words = detail.split(" ");
                 detail = "";
                 for (int i = 0; i < 2; i++)
@@ -137,7 +137,7 @@ public class MyDesktopBehavior extends MyBehavior {
                 String switchApp = "";
                 while ((detail = empdtil.readLine()) != null)
                 {
-                    detail = detail.substring(detail.indexOf("exe")).substring(4);
+                    detail = detail.substring(0 , detail.indexOf(".exe"));
                     //detail = detail.replaceAll("[^A-Za-z0-9]", " ");
                     String[] words = detail.split(" ");
                     String combined = "";
@@ -155,6 +155,7 @@ public class MyDesktopBehavior extends MyBehavior {
                     
                     if (combined.equalsIgnoreCase(listen2))
                     {
+                        System.out.println("Found");
                         System.out.println(detail);
                         switchApp = detail;
                     }
@@ -162,7 +163,7 @@ public class MyDesktopBehavior extends MyBehavior {
                 System.out.println("Switch to application : " + switchApp);
                 try
                 {
-                    Process process = new ProcessBuilder("./Windows Control/OpenProg.exe", "switch to", "\"" + switchApp + "\"").start();
+                    Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", "switch", "\"" + switchApp + "\"").start();
                 }
                 catch (IOException ex)
                 {
