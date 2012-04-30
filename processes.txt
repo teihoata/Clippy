@@ -1,17 +1,23 @@
 java.exe	Clippy
 explorer.exe	Start
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-explorer.exe	lib
-explorer.exe	dist
-chrome.exe	FreeTTS | Free Audio & Video software downloads at SourceForge.net - Google Chrome
-explorer.exe	14
-explorer.exe	Documents
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-cmd.exe	MINGW32:~/Documents/NetBeansProjects/ClippyAlpha1
+firefox.exe	Mozilla Firefox Start Page - Mozilla Firefox
+explorer.exe	Windows Control
+SciTE.exe	C:\Users\Marzipan\Desktop\ClippyAlpha2.au3 - SciTE4AutoIt3
+explorer.exe	My Videos
+FolderSize.exe	Folder Size 2.0.0.0
+explorer.exe	acoustic
+explorer.exe	Downloads
+uTorrent.exe	µTorrent 3.1.3
+chrome.exe	Window Titles and Text (Advanced) - Google Chrome
 Aut2exe.exe	Aut2Exe v3 - AutoIt Script to EXE Converter
 cmd.exe	C:\Windows\system32\cmd.exe
-SciTE.exe	C:\Users\Marzipan\Desktop\ClippyAlpha2.au3 - SciTE4AutoIt3
+cmd.exe	MINGW32:~/Documents/NetBeansProjects/ClippyAlpha1
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+explorer.exe	14
+explorer.exe	Documents
 explorer.exe	Program Manager
+java.exe	Default IME

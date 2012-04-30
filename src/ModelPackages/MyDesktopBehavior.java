@@ -105,6 +105,13 @@ public class MyDesktopBehavior extends MyBehavior {
                 ruleGrammar.setEnabled(newRuleName, true);
                 count++;
             }
+            String newRuleName = ruleName + count;
+            Rule newRule = null;
+            newRule = ruleGrammar.ruleForJSGF("close active program"
+                        + " { " + newRuleName + " }");
+                ruleGrammar.setRule(newRuleName, newRule, true);
+                ruleGrammar.setEnabled(newRuleName, true);
+                count++;
         }
         catch (GrammarException ge)
         {
@@ -125,6 +132,16 @@ public class MyDesktopBehavior extends MyBehavior {
         if (listen.equalsIgnoreCase("main menu") || listen.equalsIgnoreCase("menu"))
         {
             tag = "menu";
+        }
+        else if(listen.equalsIgnoreCase("close active program"))
+        {
+            try
+                {
+                    Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", "close").start();
+                }
+                catch (IOException ex)
+                {
+                }
         }
         else if (listen.startsWith("switch to"))
         {
