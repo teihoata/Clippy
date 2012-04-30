@@ -47,7 +47,7 @@ import org.apache.commons.io.FileUtils;
             File file = new File("C:\\Users\\" + System.getProperty("user.name") + "\\Videos\\");
             String[] extensions =
             {
-                "avi", "wmv", ""
+                "avi", "wmv", "mp4"
             };
             files = FileUtils.listFiles(file, extensions, true);
             for (Iterator iterator = files.iterator(); iterator.hasNext();)
