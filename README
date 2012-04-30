@@ -1,0 +1,160 @@
+Clippy is a voice controlled windows assistant capable of controlling various functions of the windows operating system. Currently only tested on Windows 7.
+Clippy is run by importing the project into netbeans, importing the libraries found in the lib folder (root) and executing it from there. Commands used to activate the voice recording are set to Windows key + Ctrl key
+
+
+Code within the ClippyAlpha2.exe used for windows application control below:
+
+#include <IE.au3>
+$asResult = StringRegExp($CMDLINE[1], "read email", 1) 
+If @error == 0 Then
+   $oIE = _IECreate ( "http://www.gmail.com")
+   $sText = _IEBodyReadText ($oIE)
+   Local $array = StringSplit($sText, @CRLF, 1)
+   ;MsgBox (0,"Display",$array[1])
+   ;MsgBox (0,"Display",$array[2])
+   For $i = 1 To $array[0]
+    StringRegExp($array[$i], "quickflix", 1) 
+    If @error == 0 Then
+        MsgBox(0, "found a google", $array[$i])
+    EndIf
+        
+   Next
+EndIf
+
+
+$asResult = StringRegExp($CMDLINE[1], "notepad", 1) 
+If @error == 0 Then
+    MsgBox(0, "Result", "Opening Notepad")
+	Run("notepad.exe")
+	WinWaitActive("Untitled - Notepad")
+	Send($CMDLINE[2])
+	;WinActivate("[CLASS:Notepad]", "")
+ EndIf
+ 
+ $asResult = StringRegExp($CMDLINE[1], "chrome", 1) 
+ If @error == 0 Then
+    MsgBox(0, "Clippy Open Program - Marcus", "Opening Chrome")
+	$ch1 = WinGetHandle("[CLASS:Chrome_WidgetWin_0]")
+	If Not WinGetTitle($ch1) Then WinKill($ch1)
+	MsgBox(0,"Attempt at getting title",WinGetTitle("[CLASS:Chrome_WidgetWin_0]"))
+	Opt("WinTitleMatchMode",2)
+    WinActivate("chrome", "")
+	MsgBox(0, "Result", @error)
+    ;$opened = WinActivate("[CLASS:Chrome_WidgetWin_0]", "")
+	;If $opened == 0 Then
+	 ; MsgBox(0, "Result", "Chrome is not active, Opening new instance")
+	  ;Shellexecute(@UserProfileDir & "\Local Settings\Application Data\Google\Chrome\Application\Chrome.exe")
+    ;EndIf
+ EndIf
+ 
+ $asResult = StringRegExp($CMDLINE[1], "switch to", 1) 
+ If @error == 0 Then
+	Opt("WinTitleMatchMode",2)
+	WinActivate($CMDLINE[2])
+	Local $state = WinGetState($CMDLINE[2], "")
+   MsgBox(0, "State" , $state)
+; Is the "minimized" value set?
+	  If BitAND($state, 16) Then
+		 MsgBox(0, "Result", "Chrome is not active, Opening new instance")
+    WinSetState($CMDLINE[2], @SW_SHOW)
+ Else
+	WinActivate($CMDLINE[2])
+	  EndIf
+   ; $opened = WinActivate("[CLASS:Chrome_WidgetWin_0]", "")
+ EndIf
+ 
+ $asResult = StringRegExp($CMDLINE[1], "google", 1) 
+ If @error == 0 Then
+    $sString = $CMDLINE[2]
+    ShellExecute("www.google.com/search?q=" & $sString) 
+ EndIf
+ 
+ $asResult = StringRegExp($CMDLINE[1], "hello", 1) 
+ If @error == 0 Then
+	Local $aString = ""
+	Local $stringResult = ""
+    $sString = $CMDLINE[2]
+	;$stringResult = StringRegExp($aString, "hello" [,0])
+	;MsgBox(0, "result", $stringResult)
+	  if $CMDLINE[2] = $CMDLINE[1] Then
+	  MsgBox(0,"Compare Result", "Its the saammeee")
+	  EndIf
+ EndIf
+ 
+ $asResult = StringRegExp($CMDLINE[1], "website", 1) 
+ If @error == 0 Then
+    $sString = $CMDLINE[2]
+    ShellExecute($sString) 
+EndIf
+ 
+$asResult = StringRegExp($CMDLINE[1], "windows media player", 1) 
+ If @error == 0 Then
+    MsgBox(0, "Clippy Open Program - Marcus", "Opening windows media player")
+	Opt("WinTitleMatchMode",2)
+	$opened = WinActivate("Windows Media Player", "")
+	If $opened == 0 Then
+	  MsgBox(0, "Result", "Windows media player is not active, Opening")
+	  Run("C:\Program Files\Windows Media Player\wmplayer.exe")
+   EndIf
+EndIf
+
+$asResult = StringRegExp($CMDLINE[1], "close", 1) 
+If @error == 0 Then
+   WinClose("[ACTIVE]", "")
+   EndIf
+
+$asResult = StringRegExp($CMDLINE[1], "switch", 1) 
+If @error == 0 Then
+   Local $List = WinList()
+   Local $Title = ""
+   Local $Compare = ""
+   $Compare = ($CMDLINE[2] & ".exe")
+   For $i = 1 To $List[0][0]
+   ;uncomment to show all visible programs
+      If $List[$i][0] <> "" And IsVisible($List[$i][1]) Then
+   ;uncomment to show all programs
+	;  If $List[$i][0] <> "" Then
+	
+	  Dim $Process = IDtoName( WinGetProcess($List[$i][0]))
+	  if $Process = $Compare Then
+		 WinActivate($List[$i][0])
+		 EndIf
+	  $Title &= $Process & @TAB & $List[$i][0] & @CRLF
+	  EndIf
+   Next
+	  ;msgbox(0,"",$Title)
+	  ;FileWrite ( "processes.txt", $Title )
+EndIf
+
+$asResult = StringRegExp($CMDLINE[1], "get open windows", 1) 
+If @error == 0 Then
+   Local $List = WinList()
+   Local $Title = ""
+   For $i = 1 To $List[0][0]
+   ;uncomment to show all visible programs
+      If $List[$i][0] <> "" And IsVisible($List[$i][1]) Then
+   ;uncomment to show all programs
+	;  If $List[$i][0] <> "" Then
+	  Dim $Process = IDtoName( WinGetProcess($List[$i][0]))
+	  $Title &= $Process & @TAB & $List[$i][0] & @CRLF
+	  EndIf
+   Next
+	  ;msgbox(0,"",$Title)
+	  FileWrite ( "processes.txt", $Title )
+EndIf
+ 
+ Func IDtoName($Handle)
+	  Dim $ProcList = ProcessList()
+	  For $i = 1 To $ProcList[0][0]
+	  If $ProcList[$i][1] = $Handle Then
+		 Return ($ProcList[$i][0])
+		 EndIf
+	  Next
+	  EndFunc
+	  Func IsVisible($Handle)
+	  If BitAND( WinGetState($Handle), 2) Then
+		 Return 1
+	  Else
+		 Return 0
+		 EndIf
+   EndFunc
