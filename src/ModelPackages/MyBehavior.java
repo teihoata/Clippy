@@ -4,9 +4,13 @@
  */
 package ModelPackages;
 
+import com.sun.speech.freetts.Voice;
+import com.sun.speech.freetts.VoiceManager;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.TimerPool;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.speech.recognition.GrammarException;
 
@@ -65,11 +69,22 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
                     System.out.println("Goodbye! Thanks for visiting!\n");
                     System.exit(0);
                 }
-                if (tag.equals("help"))
+                else if (tag.equals("help"))
                 {
 
                     help();
 
+                }
+                else if(tag.equals("time"))
+                {
+                    String voiceName = "kevin16"; 
+                    VoiceManager voiceManager = VoiceManager.getInstance();        
+                    Voice voice = voiceManager.getVoice(voiceName);
+                    DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                    Calendar cal = Calendar.getInstance();
+                    voice.allocate();      
+                    voice.speak(dateFormat.format(cal.getTime()));
+                    voice.deallocate();
                 }
                 else
                 {

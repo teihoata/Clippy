@@ -1,14 +1,17 @@
 java.exe	Clippy
 explorer.exe	Start
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-chrome.exe	End of April Games & Collectibles Sale - save up to 70% off! at Mighty Ape NZ - Google Chrome
-explorer.exe	NetBeansProjects
+explorer.exe	lib
+explorer.exe	dist
+chrome.exe	FreeTTS | Free Audio & Video software downloads at SourceForge.net - Google Chrome
+explorer.exe	14
+explorer.exe	Documents
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+cmd.exe	MINGW32:~/Documents/NetBeansProjects/ClippyAlpha1
 Aut2exe.exe	Aut2Exe v3 - AutoIt Script to EXE Converter
 cmd.exe	C:\Windows\system32\cmd.exe
 SciTE.exe	C:\Users\Marzipan\Desktop\ClippyAlpha2.au3 - SciTE4AutoIt3
 explorer.exe	Program Manager
-SynTPEnh.exe	Default IME

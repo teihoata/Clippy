@@ -5,8 +5,7 @@ grammar menu;
 public <command> =      
                         play music       { goto_music } |
                         open games             { goto_games } |
-                        read books             { goto_books } |
-                        open my mail           { goto_email } |
+                        tell me the time  { time } |
                         open newspapers        { goto_news } |
                         view films           { goto_movies } |
                         computer control     {goto_desktop} |
