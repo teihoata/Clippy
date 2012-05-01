@@ -1,10 +1,17 @@
 #JSGF V1.0;
 
+/**
+ * JSGF Grammar for standard commands that will spawn in each menu option
+ */
+
+//Grammar name
 grammar email;
 import <commands.standard_commands>;
 
+//Add standard commands.gram on top of the commands given
 public <commands> = <standard_commands> ;
 
+//Set type of commands
 public <command> =      
                         delete message           |
                         mark message as junk     |

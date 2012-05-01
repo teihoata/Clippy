@@ -1,11 +1,11 @@
 #JSGF V1.0;
 
 /**
- * JSGF Grammar for standard commands
+ * JSGF Grammar for standard commands that will spawn in each menu option
  */
 
 grammar commands;
 
 public <standard_commands> =
                       get help                   { help } |
-                      [go to [the]] main menu    { goto_menu } ;
+                      main menu    { goto_menu } ;

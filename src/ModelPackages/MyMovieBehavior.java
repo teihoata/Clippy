@@ -43,11 +43,10 @@ import org.apache.commons.io.FileUtils;
             songList.add("volume down");
             File playList = new File("./src/PersistantData/playlist.txt");
             FileWriter write = new FileWriter(playList);
-            System.out.println("C:\\Users\\" + System.getProperty("user.name") + "\\Videos\\");
             File file = new File("C:\\Users\\" + System.getProperty("user.name") + "\\Videos\\");
             String[] extensions =
             {
-                "avi", "wmv", "mp4"
+                "avi", "wmv", "mp4", "divx", "mkv"
             };
             files = FileUtils.listFiles(file, extensions, true);
             for (Iterator iterator = files.iterator(); iterator.hasNext();)
@@ -57,7 +56,6 @@ import org.apache.commons.io.FileUtils;
                 fileName = fileName.replaceAll("[^A-Za-z]", " ");
                 write.write(fileName);  
                 songList.add(fileName);
-                System.out.println("File = " + file1.getName().substring(0, file1.getName().indexOf('.')));
             }
             write.close();
         }

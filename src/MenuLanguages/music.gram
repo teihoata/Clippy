@@ -1,7 +1,12 @@
 #JSGF V1.0;
 
+/**
+*   JSGF grammar/choices for music menu options
+*/
 grammar music;
 
+//Add standard commands.gram on top of the commands given
 import <commands.standard_commands>;
 
+//Add a dynamic command list using the java code to the list of options
 public <commands> = <standard_commands> ;

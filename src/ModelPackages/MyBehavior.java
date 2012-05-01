@@ -86,25 +86,12 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
                     voice.speak(dateFormat.format(cal.getTime()));
                     voice.deallocate();
                 }
-                else
-                {
-                    if (tag.equals("stats"))
-                    {
-                        TimerPool.dumpAll();
-                    }
-                    else
-                    {
-                        if (tag.startsWith("goto_"))
-                        {
-                            return tag.replaceFirst("goto_", "");
-                        }
-                        else
-                        {
-                            if (tag.startsWith("browse"))
-                            {
-                                execute(tag);
-                            }
-                        }
+                else if (tag.startsWith("goto_")) {
+                    return tag.replaceFirst("goto_", "");
+                }
+                else {
+                    if (tag.startsWith("browse")) {
+                        execute(tag);
                     }
                 }
             }
@@ -118,8 +105,6 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
                     catch (Exception e)
                     {
                     } 
-                System.out.println("\n Oops! didn't hear you.\n");
-
             }
             return null;
         }

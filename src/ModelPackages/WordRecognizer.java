@@ -1,15 +1,7 @@
 package ModelPackages;
 
-/*
- * Copyright 1999-2004 Carnegie Mellon University.
- * Portions Copyright 2004 Sun Microsystems, Inc.
- * Portions Copyright 2004 Mitsubishi Electric Research Laboratories.
- * All Rights Reserved.  Use is subject to license terms.
- *
- * See the file "license.terms" for information on usage and
- * redistribution of this file, and for a DISCLAIMER OF ALL
- * WARRANTIES.
- *
+/**
+ * Manages the speech recognition for Word Collection
  */
 
 
@@ -36,9 +28,6 @@ import javax.speech.recognition.RuleParse;
 
 /**
  * @author Marcus Ball
- */
-/**
- * Manages the speech recognition for Word Collection
  */
 public class WordRecognizer implements Runnable, Configurable {
 
@@ -101,13 +90,6 @@ public class WordRecognizer implements Runnable, Configurable {
         microphone.stopRecording();
     }
 
-    /**
-     * Allocates resources necessary for recognition.
-     */
-    public void startup() throws IOException
-    {
-        //recognizer.allocate();
-    }
 
     /**
      * Releases recognition resources
@@ -122,24 +104,25 @@ public class WordRecognizer implements Runnable, Configurable {
     }
 
     /**
-     * Performs a single recognition
+     * Performs a single recognition, called when the button is pressed or JIntelli
+     * JIntellitype is initialised
      */
     @Override
     public void run()
     {
+        //Clear/clean up and begin recording using the microphone
         microphone.clear();
         microphone.startRecording();
-        try
-                    {
-                        AePlayWave aw = new AePlayWave("./models/siri_entry.wav");
-                        aw.start();
-                    }
-                    catch (Exception e)
-                    {
-                    } 
+        //play the entry sound to signify to the user that recognition has started
+        try {
+            AePlayWave aw = new AePlayWave("./models/siri_entry.wav");
+            aw.start();
+        } catch (Exception e) {
+            System.out.println("Couldn't find siri entry sound");
+        }
+        //Try to recognise
         try
         {
-            System.out.println("5." + curNode.getName());
             if (curNode != lastNode)
             {
                 if (lastNode != null)

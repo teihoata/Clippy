@@ -1,7 +1,11 @@
 #JSGF V1.0;
 
+/**
+*   Main menu choices
+*/
 grammar menu;
 
+//Set commands for main menu
 public <command> =      
                         play music       { goto_music } |
                         open games             { goto_games } |
