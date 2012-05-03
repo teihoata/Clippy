@@ -1,12 +1,12 @@
 java.exe	Clippy
 explorer.exe	Start
-explorer.exe	Libraries
-firefox.exe	Mozilla Firefox Start Page - Mozilla Firefox
-chrome.exe	Google - Google Chrome
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
+WINWORD.EXE	Document1 - Microsoft Word
+chrome.exe	(1) Twitter / Home - Google Chrome
+explorer.exe	etc
 explorer.exe	Program Manager
-SynTPEnh.exe	Default IME
+wmplayer.exe	Default IME

@@ -72,8 +72,6 @@ import org.apache.commons.io.FileUtils;
         {
             super.onEntry();
 
-            // now lets add our custom songs from the play list
-            // First, get the JSAPI RuleGrammar
             BaseRecognizer recognizer = new BaseRecognizer(getGrammar().getGrammarManager());
             try
             {
@@ -132,7 +130,6 @@ import org.apache.commons.io.FileUtils;
         public String onRecognize(Result result) throws GrammarException
         {
             String next = "";
-//            String listen = super.onRecognize(result);
             trace("Recognize result: " + result.getBestFinalResultNoFiller());
             String listen = result.getBestFinalResultNoFiller();
             System.out.println(listen);
@@ -151,7 +148,6 @@ import org.apache.commons.io.FileUtils;
                     {
                         File file1 = (File) iterator.next();
                         String fileName = file1.getName().substring(0, file1.getName().indexOf('.')).replaceAll("[^A-Za-z&&[^']]", " ").replaceAll("\\s+", " ").trim();
-//                        System.out.println("Comparing " + fileName.toLowerCase() + " and " + substring);a
                         if (fileName.equalsIgnoreCase(substring))
                         {
                             System.out.println("Name of found file: " + file1.getName());

@@ -113,7 +113,7 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
      */
     public void go() throws IOException {
         //Get the configuration from the xml resource
-        URL url = WordCollection.class.getResource("dialog.config.xml");
+        URL url = WordCollection.class.getResource("clippy.config.xml");
         ConfigurationManager cm = new ConfigurationManager(url);
         wordsRecognizer = (WordRecognizer) cm.lookup("dialogManager");
 

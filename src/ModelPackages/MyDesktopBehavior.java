@@ -6,6 +6,8 @@ package ModelPackages;
 
 import com.sun.speech.engine.recognition.BaseRecognizer;
 import com.sun.speech.engine.recognition.BaseRuleGrammar;
+import com.sun.speech.freetts.Voice;
+import com.sun.speech.freetts.VoiceManager;
 import edu.cmu.sphinx.jsgf.JSGFGrammarException;
 import edu.cmu.sphinx.jsgf.JSGFGrammarParseException;
 import edu.cmu.sphinx.result.Result;
@@ -13,7 +15,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.speech.recognition.GrammarException;
@@ -28,10 +33,19 @@ public class MyDesktopBehavior extends MyBehavior {
 
     ArrayList<String> processTitles;
 
-    @Override
+    public MyDesktopBehavior(){}
+    
     public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
     {
         super.onEntry();
+        BaseRecognizer recognizer = new BaseRecognizer(getGrammar().getGrammarManager());
+        try {
+            recognizer.allocate();
+        } catch (Exception e) {
+        }
+
+            RuleGrammar ruleGrammar = new BaseRuleGrammar(recognizer, getGrammar().getRuleGrammar());
+
         File file = new File("./processes.txt");
         if (file.exists())
         {
@@ -57,7 +71,10 @@ public class MyDesktopBehavior extends MyBehavior {
             while ((detail = empdtil.readLine()) != null)
             {
                 System.out.println(detail);
-                detail = detail.substring(0, detail.indexOf("exe"));
+                try{
+                    detail = detail.substring(0, detail.indexOf("exe"));
+                }
+                catch(StringIndexOutOfBoundsException e){}
                 String[] words = detail.split(" ");
                 detail = "";
                 for (int i = 0; i < 2; i++)
@@ -76,20 +93,6 @@ public class MyDesktopBehavior extends MyBehavior {
         {
             System.out.println(ex.getMessage());
         }
-//                WordCollection.addToMessage(processTitles);
-
-        BaseRecognizer recognizer = new BaseRecognizer(getGrammar().getGrammarManager());
-        try
-        {
-            recognizer.allocate();
-        }
-        catch (Exception e)
-        {
-        }
-
-        RuleGrammar ruleGrammar = new BaseRuleGrammar(recognizer, getGrammar().getRuleGrammar());
-
-        // now lets add a rule for each song in the play list
 
         String ruleName = "application";
         int count = 1;
@@ -126,9 +129,10 @@ public class MyDesktopBehavior extends MyBehavior {
     @Override
     public String onRecognize(Result result) throws GrammarException
     {
-        String tag = super.onRecognize(result);
+        //String tag = super.onRecognize(result);
         String listen = result.getBestFinalResultNoFiller();
-        //String tag = "";
+        trace("Recognize result: " + result.getBestFinalResultNoFiller());
+        String tag = "";
         if (listen.equalsIgnoreCase("main menu") || listen.equalsIgnoreCase("menu"))
         {
             tag = "menu";
@@ -154,8 +158,9 @@ public class MyDesktopBehavior extends MyBehavior {
                 String switchApp = "";
                 while ((detail = empdtil.readLine()) != null)
                 {
+                    try{
                     detail = detail.substring(0 , detail.indexOf(".exe"));
-                    //detail = detail.replaceAll("[^A-Za-z0-9]", " ");
+                    }catch(StringIndexOutOfBoundsException e){}
                     String[] words = detail.split(" ");
                     String combined = "";
                 for (int i = 0; i < 2; i++)
@@ -168,16 +173,17 @@ public class MyDesktopBehavior extends MyBehavior {
                 }   
                 combined = combined.trim();
                 String listen2 = listen.substring(10).trim();
-                    System.out.println(combined + " comparing to " + listen2);
-                    
                     if (combined.equalsIgnoreCase(listen2))
                     {
-                        System.out.println("Found");
-                        System.out.println(detail);
                         switchApp = detail;
                     }
                 }
-                System.out.println("Switch to application : " + switchApp);
+                String voiceName = "kevin16";
+                VoiceManager voiceManager = VoiceManager.getInstance();
+                Voice voice = voiceManager.getVoice(voiceName);
+                voice.allocate();
+                voice.speak("opening " + switchApp);
+                voice.deallocate();
                 try
                 {
                     Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", "switch", "\"" + switchApp + "\"").start();
