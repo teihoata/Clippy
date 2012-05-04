@@ -1,12 +1,14 @@
 java.exe	Clippy
 explorer.exe	Start
-chrome.exe	AnandTech - Samsung Galaxy S III Performance Preview: It's Fast - Google Chrome
-firefox.exe	Mozilla Firefox Start Page - Mozilla Firefox
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
+chrome.exe	New Tab - Google Chrome
+cmd.exe	MINGW32:~/Documents/NetBeansProjects/ClippyAlpha1
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
+firefox.exe	Mozilla Firefox Start Page - Mozilla Firefox
 explorer.exe	Libraries
 sidebar.exe	CPU Meter
 explorer.exe	Program Manager
+java.exe	Default IME
