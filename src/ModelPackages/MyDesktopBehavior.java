@@ -32,8 +32,11 @@ import javax.speech.recognition.RuleGrammar;
 public class MyDesktopBehavior extends MyBehavior {
 
     ArrayList<String> processTitles;
+    private int count;
 
-    public MyDesktopBehavior(){}
+    public MyDesktopBehavior(){
+    count = 1;
+    }
     
     public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
     {
@@ -95,35 +98,34 @@ public class MyDesktopBehavior extends MyBehavior {
         }
 
         String ruleName = "application";
-        int count = 1;
-        try
-        {
             for (String app : processTitles)
             {
-                String newRuleName = ruleName + count;
-                Rule newRule = null;
-                newRule = ruleGrammar.ruleForJSGF("switch to " + app
-                        + " { " + newRuleName + " }");
-                ruleGrammar.setRule(newRuleName, newRule, true);
-                ruleGrammar.setEnabled(newRuleName, true);
-                count++;
+                addGrammar(ruleGrammar, ruleName, "switch to " + app);
             }
-            String newRuleName = ruleName + count;
-            Rule newRule = null;
-            newRule = ruleGrammar.ruleForJSGF("close active program"
-                        + " { " + newRuleName + " }");
-                ruleGrammar.setRule(newRuleName, newRule, true);
-                ruleGrammar.setEnabled(newRuleName, true);
-                count++;
-        }
-        catch (GrammarException ge)
-        {
-            System.out.println("Trouble with the grammar " + ge);
-            throw new IOException("Can't add rules for playlist " + ge);
-        }
+            
+            addGrammar(ruleGrammar, ruleName, "close active program");
+            addGrammar(ruleGrammar, ruleName, "scroll up");
+            addGrammar(ruleGrammar, ruleName, "scroll down");
+            addGrammar(ruleGrammar, ruleName, "minimize");
+        
         // now lets commit the changes
         getGrammar().commitChanges();
         grammarChanged();
+    }
+    
+    private void addGrammar(RuleGrammar ruleGrammar, String ruleName, String grammarName)
+    {
+        try {
+            String newRuleName = ruleName + count;
+                    Rule newRule = null;
+                    newRule = ruleGrammar.ruleForJSGF(grammarName
+                            + " { " + newRuleName + " }");
+                    ruleGrammar.setRule(newRuleName, newRule, true);
+                    ruleGrammar.setEnabled(newRuleName, true);
+                    count++;
+        } catch (GrammarException ex) {
+            System.out.println("Trouble with the grammar ");
+        }
     }
 
     @Override
@@ -136,6 +138,36 @@ public class MyDesktopBehavior extends MyBehavior {
         if (listen.equalsIgnoreCase("main menu") || listen.equalsIgnoreCase("menu"))
         {
             tag = "menu";
+        }
+        else if(listen.equalsIgnoreCase("scroll up"))
+        {
+           try
+                {
+                    Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", "scroll up").start();
+                }
+                catch (IOException ex)
+                {
+                } 
+        }
+        else if(listen.equalsIgnoreCase("scroll down"))
+        {
+            try
+                {
+                    Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", "scroll down").start();
+                }
+                catch (IOException ex)
+                {
+                }   
+        }
+        else if(listen.equalsIgnoreCase("minimize"))
+        {
+            try
+                {
+                    Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", "minimize").start();
+                }
+                catch (IOException ex)
+                {
+                } 
         }
         else if(listen.equalsIgnoreCase("close active program"))
         {

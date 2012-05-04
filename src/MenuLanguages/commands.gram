@@ -7,5 +7,4 @@
 grammar commands;
 
 public <standard_commands> =
-                      get help                   { help } |
                       main menu    { goto_menu } ;
