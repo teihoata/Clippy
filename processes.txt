@@ -1,14 +1,9 @@
-java.exe	Clippy
 explorer.exe	Start
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-chrome.exe	New Tab - Google Chrome
-cmd.exe	MINGW32:~/Documents/NetBeansProjects/ClippyAlpha1
-netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
+java.exe	Clippy
 firefox.exe	Mozilla Firefox Start Page - Mozilla Firefox
-explorer.exe	Libraries
+netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
 sidebar.exe	CPU Meter
+netbeans.exe	ClippyAlpha1
+wmplayer.exe	Windows Media Player
+chrome.exe	Inbox - teihoata@gmail.com - Gmail - Google Chrome
 explorer.exe	Program Manager
-java.exe	Default IME

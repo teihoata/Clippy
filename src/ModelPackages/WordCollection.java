@@ -29,21 +29,24 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
     private JButton speakButton;
     private static String menu;
     private WordRecognizer wordsRecognizer;
+    private static boolean hidden;
 
     /**
      * WordCollection constructor
      *
      */
-    public WordCollection() {
+    public WordCollection() 
+    {
         super("Clippy");
         this.setUndecorated(true);
         this.setAlwaysOnTop(true);
         this.setOpacity(0.5f);
+        this.hidden = false;
 
         setSize(200, 250);
         this.setLocation((int) java.awt.Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200, (int) java.awt.Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 280);
         getContentPane().add(createMainPanel(), BorderLayout.CENTER);
-
+        
         // exit if the window is closed
 
         addWindowListener(new WindowAdapter() {
@@ -70,6 +73,11 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
             }
         });
     }
+    
+     public static void hideClippy()
+    {
+        
+    }
 
     /**
      * updates the button on the gui
@@ -91,7 +99,7 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
      */
     private void startListening() {
         if (wordsRecognizer.microphoneOn()) {
-            setMessage(menu + "\n " + "Clippy is listening...");
+            //setMessage(menu + "\n " + "Clippy is listening...");
         }
         else {
             setMessage(
@@ -119,12 +127,11 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
 
         //Add each menu node to the words to be recognised
         wordsRecognizer.addNode("menu", new MyBehavior());
-        wordsRecognizer.addNode("email", new MyBehavior());
         wordsRecognizer.addNode("tell me the time", new MyBehavior());
-        wordsRecognizer.addNode("news", new MyBehavior());
         wordsRecognizer.addNode("music", new MyMusicBehavior());
         wordsRecognizer.addNode("movies", new MyMovieBehavior());
         wordsRecognizer.addNode("desktop", new MyDesktopBehavior());
+        wordsRecognizer.addNode("web", new MyWebsiteBehavior());
 
         //Set the first menu as the main menu option
         wordsRecognizer.setInitialNode("menu");
@@ -145,9 +152,10 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
         });
 
         updateGui();
+        
         setMessage("Click speak or press keyboard shortcut to start");
     }
-
+  
     /**
      * Update the display with the new menu information.
      *
@@ -161,8 +169,7 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
                     //setMessage("I didn't understand what you said");
                 }
                 else {
-                    System.out.println(word);
-                    setMessage(word);
+                    //setMessage(word);
                 }
 
                 speakButton.setEnabled(true);
@@ -285,7 +292,7 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
      */
     private JPanel createMessagePanel() {
         JPanel messagePanel = getJPanel(new BorderLayout());
-        messageTextField = new JTextArea("Please wait while I'm loading...");
+        messageTextField = new JTextArea("Loading...");
         messageTextField.setBackground(backgroundColor);
         messageTextField.setForeground(Color.WHITE);
         messageTextField.setEditable(false);

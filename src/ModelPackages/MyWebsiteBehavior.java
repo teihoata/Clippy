@@ -1,5 +1,5 @@
 /*
- * This class controls the desktop behavior and how it interacts with the system
+ * This class controls the websites behavior
  */
 package ModelPackages;
 
@@ -25,15 +25,15 @@ import javax.speech.recognition.RuleGrammar;
  *
  * @author Marcus Ball
  */
-public class MyDesktopBehavior extends MyBehavior {
+public class MyWebsiteBehavior extends MyBehavior {
 
-    ArrayList<String> processTitles; //holds the names of current running windows
+    ArrayList<String> websiteList; //holds the names of current websites
     private int count; //number of rules within the dialog
 
     /**
      * Simple Constructor
      */
-    public MyDesktopBehavior()
+    public MyWebsiteBehavior()
     {
         count = 1;
     }
@@ -48,43 +48,19 @@ public class MyDesktopBehavior extends MyBehavior {
         }
 
         RuleGrammar ruleGrammar = new BaseRuleGrammar(recognizer, getGrammar().getRuleGrammar());
-        //use processes.txt to hold the current open windows
-        File file = new File("./processes.txt");
-        if (file.exists())
-        {
-            file.delete();
-        }
-        processTitles = new ArrayList<>();
+        websiteList = new ArrayList<>();
         try
-        {
-            Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", "get open windows").start();
-            try
-            {
-                //wait for all processes to be found and written to file
-                while (process.waitFor() != 0) {}
-            }
-            catch (InterruptedException ex)
-            {
-            }
-            BufferedReader empdtil = new BufferedReader(new FileReader("./processes.txt"));
-            String detail = new String();
+        {     
+            BufferedReader empdtil = new BufferedReader(new FileReader("./websites.txt"));
+            String detail = "";
             while ((detail = empdtil.readLine()) != null)
             {
                 try{
-                    detail = detail.substring(0, detail.indexOf("exe"));
+                    detail = detail.substring(detail.indexOf(".")+1, detail.indexOf("." , detail.indexOf(".") + 1));
+                    System.out.println(detail);
                 }
                 catch(StringIndexOutOfBoundsException e){}
-                String[] words = detail.split(" ");
-                detail = "";
-                for (int i = 0; i < 2; i++)
-                {
-                    detail += words[i] + " ";
-                    if (words.length < 2)
-                    {
-                        break;
-                    }
-                }
-                processTitles.add(detail);
+                websiteList.add(detail);
             }
             empdtil.close();
         }
@@ -93,10 +69,10 @@ public class MyDesktopBehavior extends MyBehavior {
             System.out.println(ex.getMessage());
         }
 
-        String ruleName = "application";
-            for (String app : processTitles)
+        String ruleName = "web";
+            for (String app : websiteList)
             {
-                addGrammar(ruleGrammar, ruleName, "switch to " + app);
+                addGrammar(ruleGrammar, ruleName, "open " + app);
             }
             
             addGrammar(ruleGrammar, ruleName, "close active program");
@@ -119,12 +95,11 @@ public class MyDesktopBehavior extends MyBehavior {
     {
         try {
             String newRuleName = ruleName + count;
-                    Rule newRule = null;
-                    newRule = ruleGrammar.ruleForJSGF(grammarName
-                            + " { " + newRuleName + " }");
-                    ruleGrammar.setRule(newRuleName, newRule, true);
-                    ruleGrammar.setEnabled(newRuleName, true);
-                    count++;
+            Rule newRule = null;
+            newRule = ruleGrammar.ruleForJSGF(grammarName);
+            ruleGrammar.setRule(newRuleName, newRule, true);
+            ruleGrammar.setEnabled(newRuleName, true);
+            count++;
         } catch (GrammarException ex) {
             System.out.println("Trouble with the grammar ");
         }
@@ -177,45 +152,41 @@ public class MyDesktopBehavior extends MyBehavior {
         {
             sendCommand("close");
         }
-        else if (listen.startsWith("switch to"))
+        else if (listen.startsWith("open"))
         {
             BufferedReader empdtil = null;
+            String url = "";
+            String nameOfCurrentWebsite = "";
             try
             {
-                empdtil = new BufferedReader(new FileReader("./processes.txt"));
-                String detail = new String();
-                String switchApp = "";
-                while ((detail = empdtil.readLine()) != null)
-                {
-                    try{
-                    detail = detail.substring(0 , detail.indexOf(".exe"));
-                    }catch(StringIndexOutOfBoundsException e){}
-                    String[] words = detail.split(" ");
-                    String combined = "";
-                for (int i = 0; i < 2; i++)
-                {
-                    combined += words[i] + " ";
-                    if (words.length < 2)
+                empdtil = new BufferedReader(new FileReader("./websites.txt"));
+                String detail = "";
+            while ((detail = empdtil.readLine()) != null)
+            {
+                String currentWebsite = detail;
+                
+                try{
+                    detail = detail.substring(detail.indexOf(".")+1, detail.indexOf("." , detail.indexOf(".") + 1));
+                    System.out.println(listen.substring(listen.indexOf("open")+5) + " compared to " + detail);
+                    if(listen.substring(listen.indexOf("open")+5).equalsIgnoreCase(detail))
                     {
-                        break;
-                    }
-                }   
-                combined = combined.trim();
-                String listen2 = listen.substring(10).trim();
-                    if (combined.equalsIgnoreCase(listen2))
-                    {
-                        switchApp = detail;
+                        url = currentWebsite;
+                        nameOfCurrentWebsite = detail;
+                        System.out.println("currentWebsite " + currentWebsite);
                     }
                 }
-                empdtil.close();
+                catch(StringIndexOutOfBoundsException e){}
+                websiteList.add(detail);
+            }
+            empdtil.close();
                 try
                 {
-                    Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", "switch", "\"" + switchApp + "\"").start();
+                    java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
                     String voiceName = "kevin16";
                     VoiceManager voiceManager = VoiceManager.getInstance();
                     Voice voice = voiceManager.getVoice(voiceName);
                     voice.allocate();
-                    voice.speak("opened " + switchApp);
+                    voice.speak("opened " + nameOfCurrentWebsite);
                     voice.deallocate();
                 }
                 catch (IOException ex)
@@ -226,7 +197,7 @@ public class MyDesktopBehavior extends MyBehavior {
             }
             catch (IOException ex)
             {
-                Logger.getLogger(MyDesktopBehavior.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
             } 
         }
         return tag;

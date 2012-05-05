@@ -167,7 +167,6 @@ public class WordRecognizer implements Runnable, Configurable {
             else
             {
                 fireListeners(nextStateName);
-                System.out.println("next state name " + nextStateName);
                 DialogNode node = nodeMap.get(nextStateName);
                 //Invalid dialog heard
                 if (node == null)
@@ -185,7 +184,6 @@ public class WordRecognizer implements Runnable, Configurable {
                     catch (Exception e){
                         System.out.println("Couldn't play tone");
                     }
-                    System.out.println(nextStateName);
                     curNode = node;
                     calculate(null);
                 }
@@ -499,14 +497,12 @@ public class WordRecognizer implements Runnable, Configurable {
         {
             trace("Recognize " + name);
             Result result = recognizer.recognize();
-            System.out.println("3." + result);
             return behavior.onRecognize(result);
         }
 
         String recognize(Result result) throws GrammarException
         {
             trace("Recognize " + name);
-            System.out.println("3." + result);
             return behavior.onRecognize(result);
         }
 
@@ -601,7 +597,6 @@ class DialogNodeBehavior {
     public String onRecognize(Result result) throws GrammarException
     {
         String tagString = getTagString(result);
-        System.out.println("23. " + tagString + "  " + result.getBestFinalResultNoFiller());
         trace("Recognize result: " + result.getBestFinalResultNoFiller());
         trace("Recognize tag   : " + tagString);
         return tagString;

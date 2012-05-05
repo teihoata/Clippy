@@ -38,9 +38,10 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
          */
         protected void help()
         {
-            menu = (" ======== " + getGrammarName() + " =======\n");
+            menu = " ======== " + getGrammarName() + " =======\n";
             dumpSampleUtterances();
-            System.out.println(" =================================");
+            WordCollection.setMessage(menu);
+            WordCollection.setCurrentMenu(menu);
         }
 
         /**
@@ -86,13 +87,13 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
                     voice.speak(dateFormat.format(cal.getTime()));
                     voice.deallocate();
                 }
-                else if (tag.startsWith("goto_")) {
-                    return tag.replaceFirst("goto_", "");
+                else if(tag.equals("hide clippy"))
+                {
+                    WordCollection.hideClippy();
                 }
-                else {
-                    if (tag.startsWith("browse")) {
-                        execute(tag);
-                    }
+                else if (tag.startsWith("goto_")) 
+                {
+                    return tag.replaceFirst("goto_", "");
                 }
             }
             else
@@ -168,8 +169,6 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
             {
                 menu += ("  " + sampleUtterance + "\n");
             }
-            WordCollection.setMessage(menu);
-            WordCollection.setCurrentMenu(menu);
         }
 
         /**

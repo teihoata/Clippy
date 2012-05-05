@@ -8,9 +8,8 @@ grammar menu;
 //Set commands for main menu
 public <command> =      
                         play music       { goto_music } |
-                        open games             { goto_games } |
                         tell me the time  { time } |
-                        open newspapers        { goto_news } |
+                        internet         {goto_web} |
                         view films           { goto_movies } |
                         computer control     {goto_desktop} |
                         close the program        { exit } ;
