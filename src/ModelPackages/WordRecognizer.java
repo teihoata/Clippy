@@ -113,7 +113,7 @@ public class WordRecognizer implements Runnable, Configurable {
             recognizer.deallocate();
         }
     }
-
+    
     /**
      * Performs a single recognition, called when the button is pressed or JIntelli
      * JIntellitype is initialised

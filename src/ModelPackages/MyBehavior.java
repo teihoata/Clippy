@@ -87,10 +87,6 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
                     voice.speak(dateFormat.format(cal.getTime()));
                     voice.deallocate();
                 }
-                else if(tag.equals("hide clippy"))
-                {
-                    WordCollection.hideClippy();
-                }
                 else if (tag.startsWith("goto_")) 
                 {
                     return tag.replaceFirst("goto_", "");

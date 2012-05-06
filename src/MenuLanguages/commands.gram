@@ -7,5 +7,4 @@
 grammar commands;
 
 public <standard_commands> =
-                      hide clippy   { hide } |
                       main menu    { goto_menu } ;

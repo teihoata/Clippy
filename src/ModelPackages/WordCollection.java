@@ -29,7 +29,6 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
     private JButton speakButton;
     private static String menu;
     private WordRecognizer wordsRecognizer;
-    private static boolean hidden;
 
     /**
      * WordCollection constructor
@@ -41,7 +40,6 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
         this.setUndecorated(true);
         this.setAlwaysOnTop(true);
         this.setOpacity(0.5f);
-        this.hidden = false;
 
         setSize(200, 250);
         this.setLocation((int) java.awt.Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200, (int) java.awt.Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 280);
@@ -72,11 +70,6 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
                 }
             }
         });
-    }
-    
-     public static void hideClippy()
-    {
-        
     }
 
     /**

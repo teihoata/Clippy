@@ -1,9 +1,9 @@
-explorer.exe	Start
 java.exe	Clippy
-firefox.exe	Mozilla Firefox Start Page - Mozilla Firefox
+explorer.exe	Start
+chrome.exe	Google - Google Chrome
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-sidebar.exe	CPU Meter
 netbeans.exe	ClippyAlpha1
-wmplayer.exe	Windows Media Player
-chrome.exe	Inbox - teihoata@gmail.com - Gmail - Google Chrome
+Steam.exe	Steam
+sidebar.exe	CPU Meter
+BTWUIExt.exe	marcustball
 explorer.exe	Program Manager

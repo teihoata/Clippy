@@ -10,16 +10,14 @@ import com.sun.speech.freetts.VoiceManager;
 import edu.cmu.sphinx.jsgf.JSGFGrammarException;
 import edu.cmu.sphinx.jsgf.JSGFGrammarParseException;
 import edu.cmu.sphinx.result.Result;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.speech.recognition.GrammarException;
 import javax.speech.recognition.Rule;
 import javax.speech.recognition.RuleGrammar;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -74,7 +72,8 @@ public class MyWebsiteBehavior extends MyBehavior {
             {
                 addGrammar(ruleGrammar, ruleName, "open " + app);
             }
-            
+            addGrammar(ruleGrammar, ruleName, "add new website");
+            addGrammar(ruleGrammar, ruleName, "remove website");
             addGrammar(ruleGrammar, ruleName, "close active program");
             addGrammar(ruleGrammar, ruleName, "scroll up");
             addGrammar(ruleGrammar, ruleName, "scroll down");
@@ -151,6 +150,30 @@ public class MyWebsiteBehavior extends MyBehavior {
         else if(listen.equalsIgnoreCase("close active program"))
         {
             sendCommand("close");
+            help();
+        }
+        else if(listen.equalsIgnoreCase("add new website"))
+        {
+            try {
+                FileWriter print = null;
+                    String websiteName = (String) JOptionPane.showInputDialog(null, "Enter the address of your website starting with 'www.'", "Add Website", JOptionPane.INFORMATION_MESSAGE, null, null, "www.");
+                    if(websiteName != null || !websiteName.isEmpty() || !websiteName.equalsIgnoreCase("www."))
+                    {
+                        File file = new File("./websites.txt");
+                        print = new FileWriter(file, true);
+                        BufferedWriter bufferWritter = new BufferedWriter(print);
+                        bufferWritter.write("\n" + websiteName);
+                        bufferWritter.close();
+                        onEntry();
+                        help();
+                    }
+            } catch (JSGFGrammarParseException ex) {
+                Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JSGFGrammarException ex) {
+                Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if (listen.startsWith("open"))
         {

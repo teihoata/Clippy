@@ -176,6 +176,7 @@ public class MyDesktopBehavior extends MyBehavior {
         else if(listen.equalsIgnoreCase("close active program"))
         {
             sendCommand("close");
+            help();
         }
         else if (listen.startsWith("switch to"))
         {
