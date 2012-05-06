@@ -140,7 +140,6 @@ public class WordRecognizer implements Runnable, Configurable {
                     lastNode.exit();
                 }
                 curNode.enter();
-
                 lastNode = curNode;
             }
             String nextStateName = " ";
@@ -184,8 +183,8 @@ public class WordRecognizer implements Runnable, Configurable {
                     catch (Exception e){
                         System.out.println("Couldn't play tone");
                     }
-                    curNode = node;
-                    calculate(null);
+                    curNode = node;  
+                    curNode.enter();
                 }
             }
         }
@@ -205,56 +204,6 @@ public class WordRecognizer implements Runnable, Configurable {
         }
         microphone.stopRecording();
 
-    }
-
-    private void calculate(String nodeName) throws JSGFGrammarParseException, JSGFGrammarException, GrammarException
-    {
-        try
-        {
-            if (curNode != lastNode)
-            {
-                if (lastNode != null)
-                {
-                    lastNode.exit();
-                }
-                curNode.enter();
-                lastNode = curNode;
-            }
-            String nextStateName = nodeName;
-            if (nextStateName == null || nextStateName.isEmpty())
-            {
-            }
-            else
-            {
-                System.out.println(nodeName);
-                DialogNode node = nodeMap.get(nodeName);
-
-                if (node == null)
-                {
-                    System.out.println("Can't transition to unknown state "
-                            + nodeName);
-
-                }
-                else
-                {
-                    try
-                    {
-                        AePlayWave aw = new AePlayWave("./models/siri_tone.wav");
-                        aw.start();
-                    }
-                    catch (Exception e){ } 
-                    System.out.println(nextStateName);
-                    curNode = node;
-                    calculate(null);
-
-                }
-            }
-        }
-        catch (IOException ioe)
-        {
-            error("problem loading grammar in state " + curNode.getName()
-                    + ' ' + ioe);
-        }
     }
 
     /**
@@ -332,6 +281,7 @@ public class WordRecognizer implements Runnable, Configurable {
         }
         initialNode = getNode(name);
         curNode = initialNode;
+        ((MyBehavior)curNode.behavior).help();
     }
 
     /**

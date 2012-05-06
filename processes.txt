@@ -1,9 +1,13 @@
 java.exe	Clippy
 explorer.exe	Start
-chrome.exe	Google - Google Chrome
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+chrome.exe	teihoata/Clippy - Google Chrome
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-netbeans.exe	ClippyAlpha1
-Steam.exe	Steam
+cmd.exe	MINGW32:~/Documents/NetBeansProjects/ClippyAlpha1
 sidebar.exe	CPU Meter
-BTWUIExt.exe	marcustball
+netbeans.exe	ClippyAlpha1
 explorer.exe	Program Manager
+SynTPEnh.exe	Default IME

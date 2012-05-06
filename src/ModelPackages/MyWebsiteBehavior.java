@@ -152,6 +152,10 @@ public class MyWebsiteBehavior extends MyBehavior {
             sendCommand("close");
             help();
         }
+        else if(listen.equalsIgnoreCase("remove website"))
+        {
+            
+        }
         else if(listen.equalsIgnoreCase("add new website"))
         {
             try {

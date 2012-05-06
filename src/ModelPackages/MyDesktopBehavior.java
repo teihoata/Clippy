@@ -107,6 +107,7 @@ public class MyDesktopBehavior extends MyBehavior {
         // now lets commit the changes
         getGrammar().commitChanges();
         grammarChanged();
+        help();
     }
     
     /**

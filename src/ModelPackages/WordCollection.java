@@ -125,17 +125,15 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
         wordsRecognizer.addNode("movies", new MyMovieBehavior());
         wordsRecognizer.addNode("desktop", new MyDesktopBehavior());
         wordsRecognizer.addNode("web", new MyWebsiteBehavior());
-
-        //Set the first menu as the main menu option
-        wordsRecognizer.setInitialNode("menu");
-
-        System.out.println("Loading IntelliJ");
+        wordsRecognizer.addNode("remove website", new removeWebsiteBehavior());
+   
+        setMessage("Loading IntelliJ");
         initJIntellitype();
 
-        System.out.println("Loading dialogs ...");
+        setMessage("Loading dialogs ...");
         wordsRecognizer.allocate();
 
-        System.out.println("Running  ...");
+        setMessage("Running  ...");
 
         wordsRecognizer.addWordListener(new WordsListener() {
 
@@ -145,8 +143,8 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
         });
 
         updateGui();
-        
-        setMessage("Click speak or press keyboard shortcut to start");
+        //Set the first menu as the main menu option
+        wordsRecognizer.setInitialNode("menu");
     }
   
     /**
