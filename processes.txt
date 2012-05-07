@@ -2,12 +2,9 @@ java.exe	Clippy
 explorer.exe	Start
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-chrome.exe	teihoata/Clippy - Google Chrome
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-cmd.exe	MINGW32:~/Documents/NetBeansProjects/ClippyAlpha1
+rundll32.exe	Sound
+chrome.exe	Stuff.co.nz - Latest New Zealand News & World News, Sports News & NZ Weather Forecasts - Google Chrome
 sidebar.exe	CPU Meter
-netbeans.exe	ClippyAlpha1
 explorer.exe	Program Manager
-SynTPEnh.exe	Default IME
+java.exe	Default IME

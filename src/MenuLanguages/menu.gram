@@ -12,4 +12,4 @@ public <command> =
                         internet         {goto_web} |
                         view films           { goto_movies } |
                         computer control     {goto_desktop} |
-                        close the program        { exit } ;
+                        close clippy        { exit } ;

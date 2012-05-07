@@ -57,7 +57,7 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
         public String onRecognize(Result result) throws GrammarException
         {
             String tag = super.onRecognize(result);
-
+            String listen = result.getBestFinalResultNoFiller();
             if (tag != null)
             {
 
@@ -70,12 +70,33 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
                     System.out.println("Goodbye! Thanks for visiting!\n");
                     System.exit(0);
                 }
+                else if(tag.equals("menu"))
+                {
+                    return "menu";
+                }
                 else if (tag.equals("help"))
                 {
 
                     help();
 
                 }
+                else if(listen.equalsIgnoreCase("scroll up"))
+        {
+           sendCommand("scroll up");
+        }
+        else if(listen.equalsIgnoreCase("scroll down"))
+        {
+            sendCommand("scroll down");
+        }
+        else if(listen.equalsIgnoreCase("minimize"))
+        {
+            sendCommand("minimize");
+        }
+        else if(listen.equalsIgnoreCase("close active program"))
+        {
+            sendCommand("close");
+            help();
+        }
                 else if(tag.equals("time"))
                 {
                     String voiceName = "kevin16"; 
@@ -103,26 +124,22 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
                     {
                     } 
             }
-            return null;
+            return "";
         }
-
-        /**
-         * execute the given command
-         *
-         * @param cmd the command to execute
-         */
-        private void execute(String cmd)
+        
+            /**
+     * sends the command to be executed by ClippyAlpha executable
+     * @param command 
+     */
+    private void sendCommand(String command)
+    {
+        try {
+            Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", command).start();
+        } catch (IOException ex) 
         {
-            try
-            {
-                Runtime.getRuntime().exec(cmd);
-            }
-            catch (IOException e)
-            {
-                // if we can't run the command, just fall back to
-                // a non-working demo.
-            }
+            System.out.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
         }
+    }
 
         /**
          * Collects the set of possible utterances.

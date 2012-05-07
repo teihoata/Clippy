@@ -7,4 +7,8 @@
 grammar commands;
 
 public <standard_commands> =
-                      main menu    { goto_menu } ;
+                      main menu    { goto_menu } |
+                      minimize |
+                      scroll up |
+                      scroll down |
+                      close active program;

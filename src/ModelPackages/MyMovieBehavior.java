@@ -129,11 +129,9 @@ import org.apache.commons.io.FileUtils;
         @Override
         public String onRecognize(Result result) throws GrammarException
         {
-            String next = "";
-//            String listen = super.onRecognize(result);
+            String next = super.onRecognize(result);;
             trace("Recognize result: " + result.getBestFinalResultNoFiller());
             String listen = result.getBestFinalResultNoFiller();
-            System.out.println(listen);
             if (listen.equalsIgnoreCase("main menu") || listen.equalsIgnoreCase("menu"))
             {
                 next = "menu";

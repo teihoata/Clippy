@@ -9,4 +9,9 @@ grammar web;
 import <commands.standard_commands>;
 
 //Add a dynamic command list using the java code to the list of options
-public <commands> = <standard_commands> ;
+public <commands> = <standard_commands> |
+                        play music       { goto_music } |
+                        tell me the time  { time } |
+                        view films           { goto_movies } |
+                        computer control     {goto_desktop} |
+                        close clippy        { exit } ;

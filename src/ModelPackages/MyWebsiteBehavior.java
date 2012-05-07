@@ -127,30 +127,13 @@ public class MyWebsiteBehavior extends MyBehavior {
     @Override
     public String onRecognize(Result result) throws GrammarException
     {
-        //String tag = super.onRecognize(result);
+        String tag = super.onRecognize(result);
         String listen = result.getBestFinalResultNoFiller();
         trace("Recognize result: " + result.getBestFinalResultNoFiller());
-        String tag = "";
+        //String tag = "";
         if (listen.equalsIgnoreCase("main menu") || listen.equalsIgnoreCase("menu"))
         {
             tag = "menu";
-        }
-        else if(listen.equalsIgnoreCase("scroll up"))
-        {
-           sendCommand("scroll up");
-        }
-        else if(listen.equalsIgnoreCase("scroll down"))
-        {
-            sendCommand("scroll down");
-        }
-        else if(listen.equalsIgnoreCase("minimize"))
-        {
-            sendCommand("minimize");
-        }
-        else if(listen.equalsIgnoreCase("close active program"))
-        {
-            sendCommand("close");
-            help();
         }
         else if(listen.equalsIgnoreCase("remove website"))
         {
