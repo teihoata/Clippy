@@ -14,6 +14,6 @@ import <menu.command>;
 public <commands> = <standard_commands> |
                         play music       { goto_music } |
                         tell me the time  { time } |
-                        internet         {goto_web} |
+                        browse internet         {goto_web} |
                         computer control     {goto_desktop} |
                         close clippy        { exit } ;

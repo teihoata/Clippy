@@ -107,7 +107,7 @@ import org.apache.commons.io.FileUtils;
                         }
                         else
                         {
-                            newRule = ruleGrammar.ruleForJSGF("play " + song
+                            newRule = ruleGrammar.ruleForJSGF("watch " + song
                                     + " { " + newRuleName + " }");
                         }
                     }
@@ -138,9 +138,9 @@ import org.apache.commons.io.FileUtils;
             }
             else
             {
-                if (listen.startsWith("play") && !listen.equalsIgnoreCase("play next song"))
+                if (listen.startsWith("watch "))
                 {
-                    String substring = listen.substring(5);
+                    String substring = listen.substring(6);
                     System.out.println(substring);
                     selectedFile = null;
                     for (Iterator iterator = files.iterator(); iterator.hasNext();)
@@ -185,7 +185,7 @@ import org.apache.commons.io.FileUtils;
                 }
                 else
                 {
-                    if (listen.equalsIgnoreCase("pause song"))
+                    if (listen.equalsIgnoreCase("pause"))
                     {
                         try
                         {
@@ -225,66 +225,6 @@ import org.apache.commons.io.FileUtils;
                                 }
                                 catch (IOException ex)
                                 {
-                                }
-                            }
-                            else
-                            {
-                                if (listen.equalsIgnoreCase("play next song"))
-                                {
-                                    System.out.println("playing next song");
-                                    ArrayList<File> list = new ArrayList(files);
-                                    for (int i = 0; i < list.size(); i++)
-                                    {
-                                        if (list.get(i).equals(selectedFile))
-                                        {
-                                            if ((i + 1) < list.size())
-                                            {
-
-                                                selectedFile = list.get(i + 1);
-                                                System.out.println(selectedFile.getName());
-                                                i = list.size() + 1;
-                                            }
-                                            else
-                                            {
-                                                selectedFile = list.get(0);
-                                                i = list.size() + 1;
-                                            }
-                                        }
-                                        try
-                                        {
-                                            try
-                                            {
-                                                System.out.println("File Path : " + selectedFile.getAbsoluteFile() + "\\");
-                                                Desktop.getDesktop().open(new File(selectedFile.getAbsoluteFile() + "\\"));
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                System.out.println(ex.getMessage() + "\n Will now try to open using windows media player executeable in program files x86");
-                                                try
-                                                {
-
-                                                    Process process = new ProcessBuilder("C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe", selectedFile.getAbsolutePath()).start();
-                                                }
-                                                catch (IOException ex1)
-                                                {
-                                                    System.out.println("Didn't work :( Trying one last option");
-                                                    try
-                                                    {
-                                                        Process process = new ProcessBuilder("C:\\Program Files\\Windows Media Player\\wmplayer.exe", selectedFile.getAbsolutePath()).start();
-                                                    }
-                                                    catch (IOException ex2)
-                                                    {
-                                                        System.out.println("Sorry cannot open music files");
-                                                    }
-                                                }
-
-                                            }
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                        }
-
-                                    }
                                 }
                             }
                         }

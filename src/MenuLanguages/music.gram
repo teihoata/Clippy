@@ -10,5 +10,5 @@ import <commands.standard_commands>;
 import <menu.command>;
 
 //Add a dynamic command list using the java code to the list of options
-public <commands> = <standard_commands> |
+public <commands> = 
  <command>;

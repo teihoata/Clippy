@@ -9,7 +9,7 @@ grammar menu;
 public <command> =      
                         play music       { goto_music } |
                         tell me the time  { time } |
-                        internet         {goto_web} |
-                        view films           { goto_movies } |
+                        browse internet         {goto_web} |
+                        watch movies           { goto_movies } |
                         computer control     {goto_desktop} |
                         close clippy        { exit } ;

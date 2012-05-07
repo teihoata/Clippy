@@ -37,7 +37,7 @@ import org.apache.commons.io.FileUtils;
         public MyMusicBehavior() throws IOException
         {
             
-            songList.add("pause song");
+            songList.add("pause");
             songList.add("play next song");
             songList.add("volume up");
             songList.add("volume down");
@@ -93,7 +93,7 @@ import org.apache.commons.io.FileUtils;
                 {
                     String newRuleName = ruleName + count;
                     Rule newRule = null;
-                    if (song.equalsIgnoreCase("pause song") || song.equalsIgnoreCase("volume up") || song.equalsIgnoreCase("volume down"))
+                    if (song.equalsIgnoreCase("pause") || song.equalsIgnoreCase("volume up") || song.equalsIgnoreCase("volume down"))
                     {
                         newRule = ruleGrammar.ruleForJSGF(song
                                 + " { " + newRuleName + " }");
@@ -186,7 +186,7 @@ import org.apache.commons.io.FileUtils;
                 }
                 else
                 {
-                    if (listen.equalsIgnoreCase("pause song"))
+                    if (listen.equalsIgnoreCase("pause"))
                     {
                         try
                         {

@@ -1,10 +1,18 @@
-java.exe	Clippy
 explorer.exe	Start
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
+java.exe	Clippy
+explorer.exe	ClippyAlpha1
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-rundll32.exe	Sound
-chrome.exe	Stuff.co.nz - Latest New Zealand News & World News, Sports News & NZ Weather Forecasts - Google Chrome
+wmplayer.exe	Windows Media Player
+chrome.exe	SourceForge.net: CMU Sphinx: Detail: 3131556 - HelloWorld simple project for spanish does not work - Google Chrome
+explorer.exe	Videos
+explorer.exe	voxforge_en_sphinx.cd_cont_5000
+explorer.exe	voxforge-en-r0_1_3
+WinRAR.exe	hub4opensrc.cd_continuous_8gau.zip - WinRAR (evaluation copy)
+explorer.exe	ClippyAlpha1
+WinRAR.exe	voxforge-en-0.3.tar.gz - WinRAR (evaluation copy)
+WinRAR.exe	voxforge-en-0.4.tar.gz - WinRAR (evaluation copy)
+explorer.exe	acoustic
 sidebar.exe	CPU Meter
+WinRAR.exe	jbehave-distribution-3.6.5-bin.zip - WinRAR (evaluation copy)
 explorer.exe	Program Manager
-java.exe	Default IME
+explorer.exe	Default IME

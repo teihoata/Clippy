@@ -1,0 +1,250 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x6641863d, pid=5672, tid=3064
+#
+# JRE version: 7.0_03-b05
+# Java VM: Java HotSpot(TM) Client VM (22.1-b02 mixed mode, sharing windows-x86 )
+# Problematic frame:
+# V  [jvm.dll+0x16863d]
+#
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.sun.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x01edc400):  VMThread [stack: 0x04020000,0x04070000] [id=3064]
+
+siginfo: ExceptionCode=0xc0000005, reading address 0x0000008b
+
+Registers:
+EAX=0x2d542980, EBX=0x00000003, ECX=0x2d793af0, EDX=0x00000027
+ESP=0x0406f3c0, EBP=0x0406f3d8, ESI=0x00000000, EDI=0x2b986768
+EIP=0x6641863d, EFLAGS=0x00010216
+
+Top of Stack: (sp=0x0406f3c0)
+0x0406f3c0:   2d542980 66589c70 395562b8 01e2d960
+0x0406f3d0:   0406f3e4 66418a5b 0406f3e4 66418a61
+0x0406f3e0:   66589c70 0406f3f8 663228c6 00000003
+0x0406f3f0:   66589c70 01e2d960 0406f414 6631ec54
+0x0406f400:   66589c70 00000000 66589c70 66589c70
+0x0406f410:   01e2d960 0406f454 66318c5f 01000001
+0x0406f420:   00000001 00000002 66589c70 0406f440
+0x0406f430:   66589c70 00000001 01e2d960 0406f600 
+
+Instructions: (pc=0x6641863d)
+0x6641861d:   ac 9b 58 66 a3 a8 9b 58 66 8b c7 eb 09 48 a3 a8
+0x6641862d:   9b 58 66 8b 04 81 8b 48 04 8b 51 08 83 c1 08 50
+0x6641863d:   8b 42 64 ff d0 8b 0d b4 9b 58 66 85 c9 0f 85 50
+0x6641864d:   ff ff ff a1 20 9c 58 66 85 c0 0f 84 bb 00 00 00 
+
+
+Register to memory mapping:
+
+EAX=0x2d542980 is an oop
+java.util.HashMap$Entry 
+ - klass: 'java/util/HashMap$Entry'
+EBX=0x00000003 is an unknown value
+ECX=0x2d793af0 is an oop
+edu.cmu.sphinx.linguist.acoustic.Unit 
+ - klass: 'edu/cmu/sphinx/linguist/acoustic/Unit'
+EDX=0x00000027 is an unknown value
+ESP=0x0406f3c0 is an unknown value
+EBP=0x0406f3d8 is an unknown value
+ESI=0x00000000 is an unknown value
+EDI=0x2b986768 is an oop
+java.util.HashMap$Entry 
+ - klass: 'java/util/HashMap$Entry'
+
+
+Stack: [0x04020000,0x04070000],  sp=0x0406f3c0,  free space=316k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x16863d]
+V  [jvm.dll+0x168a61]
+V  [jvm.dll+0x728c6]
+V  [jvm.dll+0x6ec54]
+V  [jvm.dll+0x68c5f]
+V  [jvm.dll+0x6aaef]
+V  [jvm.dll+0x6afa0]
+V  [jvm.dll+0x69ac7]
+V  [jvm.dll+0x71363]
+V  [jvm.dll+0x686a6]
+V  [jvm.dll+0x5fe83]
+V  [jvm.dll+0x16b056]
+V  [jvm.dll+0x1485c5]
+V  [jvm.dll+0x1477fe]
+V  [jvm.dll+0x147b2c]
+V  [jvm.dll+0x147fa2]
+V  [jvm.dll+0x1720b9]
+C  [msvcr100.dll+0x5c6de]  endthreadex+0x3a
+C  [msvcr100.dll+0x5c788]  endthreadex+0xe4
+C  [kernel32.dll+0x1339a]  BaseThreadInitThunk+0x12
+C  [ntdll.dll+0x39ef2]  RtlInitializeExceptionChain+0x63
+C  [ntdll.dll+0x39ec5]  RtlInitializeExceptionChain+0x36
+
+VM_Operation (0x085beef4): GenCollectForAllocation, mode: safepoint, requested by thread 0x0475c400
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x0475bc00 JavaThread "Thread-12" [_thread_blocked, id=6820, stack(0x08150000,0x081a0000)]
+  0x0475b800 JavaThread "Microphone" [_thread_blocked, id=4980, stack(0x08db0000,0x08e00000)]
+  0x0475c400 JavaThread "Thread-11" [_thread_blocked, id=6504, stack(0x08570000,0x085c0000)]
+  0x0475b000 JavaThread "ThreadedAcousticScorer-1-thread-4" daemon [_thread_blocked, id=5000, stack(0x090e0000,0x09130000)]
+  0x0475ac00 JavaThread "ThreadedAcousticScorer-1-thread-3" daemon [_thread_blocked, id=4872, stack(0x09160000,0x091b0000)]
+  0x0475a400 JavaThread "ThreadedAcousticScorer-1-thread-2" daemon [_thread_blocked, id=6716, stack(0x08ed0000,0x08f20000)]
+  0x0475a000 JavaThread "ThreadedAcousticScorer-1-thread-1" daemon [_thread_blocked, id=1376, stack(0x08fa0000,0x08ff0000)]
+  0x01e29c00 JavaThread "DestroyJavaVM" [_thread_blocked, id=7092, stack(0x004b0000,0x00500000)]
+  0x048e0000 JavaThread "Thread-4" [_thread_in_native, id=6732, stack(0x08210000,0x08260000)]
+  0x048dfc00 JavaThread "TimerQueue" daemon [_thread_blocked, id=5240, stack(0x08370000,0x083c0000)]
+  0x048c0800 JavaThread "Java Sound Event Dispatcher" daemon [_thread_blocked, id=6092, stack(0x07840000,0x07890000)]
+  0x04812000 JavaThread "D3D Screen Updater" daemon [_thread_blocked, id=5908, stack(0x07620000,0x07670000)]
+  0x047e6000 JavaThread "AWT-EventQueue-0" [_thread_blocked, id=3632, stack(0x04f90000,0x04fe0000)]
+  0x04775400 JavaThread "AWT-Windows" daemon [_thread_in_native, id=4140, stack(0x04aa0000,0x04af0000)]
+  0x04775000 JavaThread "AWT-Shutdown" [_thread_blocked, id=4908, stack(0x04b70000,0x04bc0000)]
+  0x04774800 JavaThread "Java2D Disposer" daemon [_thread_blocked, id=6756, stack(0x04990000,0x049e0000)]
+  0x01f02c00 JavaThread "Service Thread" daemon [_thread_blocked, id=2636, stack(0x04390000,0x043e0000)]
+  0x01efe800 JavaThread "C1 CompilerThread0" daemon [_thread_blocked, id=6280, stack(0x04590000,0x045e0000)]
+  0x01efdc00 JavaThread "Attach Listener" daemon [_thread_blocked, id=4028, stack(0x04320000,0x04370000)]
+  0x01efd000 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=4824, stack(0x01f70000,0x01fc0000)]
+  0x01ee0000 JavaThread "Finalizer" daemon [_thread_blocked, id=768, stack(0x040a0000,0x040f0000)]
+  0x01ede800 JavaThread "Reference Handler" daemon [_thread_blocked, id=3696, stack(0x04120000,0x04170000)]
+
+Other Threads:
+=>0x01edc400 VMThread [stack: 0x04020000,0x04070000] [id=3064]
+  0x01f08400 WatcherThread [stack: 0x04440000,0x04490000] [id=6304]
+
+VM state:at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x01e27cd0] Threads_lock - owner thread: 0x01edc400
+[0x01e280e0] Heap_lock - owner thread: 0x0475c400
+
+Heap
+ def new generation   total 39232K, used 4352K [0x24560000, 0x26ff0000, 0x29ab0000)
+  eden space 34880K,   0% used [0x24560000, 0x24560000, 0x26770000)
+  from space 4352K, 100% used [0x26770000, 0x26bb0000, 0x26bb0000)
+  to   space 4352K,   0% used [0x26bb0000, 0x26bb0000, 0x26ff0000)
+ tenured generation   total 92616K, used 92610K [0x29ab0000, 0x2f522000, 0x34560000)
+   the space 92616K,  99% used [0x29ab0000, 0x2f5209f8, 0x2f520a00, 0x2f522000)
+ compacting perm gen  total 12288K, used 3221K [0x34560000, 0x35160000, 0x38560000)
+   the space 12288K,  26% used [0x34560000, 0x348857d0, 0x34885800, 0x35160000)
+    ro space 10240K,  45% used [0x38560000, 0x389e2e40, 0x389e3000, 0x38f60000)
+    rw space 12288K,  54% used [0x38f60000, 0x395e67b8, 0x395e6800, 0x39b60000)
+
+Code Cache  [0x02000000, 0x02178000, 0x04000000)
+ total_blobs=854 nmethods=604 adapters=185 free_code_cache=31276Kb largest_free_block=32027328
+
+Dynamic libraries:
+0x002b0000 - 0x002de000 	C:\Program Files (x86)\Java\jdk1.7.0_03\bin\java.exe
+0x76ee0000 - 0x77060000 	C:\Windows\SysWOW64\ntdll.dll
+0x75690000 - 0x757a0000 	C:\Windows\syswow64\kernel32.dll
+0x752f0000 - 0x75336000 	C:\Windows\syswow64\KERNELBASE.dll
+0x71940000 - 0x71977000 	C:\Program Files\AVAST Software\Avast\snxhk.dll
+0x754c0000 - 0x75560000 	C:\Windows\syswow64\ADVAPI32.dll
+0x74b80000 - 0x74c2c000 	C:\Windows\syswow64\msvcrt.dll
+0x74ad0000 - 0x74ae9000 	C:\Windows\SysWOW64\sechost.dll
+0x747e0000 - 0x748d0000 	C:\Windows\syswow64\RPCRT4.dll
+0x745c0000 - 0x74620000 	C:\Windows\syswow64\SspiCli.dll
+0x745b0000 - 0x745bc000 	C:\Windows\syswow64\CRYPTBASE.dll
+0x74dd0000 - 0x74ed0000 	C:\Windows\syswow64\USER32.dll
+0x763f0000 - 0x76480000 	C:\Windows\syswow64\GDI32.dll
+0x75680000 - 0x7568a000 	C:\Windows\syswow64\LPK.dll
+0x748d0000 - 0x7496d000 	C:\Windows\syswow64\USP10.dll
+0x700d0000 - 0x7026e000 	C:\Windows\WinSxS\x86_microsoft.windows.common-controls_6595b64144ccf1df_6.0.7601.17514_none_41e6975e2bd6f2b2\COMCTL32.dll
+0x75050000 - 0x750a7000 	C:\Windows\syswow64\SHLWAPI.dll
+0x74d70000 - 0x74dd0000 	C:\Windows\system32\IMM32.DLL
+0x753f0000 - 0x754bc000 	C:\Windows\syswow64\MSCTF.dll
+0x6f210000 - 0x6f2ce000 	C:\Program Files (x86)\Java\jdk1.7.0_03\jre\bin\msvcr100.dll
+0x662b0000 - 0x665d8000 	C:\Program Files (x86)\Java\jdk1.7.0_03\jre\bin\client\jvm.dll
+0x720f0000 - 0x720f7000 	C:\Windows\system32\WSOCK32.dll
+0x75010000 - 0x75045000 	C:\Windows\syswow64\WS2_32.dll
+0x74ff0000 - 0x74ff6000 	C:\Windows\syswow64\NSI.dll
+0x71660000 - 0x71692000 	C:\Windows\system32\WINMM.dll
+0x750b0000 - 0x750b5000 	C:\Windows\syswow64\PSAPI.DLL
+0x74080000 - 0x7408c000 	C:\Program Files (x86)\Java\jdk1.7.0_03\jre\bin\verify.dll
+0x73dc0000 - 0x73de0000 	C:\Program Files (x86)\Java\jdk1.7.0_03\jre\bin\java.dll
+0x73d90000 - 0x73da3000 	C:\Program Files (x86)\Java\jdk1.7.0_03\jre\bin\zip.dll
+0x67cf0000 - 0x67e32000 	C:\Program Files (x86)\Java\jdk1.7.0_03\jre\bin\awt.dll
+0x74af0000 - 0x74b7f000 	C:\Windows\syswow64\OLEAUT32.dll
+0x74970000 - 0x74acc000 	C:\Windows\syswow64\ole32.dll
+0x73af0000 - 0x73b03000 	C:\Windows\system32\DWMAPI.DLL
+0x73b60000 - 0x73be0000 	C:\Windows\system32\uxtheme.dll
+0x6e760000 - 0x6e923000 	C:\Windows\system32\d3d9.dll
+0x720e0000 - 0x720e9000 	C:\Windows\system32\VERSION.dll
+0x74240000 - 0x74246000 	C:\Windows\system32\d3d8thk.dll
+0x5a0f0000 - 0x5af53000 	C:\Windows\system32\nvd3dum.dll
+0x73e30000 - 0x73e55000 	C:\Windows\system32\powrprof.dll
+0x75150000 - 0x752ed000 	C:\Windows\syswow64\SETUPAPI.dll
+0x76480000 - 0x764a7000 	C:\Windows\syswow64\CFGMGR32.dll
+0x76600000 - 0x76612000 	C:\Windows\syswow64\DEVOBJ.dll
+0x757a0000 - 0x763ea000 	C:\Windows\syswow64\SHELL32.dll
+0x70020000 - 0x7004a000 	C:\Program Files (x86)\Java\jdk1.7.0_03\jre\bin\fontmanager.dll
+0x73cb0000 - 0x73cc4000 	C:\Program Files (x86)\Java\jdk1.7.0_03\jre\bin\net.dll
+0x70e40000 - 0x70e7c000 	C:\Windows\system32\mswsock.dll
+0x70090000 - 0x70096000 	C:\Windows\System32\wship6.dll
+0x73d10000 - 0x73d1f000 	C:\Program Files (x86)\Java\jdk1.7.0_03\jre\bin\nio.dll
+0x6fe60000 - 0x6fe91000 	C:\Program Files (x86)\Java\jdk1.7.0_03\jre\bin\t2k.dll
+0x63ef0000 - 0x63f26000 	C:\Program Files\WIDCOMM\Bluetooth Software\SysWOW64\BtMmHook.dll
+0x74c30000 - 0x74cb3000 	C:\Windows\syswow64\CLBCatQ.DLL
+0x67780000 - 0x6787b000 	C:\Windows\system32\WindowsCodecs.dll
+0x6fee0000 - 0x6ff2c000 	C:\Windows\system32\apphelp.dll
+0x10000000 - 0x10017000 	C:\Users\Marzipan\AppData\Roaming\Dropbox\bin\DropboxExt.14.dll
+0x71fb0000 - 0x7209b000 	C:\Windows\system32\dbghelp.dll
+0x7c3a0000 - 0x7c41b000 	C:\Users\Marzipan\AppData\Roaming\Dropbox\bin\MSVCP71.dll
+0x7c340000 - 0x7c396000 	C:\Users\Marzipan\AppData\Roaming\Dropbox\bin\MSVCR71.dll
+0x6f330000 - 0x6f361000 	C:\Windows\system32\EhStorShell.dll
+0x71d70000 - 0x71e65000 	C:\Windows\system32\PROPSYS.dll
+0x5d8f0000 - 0x5dcfa000 	C:\PROGRA~2\MICROS~2\Office14\GROOVEEX.DLL
+0x72b10000 - 0x72bb3000 	C:\Windows\WinSxS\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.4940_none_50916076bcb9a742\MSVCR90.dll
+0x72a80000 - 0x72b0e000 	C:\Windows\WinSxS\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.4940_none_50916076bcb9a742\MSVCP90.dll
+0x6fe30000 - 0x6fe5b000 	C:\Windows\WinSxS\x86_microsoft.vc90.atl_1fc8b3b9a1e18e3b_9.0.30729.4148_none_51ca66a2bbe76806\ATL90.DLL
+0x5dd00000 - 0x5e10f000 	C:\PROGRA~2\COMMON~1\MICROS~1\OFFICE14\Cultures\office.odf
+0x5af60000 - 0x5b7c4000 	C:\PROGRA~2\MICROS~2\Office14\1033\GrooveIntlResource.dll
+0x63f30000 - 0x63fa0000 	C:\Windows\system32\ntshrui.dll
+0x70690000 - 0x706a9000 	C:\Windows\system32\srvcli.dll
+0x71c60000 - 0x71c6b000 	C:\Windows\system32\cscapi.dll
+0x6ebe0000 - 0x6ebea000 	C:\Windows\system32\slc.dll
+0x74230000 - 0x7423a000 	C:\Program Files (x86)\Java\jdk1.7.0_03\jre\bin\jsound.dll
+0x74220000 - 0x74229000 	C:\Program Files (x86)\Java\jdk1.7.0_03\jre\bin\jsoundds.dll
+0x6f370000 - 0x6f3e2000 	C:\Windows\system32\DSOUND.dll
+0x60620000 - 0x60659000 	C:\Windows\system32\MMDevAPI.DLL
+0x74420000 - 0x74450000 	C:\Windows\system32\wdmaud.drv
+0x63fa0000 - 0x63fa4000 	C:\Windows\system32\ksuser.dll
+0x67110000 - 0x67117000 	C:\Windows\system32\AVRT.dll
+0x60540000 - 0x60576000 	C:\Windows\system32\AUDIOSES.DLL
+0x74410000 - 0x74418000 	C:\Windows\system32\msacm32.drv
+0x73de0000 - 0x73df4000 	C:\Windows\system32\MSACM32.dll
+0x743a0000 - 0x743a7000 	C:\Windows\system32\midimap.dll
+0x64e80000 - 0x64e91000 	C:\Users\Marzipan\Documents\NetBeansProjects\ClippyAlpha1\JIntellitype.dll
+
+VM Arguments:
+jvm_args: -Dfile.encoding=UTF-8 
+java_command: ModelPackages.Clippy
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Broadcom\Broadcom 802.11 Network Adapter\Driver;C:\Program Files\WIDCOMM\Bluetooth Software\;C:\Program Files\WIDCOMM\Bluetooth Software\syswow64
+USERNAME=Marzipan
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 42 Stepping 7, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 7 , 64 bit Build 7601 Service Pack 1
+
+CPU:total 4 (2 cores per cpu, 2 threads per core) family 6 model 42 stepping 7, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, ht
+
+Memory: 4k page, physical 6271656k(3216396k free), swap 12541460k(9219460k free)
+
+vm_info: Java HotSpot(TM) Client VM (22.1-b02) for windows-x86 JRE (1.7.0_03-b05), built on Feb  3 2012 20:43:37 by "java_re" with unknown MS VC++:1600
+
+time: Tue May 08 01:45:46 2012
+elapsed time: 19 seconds
+
