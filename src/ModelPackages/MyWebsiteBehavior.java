@@ -70,7 +70,10 @@ public class MyWebsiteBehavior extends MyBehavior {
         String ruleName = "web";
             for (String app : websiteList)
             {
-                addGrammar(ruleGrammar, ruleName, "open " + app);
+                if(!app.isEmpty() && app != null)
+                {
+                    addGrammar(ruleGrammar, ruleName, "open " + app);
+                }    
             }
             addGrammar(ruleGrammar, ruleName, "add new website");
             addGrammar(ruleGrammar, ruleName, "remove website");

@@ -88,28 +88,21 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
         {
             sendCommand("scroll down");
         }
-        else if(listen.equalsIgnoreCase("minimize"))
-        {
-            sendCommand("minimize");
-        }
-        else if(listen.equalsIgnoreCase("close active program"))
-        {
-            sendCommand("close");
-            help();
-        }
-                else if(tag.equals("time"))
-                {
-                    String voiceName = "kevin16"; 
-                    VoiceManager voiceManager = VoiceManager.getInstance();        
+                else if (listen.equalsIgnoreCase("close active program")) {
+                    sendCommand("close");
+                    help();
+                }
+                else if (tag.equals("time")) {
+                    String voiceName = "kevin16";
+                    VoiceManager voiceManager = VoiceManager.getInstance();
                     Voice voice = voiceManager.getVoice(voiceName);
                     DateFormat dateFormat = new SimpleDateFormat("HH:mm");
                     Calendar cal = Calendar.getInstance();
-                    voice.allocate();      
+                    voice.allocate();
                     voice.speak(dateFormat.format(cal.getTime()));
                     voice.deallocate();
                 }
-                else if (tag.startsWith("goto_")) 
-                {
+                else if (tag.startsWith("goto_")) {
                     return tag.replaceFirst("goto_", "");
                 }
             }

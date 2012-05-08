@@ -1,18 +1,15 @@
-explorer.exe	Start
 java.exe	Clippy
-explorer.exe	ClippyAlpha1
-netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
+explorer.exe	Start
+chrome.exe	Twitter / Home - Google Chrome
 wmplayer.exe	Windows Media Player
-chrome.exe	SourceForge.net: CMU Sphinx: Detail: 3131556 - HelloWorld simple project for spanish does not work - Google Chrome
-explorer.exe	Videos
-explorer.exe	voxforge_en_sphinx.cd_cont_5000
-explorer.exe	voxforge-en-r0_1_3
-WinRAR.exe	hub4opensrc.cd_continuous_8gau.zip - WinRAR (evaluation copy)
-explorer.exe	ClippyAlpha1
-WinRAR.exe	voxforge-en-0.3.tar.gz - WinRAR (evaluation copy)
-WinRAR.exe	voxforge-en-0.4.tar.gz - WinRAR (evaluation copy)
-explorer.exe	acoustic
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+explorer.exe	Windows Control
+netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
+cmd.exe	C:\Windows\system32\cmd.exe
+SciTE.exe	C:\Users\Marzipan\Desktop\ClippyAlpha2.au3 - SciTE4AutoIt3
 sidebar.exe	CPU Meter
-WinRAR.exe	jbehave-distribution-3.6.5-bin.zip - WinRAR (evaluation copy)
+notepad++.exe	*new  2 - Notepad++
 explorer.exe	Program Manager
-explorer.exe	Default IME
+java.exe	Default IME

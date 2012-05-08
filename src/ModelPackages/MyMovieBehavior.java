@@ -41,6 +41,8 @@ import org.apache.commons.io.FileUtils;
             songList.add("pause");
             songList.add("volume up");
             songList.add("volume down");
+            songList.add("maximize window");
+            songList.add("minimize window");
             File playList = new File("./src/PersistantData/playlist.txt");
             FileWriter write = new FileWriter(playList);
             File file = new File("C:\\Users\\" + System.getProperty("user.name") + "\\Videos\\");

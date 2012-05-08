@@ -13,9 +13,7 @@
     <!-- ******************************************************** -->
     <!-- frequently tuned properties                              -->
     <!-- ******************************************************** --> 
-
-    <property name="logLevel" value="WARNING"/>
-    
+    <property name="logLevel" value="WARNING"/> 
     <property name="absoluteBeamWidth"  value="-1"/>
     <property name="relativeBeamWidth"  value="1E-80"/>
     <property name="wordInsertionProbability" value="1E-36"/>

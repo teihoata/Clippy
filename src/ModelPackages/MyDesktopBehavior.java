@@ -102,7 +102,8 @@ public class MyDesktopBehavior extends MyBehavior {
             addGrammar(ruleGrammar, ruleName, "close active program");
             addGrammar(ruleGrammar, ruleName, "scroll up");
             addGrammar(ruleGrammar, ruleName, "scroll down");
-            addGrammar(ruleGrammar, ruleName, "minimize");
+            addGrammar(ruleGrammar, ruleName, "minimize window");
+            addGrammar(ruleGrammar, ruleName, "maximize window");
         
         // now lets commit the changes
         getGrammar().commitChanges();
@@ -207,6 +208,14 @@ public class MyDesktopBehavior extends MyBehavior {
             {
                 Logger.getLogger(MyDesktopBehavior.class.getName()).log(Level.SEVERE, null, ex);
             } 
+        }
+        else if(listen.equalsIgnoreCase("minimize window"))
+        {
+            sendCommand("minimize");
+        }
+        else if(listen.equalsIgnoreCase("maximize window"))
+        {
+            sendCommand("maximize");
         }
         return tag;
     }

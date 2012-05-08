@@ -11,4 +11,8 @@ import <menu.command>;
 
 //Add a dynamic command list using the java code to the list of options
 public <commands> = 
- <command>;
+                        <standard_commands> |
+                        tell me the time  { time } |
+                        browse internet         {goto_web} |
+                        computer control     {goto_desktop} |
+                        watch movies          { goto_movies } ;
