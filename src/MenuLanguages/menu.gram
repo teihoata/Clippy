@@ -12,4 +12,6 @@ public <command> =
                         browse internet         {goto_web} |
                         watch movies           { goto_movies } |
                         computer control     {goto_desktop} |
+                        get directions      {directions} |
+                        google search       {search} |
                         close clippy        { exit } ;

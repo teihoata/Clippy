@@ -6,7 +6,6 @@
             <name>ClippyAlpha1</name>
             <source-roots>
                 <root id="src.JIntelliType.dir"/>
-                <root id="src.JavaDB%20Packages.dir"/>
                 <root id="src.voice.dir" name="Voice Packages"/>
                 <root id="src.dir"/>
             </source-roots>

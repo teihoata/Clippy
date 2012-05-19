@@ -1,16 +1,20 @@
 explorer.exe	Start
-java.exe	Clippy
 wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
+chrome.exe	Facebook - Google Chrome
+explorer.exe	GAWINGUSB (G:)
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-explorer.exe	SDP
-chrome.exe	https://autonline.aut.ac.nz/bbcswebdav/institution/Papers/407701/Publish/Lecture_5.pdf - Google Chrome
-explorer.exe	main
-explorer.exe	Arnauld-jbehave-eclipse-plugin-dfe7b97
-javaw.exe	Java - technbolts-jbehave-eclipse-plugin/test/org/technbolts/eclipse/jbehave/PartitionScannerTest.java - Eclipse SDK
-explorer.exe	eclipse
+explorer.exe	Marcus Music Top 40
+WinRAR.exe	Gawing-Clippy-56327d8.zip - WinRAR (only 16 days left to buy a license)
+sidebar.exe	CPU Meter
+explorer.exe	Program Manager
+java.exe	Default IME
+explorer.exe	Start
+wmplayer.exe	Windows Media Player
+chrome.exe	Facebook - Google Chrome
+explorer.exe	GAWINGUSB (G:)
+netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
+explorer.exe	Marcus Music Top 40
+WinRAR.exe	Gawing-Clippy-56327d8.zip - WinRAR (only 16 days left to buy a license)
 sidebar.exe	CPU Meter
 explorer.exe	Program Manager
 java.exe	Default IME
