@@ -28,7 +28,7 @@ import org.apache.commons.io.FileUtils;
  */
  public class MyMovieBehavior extends MyBehavior {
 
-        private List<String> songList = new ArrayList<String>();
+        private List<String> playList = new ArrayList<String>();
         private Collection files;
         private File selectedFile;
         private ClippyGui gui;
@@ -39,13 +39,11 @@ import org.apache.commons.io.FileUtils;
         {
             super(gui);
             this.gui = gui;
-            songList.add("pause");
-            songList.add("volume up");
-            songList.add("volume down");
-            songList.add("maximize window");
-            songList.add("minimize window");
-            File playList = new File("./src/PersistantData/playlist.txt");
-            FileWriter write = new FileWriter(playList);
+            playList.add("pause");
+            playList.add("volume up");
+            playList.add("volume down");
+            File playListFile = new File("./src/PersistantData/playlist.txt");
+            FileWriter write = new FileWriter(playListFile);
             File file = new File("C:\\Users\\" + System.getProperty("user.name") + "\\Videos\\");
             String[] extensions =
             {
@@ -58,7 +56,7 @@ import org.apache.commons.io.FileUtils;
                 String fileName = file1.getName().substring(0, file1.getName().indexOf('.'));
                 fileName = fileName.replaceAll("[^A-Za-z]", " ");
                 write.write(fileName);  
-                songList.add(fileName);
+                playList.add(fileName);
             }
             write.close();
         }
@@ -72,7 +70,6 @@ import org.apache.commons.io.FileUtils;
         public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
         {
             super.onEntry();
-
             // now lets add our custom songs from the play list
             // First, get the JSAPI RuleGrammar
             BaseRecognizer recognizer = new BaseRecognizer(getGrammar().getGrammarManager());
@@ -87,32 +84,28 @@ import org.apache.commons.io.FileUtils;
             RuleGrammar ruleGrammar = new BaseRuleGrammar(recognizer, getGrammar().getRuleGrammar());
 
             // now lets add a rule for each song in the play list
-
+            ArrayList<String> menuList = new ArrayList<>();
             String ruleName = "movies";
             int count = 1;
             try
             {
-                for (String song : songList)
+                
+                addDefaultListWithoutCurrent(menuList, "watch movies");
+                for (String movie : playList)
                 {
                     String newRuleName = ruleName + count;
                     Rule newRule = null;
-                    if (song.equalsIgnoreCase("pause") || song.equalsIgnoreCase("volume up") || song.equalsIgnoreCase("volume down"))
+                    if (movie.equalsIgnoreCase("pause") || movie.equalsIgnoreCase("volume up") || movie.equalsIgnoreCase("volume down") || movie.equalsIgnoreCase("maximize window") || movie.equalsIgnoreCase("minimize window"))
                     {
-                        newRule = ruleGrammar.ruleForJSGF(song
+                        menuList.add(movie);
+                        newRule = ruleGrammar.ruleForJSGF(movie
                                 + " { " + newRuleName + " }");
                     }
                     else
                     {
-                        if (song.equalsIgnoreCase("play next movie"))
-                        {
-                            newRule = ruleGrammar.ruleForJSGF(song
-                                    + " { " + newRuleName + " }");
-                        }
-                        else
-                        {
-                            newRule = ruleGrammar.ruleForJSGF("watch " + song
-                                    + " { " + newRuleName + " }");
-                        }
+                            menuList.add("watch " + movie);
+                            newRule = ruleGrammar.ruleForJSGF("watch " + movie
+                                    + " { " + newRuleName + " }");      
                     }
                     ruleGrammar.setRule(newRuleName, newRule, true);
                     ruleGrammar.setEnabled(newRuleName, true);
@@ -127,23 +120,22 @@ import org.apache.commons.io.FileUtils;
             // now lets commit the changes
             getGrammar().commitChanges();
             grammarChanged();
+            this.setList(menuList);
+            gui.setCurrentBehavior(this);
         }
-
-        @Override
-        public String onRecognize(Result result) throws GrammarException
+        
+    @Override
+        public void processResult(String result)
         {
-            String next = super.onRecognize(result);;
-            trace("Recognize result: " + result.getBestFinalResultNoFiller());
-            String listen = result.getBestFinalResultNoFiller();
-            if (listen.equalsIgnoreCase("main menu") || listen.equalsIgnoreCase("menu"))
+            if (result.equalsIgnoreCase("main menu") || result.equalsIgnoreCase("menu"))
             {
-                next = "menu";
+                //next = "menu";
             }
             else
             {
-                if (listen.startsWith("watch "))
+                if (result.startsWith("watch "))
                 {
-                    String substring = listen.substring(6);
+                    String substring = result.substring(6);
                     System.out.println(substring);
                     selectedFile = null;
                     for (Iterator iterator = files.iterator(); iterator.hasNext();)
@@ -184,11 +176,10 @@ import org.apache.commons.io.FileUtils;
                         }
 
                     }
-                    next = "";
                 }
                 else
                 {
-                    if (listen.equalsIgnoreCase("pause"))
+                    if (result.equalsIgnoreCase("pause"))
                     {
                         try
                         {
@@ -200,7 +191,7 @@ import org.apache.commons.io.FileUtils;
                     }
                     else
                     {
-                        if (listen.equalsIgnoreCase("volume up"))
+                        if (result.equalsIgnoreCase("volume up"))
                         {
                             try
                             {
@@ -216,13 +207,13 @@ import org.apache.commons.io.FileUtils;
                         }
                         else
                         {
-                            if (listen.equalsIgnoreCase("volume down"))
+                            if (result.equalsIgnoreCase("volume down"))
                             {
                                 try
                                 {
                                     for (int i = 0; i < 10; i++)
                                     {
-                                        Process process = new ProcessBuilder("./UniversalMediaRemote.exe", "VDown").start();
+                                        Process process = new ProcessBuilder("./Windows Control/UniversalMediaRemote.exe", "VDown").start();
                                     }
 
                                 }
@@ -234,6 +225,15 @@ import org.apache.commons.io.FileUtils;
                     }
                 }
             }
-            return next;
         }
+
+        @Override
+        public String onRecognize(Result result) throws GrammarException
+        {
+            String next = super.onRecognize(result);;
+            trace("Recognize result: " + result.getBestFinalResultNoFiller());
+            String listen = result.getBestFinalResultNoFiller();
+            processResult(listen);
+            return next;
+        }  
     }

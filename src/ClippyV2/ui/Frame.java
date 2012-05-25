@@ -7,10 +7,12 @@ package ClippyV2.ui;
 import ClippyV2.ui.View.ComponentMover;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.RoundRectangle2D;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
  *
@@ -27,13 +29,16 @@ public abstract class Frame extends JFrame {
         super();
         xSize = sizeX;
         ySize = sizeY;
+        Shape shape = null;
+        this.setUndecorated(true);
+        shape = new RoundRectangle2D.Float(0, 0, this.getWidth(), this.getHeight(), 30, 30);
+        this.setShape(shape);
         this.setPreferredSize(new Dimension(xSize,ySize));
         this.setLocation((int)java.awt.Toolkit.getDefaultToolkit()
         .getScreenSize().getWidth()-locatX,(int)java.awt.Toolkit
         .getDefaultToolkit().getScreenSize().getHeight()-locatY);
-        this.setUndecorated(true);
-        this.setBackground(backgroundColor);
-        this.setOpacity(0.6f);
+        this.setBackground(new Color(1.0f, 1.0f, 1.0f, 0.01f));
+        //this.setOpacity(0.2f);
         this.setLayout(null);
         this.setResizable(false);
         this.setAlwaysOnTop(true);
@@ -49,7 +54,7 @@ public abstract class Frame extends JFrame {
         this.setPreferredSize(new Dimension(x,y));
     }
     
-    public void setPnl(JPanel pnl){
+    public void setPnl(JComponent pnl){
         new ComponentMover(this, pnl);
         pnl.setLayout(null);
         pnl.setBounds(0,0,xSize,ySize);

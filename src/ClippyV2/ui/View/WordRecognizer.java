@@ -7,6 +7,7 @@ package ClippyV2.ui.View;
 
 import com.sun.speech.engine.recognition.BaseRecognizer;
 import com.sun.speech.engine.recognition.BaseRuleGrammar;
+import db.clippy.SearchEngine.GoogleSearch;
 import edu.cmu.sphinx.frontend.util.Microphone;
 import edu.cmu.sphinx.jsgf.JSGFGrammar;
 import edu.cmu.sphinx.jsgf.JSGFGrammarException;
@@ -17,14 +18,17 @@ import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.*;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.speech.recognition.GrammarException;
 import javax.speech.recognition.RuleGrammar;
 import javax.speech.recognition.RuleParse;
+import javax.swing.JOptionPane;
+import org.json.JSONException;
+
 
 /**
  * @author Marcus Ball
@@ -51,6 +55,7 @@ public class WordRecognizer implements Runnable, Configurable {
     public final static String PROP_MICROPHONE = "microphone";  
     @S4Component(type = Recognizer.class)
     public final static String PROP_RECOGNIZER = "recognizer";
+    private ClippyGui gui;
     
     /**
      * Creates the WordRecognizer.
@@ -114,6 +119,64 @@ public class WordRecognizer implements Runnable, Configurable {
         }
     }
     
+    public void enterNextNode(String nextState)
+    {
+        try
+        {
+            if (curNode != lastNode)
+            {
+                if (lastNode != null)
+                {
+                    lastNode.exit();
+                }
+                curNode.enter();
+                lastNode = curNode;
+            }
+            String nextStateName = curNode.recognizeByString(nextState);
+            System.out.println("Next state Name: " + nextStateName);
+            //if it doesn't understand what you say
+            if (nextStateName == null || nextStateName.isEmpty())
+            {
+                gui.getCurrentBehavior().processResult(nextState);
+                try
+                    {
+                        AePlayWave aw = new AePlayWave("./models/siri_notHeard.wav");
+                        aw.start();
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                fireListeners(null);
+            }
+            else
+            {
+                fireListeners(nextStateName);
+                DialogNode node = nodeMap.get(nextStateName);
+                //Invalid dialog heard
+                if (node == null)
+                {
+                    System.out.println("Can't transition to unknown state "
+                            + nextStateName);
+                }
+                else
+                {
+                    Thread speakMenuName = new ClippyV2.ui.View.MyBehavior.Speak("Entering " + node.getName());
+                    speakMenuName.start();
+                    curNode = node;  
+                    curNode.enter();
+                }
+            }
+    }   catch (GrammarException ex) {
+            Logger.getLogger(WordRecognizer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (IOException ex) {
+            Logger.getLogger(WordRecognizer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JSGFGrammarParseException ex) {
+            Logger.getLogger(WordRecognizer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JSGFGrammarException ex) {
+            Logger.getLogger(WordRecognizer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     /**
      * Performs a single recognition, called when the button is pressed or JIntelli
      * JIntellitype is initialised
@@ -150,6 +213,7 @@ public class WordRecognizer implements Runnable, Configurable {
             catch (NullPointerException e)
             {
             }
+            System.out.println("Next state name: " + nextStateName);
             //if it doesn't understand what you say
             if (nextStateName == null || nextStateName.isEmpty())
             {
@@ -175,14 +239,8 @@ public class WordRecognizer implements Runnable, Configurable {
                 }
                 else
                 {
-                    try
-                    {
-                        AePlayWave aw = new AePlayWave("./models/siri_tone.wav");
-                        aw.start();
-                    }
-                    catch (Exception e){
-                        System.out.println("Couldn't play tone");
-                    }
+                    Thread speakMenuName = new ClippyV2.ui.View.MyBehavior.Speak("Entering " + node.getName());
+                    speakMenuName.start();
                     curNode = node;  
                     curNode.enter();
                 }
@@ -203,7 +261,6 @@ public class WordRecognizer implements Runnable, Configurable {
         {
         }
         microphone.stopRecording();
-
     }
 
     /**
@@ -395,6 +452,10 @@ public class WordRecognizer implements Runnable, Configurable {
         this.recognizer = recognizer;
     }
 
+    void setGui(ClippyGui gui) {
+        this.gui = gui;
+    }
+
     /**
      * Represents a node in the dialog
      */
@@ -455,7 +516,11 @@ public class WordRecognizer implements Runnable, Configurable {
             trace("Recognize " + name);
             return behavior.onRecognize(result);
         }
-
+        
+        String recognizeByString(String result) throws GrammarException
+        {
+            return behavior.onRecognizeFromString(result);
+        }
         /**
          * Exits the node
          */
@@ -502,7 +567,6 @@ public class WordRecognizer implements Runnable, Configurable {
         }
     }
 }
-
 /**
  * Provides the default behavior for dialog node. Applications will typically
  * extend this class and override methods as appropriate
@@ -550,6 +614,24 @@ class DialogNodeBehavior {
         trace("Recognize result: " + result.getBestFinalResultNoFiller());
         trace("Recognize tag   : " + tagString);
         return tagString;
+    }
+    
+    public void processResult(String result)
+    {
+        
+    }
+    
+    /*
+     * Called with the recognition results. Should return a string representing
+     * the name of the next node.
+     */
+    public String onRecognizeFromString(String result) throws GrammarException
+    {
+        String tagString = getTagStringFromString(result);
+        
+        trace("Recognize result: " + result);
+        trace("Recognize tag   : " + tagString);
+        return onRecognizeByString(result);
     }
 
     /**
@@ -613,6 +695,105 @@ class DialogNodeBehavior {
         RuleParse ruleParse = ruleGrammar.parse(resultText, null);
         return ruleParse;
     }
+    
+    RuleParse getRuleParseFromString(String result) throws GrammarException
+    {
+        BaseRecognizer jsapiRecognizer = new BaseRecognizer(getGrammar().getGrammarManager());
+        try
+        {
+            jsapiRecognizer.allocate();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        RuleGrammar ruleGrammar = new BaseRuleGrammar(jsapiRecognizer, getGrammar().getRuleGrammar());
+        RuleParse ruleParse = ruleGrammar.parse(result, null);
+        return ruleParse;
+    }
+    
+    String getTagStringFromString(String result) throws GrammarException
+    {
+        RuleParse ruleParse = getRuleParseFromString(result);
+        if (ruleParse == null)
+        {
+            return null;
+        }
+        String[] tags = ruleParse.getTags();
+        if (tags == null)
+        {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String tag : tags)
+        {
+            sb.append(tag).append(' ');
+        }
+        return sb.toString().trim();
+    }
+    
+    public String onRecognizeByString(String result) throws GrammarException
+        {
+            System.out.println("Result = " + result);
+            String tag = getTagStringFromString(result);
+            System.out.println("Tag = " + tag);
+            String listen = result;
+            if (tag != null)
+            {
+
+                System.out.println("\n "
+                        + result + '\n');
+
+                if (tag.equals("exit"))
+                {
+
+                    System.out.println("Goodbye! Thanks for visiting!\n");
+                    //gui.exitClippy();
+                }
+                else if(tag.equals("menu"))
+                {
+                    return "menu";
+                }
+                else if (tag.equals("time")) {
+                    DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                    Calendar cal = Calendar.getInstance();
+                    Thread speak = new MyBehavior.Speak(dateFormat.format(cal.getTime()));
+                    speak.start();
+                }
+                else if(tag.equals("search"))
+                {
+                    String search = JOptionPane.showInputDialog(null, "Enter text to search");
+                try { Map<String, String> map = GoogleSearch.getSearchResult(search);
+         Iterator it = map.keySet().iterator(); while (it.hasNext()) { String
+          key = it.next().toString(); System.out.println(key + " <==> " +
+          map.get(key)); } } 
+                catch (IOException ex) { } 
+                catch (JSONException ex) { } 
+                }
+                else if(tag.equals("directions"))
+                {
+                    NavMenu navMenu = new NavMenu();
+                    navMenu.pack();
+                    navMenu.setVisible(true);
+                }
+                else if (tag.startsWith("goto_")) {
+                    System.out.println("Got heree");
+                    return tag.replaceFirst("goto_", "");
+                }
+            }
+            else
+            {
+                try
+                    {
+                        AePlayWave aw = new AePlayWave("./models/siri_notHeard.wav");
+                        aw.start();
+                    }
+                    catch (Exception e)
+                    {
+                    } 
+            }
+            return "";
+        }
 
     /**
      * Gets a space delimited string of tags representing the result

@@ -30,6 +30,7 @@ public class MyDesktopBehavior extends MyBehavior {
     ArrayList<String> processTitles; //holds the names of current running windows
     private int count; //number of rules within the dialog
     private ClippyGui gui;
+    private ArrayList<String> optionsList;
     
     /**
      * Simple Constructor
@@ -41,9 +42,11 @@ public class MyDesktopBehavior extends MyBehavior {
         count = 1;
     }
     
+    @Override
     public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
     {
         super.onEntry();
+        optionsList = new ArrayList<>();
         BaseRecognizer recognizer = new BaseRecognizer(getGrammar().getGrammarManager());
         try {
             recognizer.allocate();
@@ -96,9 +99,21 @@ public class MyDesktopBehavior extends MyBehavior {
             System.out.println(ex.getMessage());
         }
 
+        addDefaultListWithoutCurrent(optionsList, "computer control");
+        optionsList.add("close active program");
+        optionsList.add("scroll up");
+        optionsList.add("scroll down");
+        optionsList.add("maxmize window");
+        optionsList.add("minimize window");
+        
         String ruleName = "application";
             for (String app : processTitles)
             {
+                app = app.replaceAll("[^A-Za-z&&[^']]", " ");
+                if(!optionsList.contains("switch to " + app))
+                {
+                    optionsList.add("switch to " + app);
+                }
                 addGrammar(ruleGrammar, ruleName, "switch to " + app);
             }
             
@@ -111,7 +126,8 @@ public class MyDesktopBehavior extends MyBehavior {
         // now lets commit the changes
         getGrammar().commitChanges();
         grammarChanged();
-        help();
+        this.setList(optionsList);
+        gui.setCurrentBehavior(this);
     }
     
     /**
@@ -148,20 +164,11 @@ public class MyDesktopBehavior extends MyBehavior {
             System.out.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
         }
     }
-
-    /**
-     * Called when Clippy recognises an input
-     * @param result
-     * @return
-     * @throws GrammarException 
-     */
+    
     @Override
-    public String onRecognize(Result result) throws GrammarException
+    public void processResult(String result)
     {
-        String tag = super.onRecognize(result);
-        String listen = result.getBestFinalResultNoFiller();
-        trace("Recognize result: " + result.getBestFinalResultNoFiller());
-        if (listen.startsWith("switch to"))
+        if (result.startsWith("switch to"))
         {
             BufferedReader empdtil = null;
             try
@@ -185,7 +192,7 @@ public class MyDesktopBehavior extends MyBehavior {
                     }
                 }   
                 combined = combined.trim();
-                String listen2 = listen.substring(10).trim();
+                String listen2 = result.substring(10).trim();
                     if (combined.equalsIgnoreCase(listen2))
                     {
                         switchApp = detail;
@@ -213,14 +220,30 @@ public class MyDesktopBehavior extends MyBehavior {
                 Logger.getLogger(MyDesktopBehavior.class.getName()).log(Level.SEVERE, null, ex);
             } 
         }
-        else if(listen.equalsIgnoreCase("minimize window"))
+        else if(result.equalsIgnoreCase("minimize window"))
         {
             sendCommand("minimize");
         }
-        else if(listen.equalsIgnoreCase("maximize window"))
+        else if(result.equalsIgnoreCase("maximize window"))
         {
             sendCommand("maximize");
         }
+    }
+    
+
+    /**
+     * Called when Clippy recognises an input
+     * @param result
+     * @return
+     * @throws GrammarException 
+     */
+    @Override
+    public String onRecognize(Result result) throws GrammarException
+    {
+        String tag = super.onRecognize(result);
+        String listen = result.getBestFinalResultNoFiller();
+        trace("Recognize result: " + result.getBestFinalResultNoFiller());
+        processResult(listen);
         return tag;
     }
 }

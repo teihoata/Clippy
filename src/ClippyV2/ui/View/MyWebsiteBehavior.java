@@ -27,6 +27,7 @@ public class MyWebsiteBehavior extends MyBehavior {
 
     ArrayList<String> websiteList; //holds the names of current websites
     private int count; //number of rules within the dialog
+    private ArrayList<String> menuList;
 
     /**
      * Simple Constructor
@@ -40,6 +41,8 @@ public class MyWebsiteBehavior extends MyBehavior {
     public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
     {
         super.onEntry();
+        menuList = new ArrayList<>();
+        addDefaultListWithoutCurrent(menuList, "browse internet");
         BaseRecognizer recognizer = new BaseRecognizer(getGrammar().getGrammarManager());
         try {
             recognizer.allocate();
@@ -56,7 +59,6 @@ public class MyWebsiteBehavior extends MyBehavior {
             {
                 try{
                     detail = detail.substring(detail.indexOf(".")+1, detail.indexOf("." , detail.indexOf(".") + 1));
-                    System.out.println(detail);
                 }
                 catch(StringIndexOutOfBoundsException e){}
                 websiteList.add(detail);
@@ -73,9 +75,15 @@ public class MyWebsiteBehavior extends MyBehavior {
             {
                 if(!app.isEmpty() && app != null)
                 {
+                    menuList.add("open " + app);
                     addGrammar(ruleGrammar, ruleName, "open " + app);
                 }    
             }
+            menuList.add("add new website");
+            menuList.add("remove website");
+            menuList.add("scroll up");
+            menuList.add("scroll down");
+            menuList.add("minimize");
             addGrammar(ruleGrammar, ruleName, "add new website");
             addGrammar(ruleGrammar, ruleName, "remove website");
             addGrammar(ruleGrammar, ruleName, "close active program");
@@ -85,6 +93,8 @@ public class MyWebsiteBehavior extends MyBehavior {
         
         // now lets commit the changes
         getGrammar().commitChanges();
+        this.setList(menuList);
+        
         grammarChanged();
     }
     
@@ -121,29 +131,14 @@ public class MyWebsiteBehavior extends MyBehavior {
             System.out.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
         }
     }
-
-    /**
-     * Called when Clippy recognises an input
-     * @param result
-     * @return
-     * @throws GrammarException 
-     */
-    @Override
-    public String onRecognize(Result result) throws GrammarException
+    
+    public void processResult(String result)
     {
-        String tag = super.onRecognize(result);
-        String listen = result.getBestFinalResultNoFiller();
-        trace("Recognize result: " + result.getBestFinalResultNoFiller());
-        //String tag = "";
-        if (listen.equalsIgnoreCase("main menu") || listen.equalsIgnoreCase("menu"))
-        {
-            tag = "menu";
-        }
-        else if(listen.equalsIgnoreCase("remove website"))
+         if(result.equalsIgnoreCase("remove website"))
         {
             
         }
-        else if(listen.equalsIgnoreCase("add new website"))
+        else if(result.equalsIgnoreCase("add new website"))
         {
             try {
                 FileWriter print = null;
@@ -166,7 +161,7 @@ public class MyWebsiteBehavior extends MyBehavior {
                 Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        else if (listen.startsWith("open"))
+        else if (result.startsWith("open"))
         {
             BufferedReader empdtil = null;
             String url = "";
@@ -181,12 +176,11 @@ public class MyWebsiteBehavior extends MyBehavior {
                 
                 try{
                     detail = detail.substring(detail.indexOf(".")+1, detail.indexOf("." , detail.indexOf(".") + 1));
-                    System.out.println(listen.substring(listen.indexOf("open")+5) + " compared to " + detail);
-                    if(listen.substring(listen.indexOf("open")+5).equalsIgnoreCase(detail))
+                    
+                    if(result.substring(result.indexOf("open")+5).equalsIgnoreCase(detail))
                     {
                         url = currentWebsite;
                         nameOfCurrentWebsite = detail;
-                        System.out.println("currentWebsite " + currentWebsite);
                     }
                 }
                 catch(StringIndexOutOfBoundsException e){}
@@ -214,6 +208,20 @@ public class MyWebsiteBehavior extends MyBehavior {
                 Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
             } 
         }
+    }
+
+    /**
+     * Called when Clippy recognises an input
+     * @param result
+     * @return
+     * @throws GrammarException 
+     */
+    @Override
+    public String onRecognize(Result result) throws GrammarException
+    {
+        String tag = super.onRecognize(result);
+        String listen = result.getBestFinalResultNoFiller();
+        trace("Recognize result: " + result.getBestFinalResultNoFiller());
         return tag;
     }
 }

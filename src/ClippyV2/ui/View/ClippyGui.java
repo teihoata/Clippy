@@ -7,11 +7,14 @@ import com.melloware.jintellitype.IntellitypeListener;
 import com.melloware.jintellitype.JIntellitype;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
 import ClippyV2.ui.*;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,10 +34,10 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
     private ImageIcon editIcon = new ImageIcon(getClass()
     .getResource("Images/edit.png"));
     private ImageIcon speechIcon = new ImageIcon(getClass()
-    .getResource("Images/speech.png"));
+    .getResource("Images/speech2.png"));
     private ImageIcon exitIcon = new ImageIcon(getClass()
     .getResource("Images/exit.png"));
-    private JPanel clipPnl = new JPanel();
+    private JPanel clipPnl;
     private JLabel imgLbl = new JLabel();
     private JLabel speechLbl = new JLabel();
     private JTextArea exeTxt = new JTextArea();
@@ -53,28 +56,27 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
     private boolean errorState;
     private boolean exitState;
     private boolean voiceState;
-    private Font txtFont = new Font("Castellar", Font.BOLD, 12);
+    private Font txtFont = new Font("Arial", Font.BOLD, 14);
     private HelpMenu helpMenu = new HelpMenu();
     private EditMenu editMenu = new EditMenu();
     private NavMenu navMenu = new NavMenu();
-    private VoiceMenu voiceMenu = new VoiceMenu();
+    private VoiceMenu voiceMenu;
     private WordRecognizer wordsRecognizer;
     private MyBehavior currentBehavior;
+    private JLayeredPane lpane = new JLayeredPane();
     
     /**
      * Constructor for class ClippyGUI
      */
     public ClippyGui(String userName){
-        super(350,300,350,300);
+        super(300,200,350,300);
         user = userName;
         clippyTxt = new JTextArea("Hello " + user + "!");
-  
-            createPnl();
-            setComVisible(false);
-            isIdle = true;
-            
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);    
-        
+        createPnl();
+        setComVisible(false);
+        isIdle = true;
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        currentBehavior.setDefaultList();
     }
     
     
@@ -84,18 +86,20 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      * Creates a panel for the components of the interface 
      */
      private void createPnl(){
-        setPnl(clipPnl);
+        clipPnl = new JPanel();
+        setPnl(lpane);
         setImage();
-        addClippyTxt();
         setSpeechImg();
         addBtn();
-        addField();
-        clipPnl.setBackground(getBgColor());
-        voiceMenu = new VoiceMenu();
+        addClippyTxt();
+//        this.setBackground(new Color(1.0f, 1.0f, 1.0f, 0.1f));
+        //clipPnl.add(lpane);
+        //addField();
+        lpane.setOpaque(false);
+        //lpane.setBackground(Color.white);
+        voiceMenu = new VoiceMenu(currentBehavior);
         voiceMenu.pack();
         voiceMenu.setVisible(true);
-//        ComponentMover cm = new ComponentMover();
-        
         try {
             setup();
         } catch (IOException ex) {
@@ -109,6 +113,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         URL url = WordCollection.class.getResource("clippy.config.xml");
         ConfigurationManager cm = new ConfigurationManager(url);
         wordsRecognizer = (WordRecognizer) cm.lookup("dialogManager");
+        wordsRecognizer.setGui(this);
         MyBehavior menu = new MyBehavior(this);
         MyBehavior time = new MyBehavior(this);
         MyBehavior music = new MyMusicBehavior(this);
@@ -129,13 +134,14 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         
         currentBehavior = menu;
    
-        voiceMenu.setVoiceMenu("Loading IntelliJ");
+
+        voiceMenu.setSingleMenuItem("Loading IntelliJ");
         initJIntellitype();
 
-        voiceMenu.setVoiceMenu("Loading dialogs ...");
+        voiceMenu.setSingleMenuItem("Loading dialogs ...");
         wordsRecognizer.allocate();
 
-        voiceMenu.setVoiceMenu("Running  ...");
+        voiceMenu.setSingleMenuItem("Running  ...");
 
         wordsRecognizer.addWordListener(new WordsListener() {
 
@@ -144,13 +150,31 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
             }
         });
 
+        //Needed to add a timer as the program refused to update the list
+        javax.swing.Timer timer = new Timer(500, null);
+        timer.start();
         wordsRecognizer.setInitialNode("menu");
-        voiceMenu.setVoiceMenu(currentBehavior.getCurrentMenuOptions());
+        voiceMenu.setWordsRecognizer(wordsRecognizer);
+        //currentBehavior.setDefaultList();
      }
      
-     public void setCurrentMenu(String menu)
+     public MyBehavior getCurrentBehavior()
      {
+         return currentBehavior;
+     }
+     
+     public void setCurrentMenu(ArrayList menu)
+     {
+         javax.swing.Timer timer = new Timer(500, null);
+        timer.start();
          voiceMenu.setVoiceMenu(menu);
+     }
+     
+     public void setCurrentBehavior(MyBehavior behav)
+     {
+         currentBehavior = behav;
+         setClippyTxt("Entering " + currentBehavior.getName());
+         voiceMenu.setBehavior(currentBehavior);
      }
     
      
@@ -204,7 +228,9 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         try{
             imgLbl.setIcon(newImage);
             imgLbl.setBounds(120, 40,134,150); 
-            clipPnl.add(imgLbl);
+            imgLbl.setOpaque(false);
+            //imgLbl.setBackground(Color.white);
+            lpane.add(imgLbl, new Integer(0), 0);
             imgLbl.setVisible(true);
         }  
         catch(NullPointerException ex){
@@ -218,7 +244,8 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         try{
             speechLbl.setIcon(speechIcon);
             speechLbl.setBounds(3, 10,150,113); 
-            clipPnl.add(speechLbl);
+            speechLbl.setOpaque(false);
+            lpane.add(speechLbl, new Integer(1), 0);
             speechLbl.setVisible(true);
         }  
         catch(NullPointerException ex){
@@ -231,11 +258,11 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      */
     public void addBtn(){
         setVoiceBtn();
-        setExeBtn();
+        //setExeBtn();
         setEditBtn();
-        setSearchBtn();
-        setHelpBtn();
-        setExitBtn();
+        //setSearchBtn();
+        //setHelpBtn();
+        //setExitBtn();
     }
     
     
@@ -243,7 +270,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      * Creates voice button and set the action event 
      */
     private void setVoiceBtn(){
-        voiceBtn.setBounds(260, 55, 45, 45);
+        voiceBtn.setBounds(235, 145, 45, 45);
         voiceBtn.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
@@ -255,7 +282,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
                 }   
             }
         });
-        clipPnl.add(voiceBtn);
+        lpane.add(voiceBtn, new Integer(2), 0);
     }
     
      /**
@@ -263,13 +290,12 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      */
     private void startListening() {
         if (wordsRecognizer.microphoneOn()) {
-            //setMessage(menu + "\n " + "Clippy is listening...");
             setBtnEnabled(false);
             genImage("clippySearch");
             setClippyTxt("Listening...");
         }
         else {
-            voiceMenu.setVoiceMenu("Sorry, can't find the microphone on your computer.");
+            voiceMenu.setSingleMenuItem("Sorry, can't find the microphone on your computer.");
         }
     }
     
@@ -277,22 +303,22 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      * Creates edit button and set the action event 
      */
     private void setEditBtn(){
-        editBtn.setBounds(260, 110, 45, 45);
+        editBtn.setEnabled(true);
+        editBtn.setBounds(235, 40, 45, 45);
         editBtn.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                try{
-                    editMenu.dispose();
-                    editMenu = new EditMenu();
-                    editMenu.pack();
-                    editMenu.setVisible(true);
+                if(voiceMenu.isVisible())
+                {
+                voiceMenu.setVisible(false);
                 }
-                catch(NullPointerException ex){
-                    
-                }   
+                else
+                {
+                    voiceMenu.setVisible(true);
+                }
             }
         });
-        clipPnl.add(editBtn);
+        lpane.add(editBtn, new Integer(2), 0);
     }
     
     /**
@@ -350,7 +376,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
                 }             
             }
         });
-        clipPnl.add(helpBtn);
+        lpane.add(helpBtn);
     }
     
     /**
@@ -387,7 +413,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      * Creates the design and add the input field to the panel 
      */
     public void addField(){
-        exeTxt.setBounds(25, 195, 300, 30);
+        exeTxt.setBounds(55, 195, 300, 30);
         exeTxt.setFont(txtFont);
         exeTxt.setBorder(new EtchedBorder());
         clipPnl.add(exeTxt);
@@ -457,12 +483,16 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         clippyTxt.setWrapStyleWord(true);
         clippyTxt.setEditable(false);
         clippyTxt.setFont(txtFont);
+        clippyTxt.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
+        clippyTxt.setAlignmentY(JTextArea.CENTER_ALIGNMENT);
         clippyScroll = new JScrollPane(clippyTxt);
-        clippyScroll.setBackground(getBgColor());
-        clippyScroll.setBorder(null);
-        clippyScroll.setSize(119,38);
-        clippyScroll.setLocation(16, 40);
-        clipPnl.add(clippyScroll);
+        //clippyTxt.setBackground(getBgColor());
+        
+        clippyTxt.setBorder(null);
+        clippyTxt.setSize(105,30);
+        clippyTxt.setLocation(25, 45);
+        clippyTxt.setOpaque(false);
+        lpane.add(clippyTxt, new Integer(1), 0);
     }
     
     /**
@@ -470,7 +500,9 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      * @param text Clippys output text/feedback
      */
     public void setClippyTxt(String text){
+        javax.swing.Timer time = new Timer(500, null);
         clippyTxt.setText(text);
+        time.start();
     }
     
     /**
@@ -480,7 +512,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
     public void setBtnEnabled(boolean enabled){
         exitBtn.setEnabled(enabled);
         exeBtn.setEnabled(enabled);
-        editBtn.setEnabled(enabled);
+        
         helpBtn.setEnabled(enabled);
         searchBtn.setEnabled(enabled);
         voiceBtn.setEnabled(enabled);

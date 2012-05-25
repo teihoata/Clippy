@@ -6,23 +6,18 @@ package ClippyV2.ui.View;
 
 import ClippyV2.ui.Button;
 import ClippyV2.ui.Frame;
-import Test.TestMain;
 import db.clippy.SearchEngine.GoogleNavigation;
 import db.clippy.Vo.GoogleNaviVo;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import org.json.JSONException;
 
 /**
  * A class that creates the navigation menu 
@@ -40,7 +35,8 @@ public class NavMenu extends Frame{
     private JScrollPane navScroll = new JScrollPane(navTxt);
     public NavMenu(){
         super(500,500,850,500); 
-        this.setOpacity(0.7f);
+        //this.setOpacity(0.7f);
+        this.setBackground(new Color(1.0f, 1.0f, 1.0f, 0.3f));
         setPnl(navPnl);
         addPnl();
     }    

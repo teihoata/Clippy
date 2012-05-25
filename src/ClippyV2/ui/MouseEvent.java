@@ -5,9 +5,7 @@
 package ClippyV2.ui;
 
 import ClippyV2.ui.View.HelpMenu;
-import java.applet.Applet;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
 
 /**
  *

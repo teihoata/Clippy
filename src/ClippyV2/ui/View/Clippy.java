@@ -4,8 +4,6 @@
  */
 package ClippyV2.ui.View;
 
-import java.io.IOException;
-
 /**
  *
  * @author Marzipan

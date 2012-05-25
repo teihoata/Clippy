@@ -28,6 +28,8 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
         public void onReady()
         {
             super.onReady();
+            Thread speakMenuName = new ClippyV2.ui.View.MyBehavior.Speak("Entering " + getGrammarName());
+            speakMenuName.start();
             menu = "";
             help();
         }

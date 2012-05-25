@@ -53,9 +53,6 @@ public class Dialog extends JOptionPane {
         if (answer == JOptionPane.YES_OPTION) {
             confirm = true;
         }
-        else {
-            
-        }
     }
 
     /**
