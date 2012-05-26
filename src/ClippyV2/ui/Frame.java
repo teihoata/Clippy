@@ -38,7 +38,6 @@ public abstract class Frame extends JFrame {
         .getScreenSize().getWidth()-locatX,(int)java.awt.Toolkit
         .getDefaultToolkit().getScreenSize().getHeight()-locatY);
         this.setBackground(new Color(1.0f, 1.0f, 1.0f, 0.01f));
-        //this.setOpacity(0.2f);
         this.setLayout(null);
         this.setResizable(false);
         this.setAlwaysOnTop(true);

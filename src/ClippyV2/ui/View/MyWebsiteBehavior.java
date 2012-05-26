@@ -28,6 +28,7 @@ public class MyWebsiteBehavior extends MyBehavior {
     ArrayList<String> websiteList; //holds the names of current websites
     private int count; //number of rules within the dialog
     private ArrayList<String> menuList;
+    private ClippyGui gui;
 
     /**
      * Simple Constructor
@@ -35,9 +36,11 @@ public class MyWebsiteBehavior extends MyBehavior {
     public MyWebsiteBehavior(ClippyGui gui)
     {
         super(gui);
+        this.gui = gui;
         count = 1;
     }
     
+    @Override
     public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
     {
         super.onEntry();
@@ -94,7 +97,7 @@ public class MyWebsiteBehavior extends MyBehavior {
         // now lets commit the changes
         getGrammar().commitChanges();
         this.setList(menuList);
-        
+        gui.setCurrentBehavior(this);
         grammarChanged();
     }
     
@@ -132,8 +135,10 @@ public class MyWebsiteBehavior extends MyBehavior {
         }
     }
     
-    public void processResult(String result)
+    @Override
+    public boolean processResult(String result)
     {
+        boolean processed = false;
          if(result.equalsIgnoreCase("remove website"))
         {
             
@@ -160,6 +165,7 @@ public class MyWebsiteBehavior extends MyBehavior {
             } catch (IOException ex) {
                 Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
             }
+            processed = true;
         }
         else if (result.startsWith("open"))
         {
@@ -207,7 +213,9 @@ public class MyWebsiteBehavior extends MyBehavior {
             {
                 Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
             } 
+            processed = true;
         }
+         return processed;
     }
 
     /**
@@ -222,6 +230,10 @@ public class MyWebsiteBehavior extends MyBehavior {
         String tag = super.onRecognize(result);
         String listen = result.getBestFinalResultNoFiller();
         trace("Recognize result: " + result.getBestFinalResultNoFiller());
+        if(processResult(listen))
+            {
+                tag = "processed";
+            }
         return tag;
     }
 }

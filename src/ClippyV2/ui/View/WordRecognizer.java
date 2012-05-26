@@ -145,6 +145,7 @@ public class WordRecognizer implements Runnable, Configurable {
                     }
                     catch (Exception e)
                     {
+                        System.out.println("Couldn't find siri_notHeard.wav");
                     }
                 fireListeners(null);
             }
@@ -166,14 +167,7 @@ public class WordRecognizer implements Runnable, Configurable {
                     curNode.enter();
                 }
             }
-    }   catch (GrammarException ex) {
-            Logger.getLogger(WordRecognizer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (IOException ex) {
-            Logger.getLogger(WordRecognizer.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JSGFGrammarParseException ex) {
-            Logger.getLogger(WordRecognizer.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JSGFGrammarException ex) {
+    }   catch (GrammarException | IOException | JSGFGrammarParseException | JSGFGrammarException ex) {
             Logger.getLogger(WordRecognizer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -216,16 +210,23 @@ public class WordRecognizer implements Runnable, Configurable {
             System.out.println("Next state name: " + nextStateName);
             //if it doesn't understand what you say
             if (nextStateName == null || nextStateName.isEmpty())
-            {
+            {    
                 try
                     {
                         AePlayWave aw = new AePlayWave("./models/siri_notHeard.wav");
                         aw.start();
+                        gui.runErrorSte();
                     }
                     catch (Exception e)
                     {
                     }
                 fireListeners(null);
+            }
+            else if(nextStateName.equalsIgnoreCase("processed"))
+            {
+                System.out.println("Got here");
+                fireListeners(null);
+                //A seperate event was triggered
             }
             else
             {
@@ -616,9 +617,9 @@ class DialogNodeBehavior {
         return tagString;
     }
     
-    public void processResult(String result)
+    public boolean processResult(String result)
     {
-        
+        return false;
     }
     
     /*

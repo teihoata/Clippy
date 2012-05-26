@@ -143,14 +143,10 @@ import org.apache.commons.io.FileUtils;
         }
         
     @Override
-        public void processResult(String result)
+        public boolean processResult(String result)
         {
-            
-            if (result.equalsIgnoreCase("main menu") || result.equalsIgnoreCase("menu"))
-            {
-                this.setDefaultList();
-            }
-            else if (result.startsWith("play") && !result.equalsIgnoreCase("play next song"))
+            boolean processed = false;
+            if (result.startsWith("play") && !result.equalsIgnoreCase("play next song"))
                 {
                     String substring = result.substring(5);
                     System.out.println(substring);
@@ -163,7 +159,7 @@ import org.apache.commons.io.FileUtils;
                         {
                             System.out.println("Name of found file: " + file1.getName());
                             selectedFile = file1;
-                            
+                            processed = true;
                         }
                     }
                     try
@@ -205,6 +201,7 @@ import org.apache.commons.io.FileUtils;
                         {
                             System.out.println("Couldn't find Media Control Program in root/windows control/");
                         }
+                        processed = true;
                     }
                     else
                     {
@@ -221,6 +218,7 @@ import org.apache.commons.io.FileUtils;
                             catch (IOException ex)
                             {
                             }
+                            processed = true;
                         }
                         else
                         {
@@ -237,6 +235,7 @@ import org.apache.commons.io.FileUtils;
                                 catch (IOException ex)
                                 {
                                 }
+                                processed = true;
                             }
                             else if (result.equalsIgnoreCase("play next song"))
                                 {
@@ -277,11 +276,12 @@ import org.apache.commons.io.FileUtils;
                                         catch (Exception ex)
                                         {
                                         }
-
+                                        processed = true;
                                     }
                                 }
                             }
-                        }       
+                        } 
+            return processed;
         }
 
         @Override
@@ -291,7 +291,10 @@ import org.apache.commons.io.FileUtils;
             System.out.println("next = " + next);
             trace("Recognize result: " + result.getBestFinalResultNoFiller());
             String listen = result.getBestFinalResultNoFiller();
-            processResult(listen);
+            if(processResult(listen))
+            {
+                next = "processed";
+            }
             return next;
         }     
  }

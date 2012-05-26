@@ -166,8 +166,9 @@ public class MyDesktopBehavior extends MyBehavior {
     }
     
     @Override
-    public void processResult(String result)
+    public boolean processResult(String result)
     {
+        boolean processed = false;
         if (result.startsWith("switch to"))
         {
             BufferedReader empdtil = null;
@@ -219,15 +220,19 @@ public class MyDesktopBehavior extends MyBehavior {
             {
                 Logger.getLogger(MyDesktopBehavior.class.getName()).log(Level.SEVERE, null, ex);
             } 
+            processed = true;
         }
         else if(result.equalsIgnoreCase("minimize window"))
         {
             sendCommand("minimize");
+            processed = true;
         }
         else if(result.equalsIgnoreCase("maximize window"))
         {
             sendCommand("maximize");
+            processed = true;
         }
+        return processed;
     }
     
 
@@ -243,7 +248,10 @@ public class MyDesktopBehavior extends MyBehavior {
         String tag = super.onRecognize(result);
         String listen = result.getBestFinalResultNoFiller();
         trace("Recognize result: " + result.getBestFinalResultNoFiller());
-        processResult(listen);
+        if(processResult(listen))
+            {
+                tag = "processed";
+            }
         return tag;
     }
 }

@@ -13,8 +13,8 @@ public class Interface {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        ClippyGui newClip = new ClippyGui("Gavin");
+    public static void main(String[] args) throws InterruptedException {
+        ClippyGui newClip = new ClippyGui();
         newClip.pack();
         newClip.setVisible(true);
         Thread clipImg = new Thread(newClip);

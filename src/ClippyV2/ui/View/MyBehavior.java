@@ -33,6 +33,7 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
     public static class Speak extends Thread {
 
         private String sentence;
+        private String result;
     
     public Speak(String sentence)
     {
@@ -88,7 +89,12 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
             list.add("google search");
             list.add("tell me the time");
             updateList();
-            gui.setCurrentBehavior(this);
+            try{
+                gui.setCurrentBehavior(this);
+            }
+            catch(Exception e){
+                
+            }
         }
         
         
@@ -117,6 +123,11 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
         public ArrayList getCurrentList()
         {
             return list;
+        }
+        
+        public boolean processResult(String result)
+        {
+            return true;
         }
                 
         
@@ -155,15 +166,6 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
         {
             return this.menu;
         }
-        
-        public void processResult(String result)
-        {
-        try {
-            onRecognizeByString(result);
-        } catch (GrammarException ex) {
-            Logger.getLogger(MyBehavior.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        }
             
         public String onRecognizeByString(String result) throws GrammarException
         {
@@ -173,7 +175,6 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
             String listen = result;
             if (tag != null)
             {
-
                 System.out.println("\n "
                         + result + '\n');
 
@@ -190,9 +191,7 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
                 }
                 else if (tag.equals("help"))
                 {
-
                     help();
-
                 }
                 else if(listen.equalsIgnoreCase("scroll up"))
         {
@@ -247,7 +246,7 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
             return "";
         }
         
-
+   
 
         /**
          * Executed when the recognizer generates a result. Returns the name of
@@ -275,9 +274,10 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
 
                     System.out.println("Goodbye! Thanks for visiting!\n");
                     gui.exitClippy();
+  
                 }
                 else if(tag.equals("menu"))
-                {
+                {   
                     return "menu";
                 }
                 else if (tag.equals("help"))
@@ -307,18 +307,23 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
                 else if(tag.equals("search"))
                 {
                     String search = JOptionPane.showInputDialog(null, "Enter text to search");
-                try { Map<String, String> map = GoogleSearch.getSearchResult(search);
-         Iterator it = map.keySet().iterator(); while (it.hasNext()) { String
-          key = it.next().toString(); System.out.println(key + " <==> " +
-          map.get(key)); } } 
+                try { 
+                Map<String, String> map = GoogleSearch.getSearchResult(search);
+                Iterator it = map.keySet().iterator(); 
+                while (it.hasNext()) { 
+                    String key = it.next().toString(); 
+                    System.out.println(key + " <==> " + map.get(key)); } 
+                } 
                 catch (IOException ex) { } 
                 catch (JSONException ex) { } 
+                return "processed";
                 }
                 else if(tag.equals("directions"))
                 {
                     NavMenu navMenu = new NavMenu();
                     navMenu.pack();
                     navMenu.setVisible(true);
+                    return "processed";
                 }
                 else if (tag.startsWith("goto_")) {
                     return tag.replaceFirst("goto_", "");

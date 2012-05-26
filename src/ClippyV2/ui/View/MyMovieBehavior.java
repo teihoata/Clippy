@@ -125,14 +125,9 @@ import org.apache.commons.io.FileUtils;
         }
         
     @Override
-        public void processResult(String result)
+        public boolean processResult(String result)
         {
-            if (result.equalsIgnoreCase("main menu") || result.equalsIgnoreCase("menu"))
-            {
-                //next = "menu";
-            }
-            else
-            {
+            boolean processed = false;
                 if (result.startsWith("watch "))
                 {
                     String substring = result.substring(6);
@@ -176,6 +171,7 @@ import org.apache.commons.io.FileUtils;
                         }
 
                     }
+                    processed = true;
                 }
                 else
                 {
@@ -188,6 +184,7 @@ import org.apache.commons.io.FileUtils;
                         catch (IOException ex)
                         {
                         }
+                        processed = true;
                     }
                     else
                     {
@@ -204,6 +201,7 @@ import org.apache.commons.io.FileUtils;
                             catch (IOException ex)
                             {
                             }
+                            processed = true;
                         }
                         else
                         {
@@ -220,11 +218,12 @@ import org.apache.commons.io.FileUtils;
                                 catch (IOException ex)
                                 {
                                 }
+                                processed = true;
                             }
                         }
                     }
                 }
-            }
+                return processed;
         }
 
         @Override
@@ -233,7 +232,10 @@ import org.apache.commons.io.FileUtils;
             String next = super.onRecognize(result);;
             trace("Recognize result: " + result.getBestFinalResultNoFiller());
             String listen = result.getBestFinalResultNoFiller();
-            processResult(listen);
+            if(processResult(listen))
+            {
+                next = "processed";
+            }
             return next;
         }  
     }

@@ -32,46 +32,41 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
     private ImageIcon micIcon = new ImageIcon(getClass()
     .getResource("Images/mic.png")) ;
     private ImageIcon editIcon = new ImageIcon(getClass()
-    .getResource("Images/edit.png"));
+    .getResource("Images/menu.png"));
     private ImageIcon speechIcon = new ImageIcon(getClass()
     .getResource("Images/speech2.png"));
     private ImageIcon exitIcon = new ImageIcon(getClass()
-    .getResource("Images/exit.png"));
+    .getResource("Images/exitx.png"));
     private JPanel clipPnl;
     private JLabel imgLbl = new JLabel();
     private JLabel speechLbl = new JLabel();
     private JTextArea exeTxt = new JTextArea();
     private JTextArea clippyTxt;
-    private JScrollPane clippyScroll;
+  
     private Button searchBtn = new Button("Search");
     private Button exeBtn = new Button("Execute");
     private Button helpBtn = new Button("Help");
     private RoundButton exitBtn = new RoundButton(exitIcon);
     private RoundButton voiceBtn = new RoundButton(micIcon);
     private RoundButton editBtn = new RoundButton(editIcon);
-    private String user = "";
     private boolean isIdle;
     private boolean exeState;
-    private boolean searchState;
     private boolean errorState;
     private boolean exitState;
     private boolean voiceState;
     private Font txtFont = new Font("Arial", Font.BOLD, 14);
-    private HelpMenu helpMenu = new HelpMenu();
-    private EditMenu editMenu = new EditMenu();
-    private NavMenu navMenu = new NavMenu();
     private VoiceMenu voiceMenu;
     private WordRecognizer wordsRecognizer;
     private MyBehavior currentBehavior;
     private JLayeredPane lpane = new JLayeredPane();
+    private Thread newThread;
     
     /**
      * Constructor for class ClippyGUI
      */
-    public ClippyGui(String userName){
+    public ClippyGui() throws InterruptedException{
         super(300,200,350,300);
-        user = userName;
-        clippyTxt = new JTextArea("Hello " + user + "!");
+        clippyTxt = new JTextArea("Hello " + "!");
         createPnl();
         setComVisible(false);
         isIdle = true;
@@ -85,14 +80,14 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
     /**
      * Creates a panel for the components of the interface 
      */
-     private void createPnl(){
+     private void createPnl() throws InterruptedException{
         clipPnl = new JPanel();
         setPnl(lpane);
         setImage();
         setSpeechImg();
         addBtn();
         addClippyTxt();
-//        this.setBackground(new Color(1.0f, 1.0f, 1.0f, 0.1f));
+        //this.setBackground(new Color(1.0f, 1.0f, 1.0f, 0.1f));
         //clipPnl.add(lpane);
         //addField();
         lpane.setOpaque(false);
@@ -100,6 +95,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         voiceMenu = new VoiceMenu(currentBehavior);
         voiceMenu.pack();
         voiceMenu.setVisible(true);
+        setExitBtn();
         try {
             setup();
         } catch (IOException ex) {
@@ -107,7 +103,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         }
     }
     
-     private void setup() throws IOException
+     private void setup() throws IOException, InterruptedException
      {
          //Get the configuration from the xml resource
         URL url = WordCollection.class.getResource("clippy.config.xml");
@@ -119,9 +115,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         MyBehavior music = new MyMusicBehavior(this);
         MyBehavior movie = new MyMovieBehavior(this);
         MyBehavior desktop = new MyDesktopBehavior(this);
-        MyBehavior removeWeb = new MyWebsiteBehavior(this);
         MyBehavior website = new MyWebsiteBehavior(this);
-        
         
         //Add each menu node to the words to be recognised
         wordsRecognizer.addNode("menu", menu);
@@ -130,11 +124,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         wordsRecognizer.addNode("movies", movie);
         wordsRecognizer.addNode("desktop", desktop);
         wordsRecognizer.addNode("web", website);
-        wordsRecognizer.addNode("remove website", removeWeb);
-        
         currentBehavior = menu;
-   
-
         voiceMenu.setSingleMenuItem("Loading IntelliJ");
         initJIntellitype();
 
@@ -149,10 +139,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
                 updateMenu(word);
             }
         });
-
-        //Needed to add a timer as the program refused to update the list
-        javax.swing.Timer timer = new Timer(500, null);
-        timer.start();
+        
         wordsRecognizer.setInitialNode("menu");
         voiceMenu.setWordsRecognizer(wordsRecognizer);
         //currentBehavior.setDefaultList();
@@ -165,14 +152,15 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      
      public void setCurrentMenu(ArrayList menu)
      {
-         javax.swing.Timer timer = new Timer(500, null);
+        javax.swing.Timer timer = new Timer(500, null);
         timer.start();
-         voiceMenu.setVoiceMenu(menu);
+        voiceMenu.setVoiceMenu(menu);
      }
      
      public void setCurrentBehavior(MyBehavior behav)
      {
          currentBehavior = behav;
+         exeState = true;
          setClippyTxt("Entering " + currentBehavior.getName());
          voiceMenu.setBehavior(currentBehavior);
      }
@@ -262,7 +250,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         setEditBtn();
         //setSearchBtn();
         //setHelpBtn();
-        //setExitBtn();
+        setExitBtn();
     }
     
     
@@ -320,70 +308,13 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         });
         lpane.add(editBtn, new Integer(2), 0);
     }
-    
-    /**
-     * Creates execute button and set the action event 
-     */
-    private void setExeBtn(){
-        exeBtn.setLocation(70, 240);
-        exeBtn.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                isIdle = false;
-                String txt = exeTxt.getText();
-                if(txt.equals("")){   
-                    errorState = true;      
-                }
-                else{
-                    exeState = true;
-                }               
-            }
-        });
-        clipPnl.add(exeBtn);
-    }
-    
-    /**
-     * Creates search button and set the action event 
-     */
-    private void setSearchBtn(){
-        searchBtn.setLocation(200, 240);
-        searchBtn.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){ 
-                isIdle = false;  
-                searchState = true;            
-            }
-        });
-        clipPnl.add(searchBtn); 
-    }
-    
-    /**
-     * Creates help menu button and set the action event 
-     */
-    private void setHelpBtn(){
-        helpBtn.setLocation(230, 170);
-        helpBtn.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                try{
-                    helpMenu.dispose();
-                    helpMenu = new HelpMenu();
-                    helpMenu.pack();
-                    helpMenu.setVisible(true);     
-                }
-                catch(NullPointerException ex){
-                    
-                }             
-            }
-        });
-        lpane.add(helpBtn);
-    }
+     
     
     /**
      * Creates exit button and set the action event 
      */
     private void setExitBtn(){
-        exitBtn.setBounds(300,1 ,21,21);
+        exitBtn.setBounds(265,1 ,21,21);
         exitBtn.setVisible(false);
         exitBtn.addActionListener(new ActionListener(){
             @Override
@@ -391,11 +322,14 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
                 exitClippy();
             }     
         });
-        clipPnl.add(exitBtn);      
+       // lpane.add(exitBtn); 
+        lpane.add(exitBtn, new Integer(2), 0);
     }
     
     public void exitClippy()
     {
+        if(!exitState)
+        {
         clipDialog = new Dialog("Are you sure you want to exit?");
                 clipDialog.showOptionDialog();
                 if(clipDialog.getConfirmation()){
@@ -407,6 +341,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
                 else{
                     isIdle = true;
                 }
+        }
     }
      
     /**
@@ -485,9 +420,6 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         clippyTxt.setFont(txtFont);
         clippyTxt.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
         clippyTxt.setAlignmentY(JTextArea.CENTER_ALIGNMENT);
-        clippyScroll = new JScrollPane(clippyTxt);
-        //clippyTxt.setBackground(getBgColor());
-        
         clippyTxt.setBorder(null);
         clippyTxt.setSize(105,30);
         clippyTxt.setLocation(25, 45);
@@ -499,10 +431,8 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      * Set the output text of Clippy
      * @param text Clippys output text/feedback
      */
-    public void setClippyTxt(String text){
-        javax.swing.Timer time = new Timer(500, null);
-        clippyTxt.setText(text);
-        time.start();
+    public void setClippyTxt(String text){  
+        clippyTxt.setText(text);   
     }
     
     /**
@@ -512,10 +442,8 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
     public void setBtnEnabled(boolean enabled){
         exitBtn.setEnabled(enabled);
         exeBtn.setEnabled(enabled);
-        
         helpBtn.setEnabled(enabled);
         searchBtn.setEnabled(enabled);
-        voiceBtn.setEnabled(enabled);
     }
     /**
      * Set the visibility of the GUI components 
@@ -536,7 +464,6 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
     public void runExitSte(){
         try {
             clippyTxt.setVisible(false);
-            clippyScroll.setVisible(false);
             speechLbl.setVisible(false);
             setComVisible(false);
             genImage("clippyExit");
@@ -549,43 +476,23 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
     }
     
     /**
-     * Runs the event when the user searches information using Clippy
-     */
-    public void runSearchSte() throws InterruptedException{
-        setBtnEnabled(false);
-        imgLbl.setVisible(false);
-        genImage("clippySearch");
-        setClippyTxt("Searching...");
-    }
-    
-    /**
      * Runs the event when the user executes commands using input text  
      */
     public void runExeSte() throws InterruptedException{
-        setBtnEnabled(false);
-        imgLbl.setVisible(true);
         genImage("clippyVoice");
-        setClippyTxt("Executing Command..."); 
-        navMenu = new NavMenu();
-        navMenu.pack();
-        navMenu.setVisible(true);
+        newThread = new Thread(this);
+        newThread.sleep(3800);
     }
     
     /**
      * Runs the user interface event when Clippy gets an error 
      */
     public void runErrorSte() throws InterruptedException{
-        setBtnEnabled(false);
         genImage("clippyError");
-        setClippyTxt("Cannot Execute Error!");
-        
-        if(voiceState){
-            setClippyTxt("What? Speak Again?");
-        }
-        else{
-            
-        }
-        Thread.sleep(3800);
+        setClippyTxt("What? Speak Again?");
+        javax.swing.Timer time = new Timer(3000, null);
+        time.start();
+        System.out.println("gfgffgfg");
     }
     
     /**
@@ -593,37 +500,31 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      */
     
     public void runClippy() throws InterruptedException{
-        while(isIdle){
-            try {
-                threadIdle();
-            } 
-            catch (InterruptedException ex) {
-      
-            }
+        if(isIdle){
+           threadIdle();  
+        }  
+        
+        if(exitState){
+            runExitSte();
         }
-        if(exeState){
+        
+        else if(exeState){
             runExeSte();
             exeState = false;
         }
         
-        else if(exitState){
-            runExitSte();
-        }
-        else if(searchState){
-            runSearchSte();
-            searchState = false;         
-        }
         else if(errorState){
             runErrorSte();
             errorState = false;             
         }
         else if(voiceState){
-            voiceState = false;
+            voiceBtn.setEnabled(false);
         }
         else{
               
         }       
-        Thread.sleep(3800); 
+        Thread idleThread = new Thread();
+        idleThread.sleep(3800); 
         setBtnEnabled(true);
         isIdle = true;
         runClippy();
