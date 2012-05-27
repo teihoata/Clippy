@@ -4,6 +4,8 @@
  */
 package ClippyV2.ui.View;
 
+import Clippy.WordRecognizer;
+import Clippy.MyBehavior;
 import ClippyV2.ui.Frame;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;

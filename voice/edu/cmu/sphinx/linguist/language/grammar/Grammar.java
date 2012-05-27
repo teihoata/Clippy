@@ -11,7 +11,7 @@
  */
 package edu.cmu.sphinx.linguist.language.grammar;
 
-import ClippyV2.ui.View.AddGrammar;
+import Clippy.AddGrammar;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
 import edu.cmu.sphinx.linguist.dictionary.Word;
 import edu.cmu.sphinx.util.Timer;

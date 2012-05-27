@@ -4,13 +4,11 @@ wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-chrome.exe	Blackboard Academic Suite - Google Chrome
-cmd.exe	MINGW32:~/Documents/NetBeansProjects/ClippyAlpha1
-WinRAR.exe	changedCode.zip - WinRAR (only 8 days left to buy a license)
+chrome.exe	Linux & Java tips: using Class.getResource() load resource file in Eclipse - Google Chrome
+notepad++.exe	C:\Users\Marzipan\Desktop\teihoata-Clippy-bcfa12b\src\ClippyV2\ui\View\WordCollection.java - Notepad++
 explorer.exe	View
-explorer.exe	teihoata-Clippy-bcfa12b
-WinRAR.exe	Thunder2USB.zip - WinRAR (only 9 days left to buy a license)
-dllhost.exe	pole.jpg - Windows Photo Viewer
+WINWORD.EXE	Assignment 2012 (2).docx (Protected View) - Microsoft Word
+WINWORD.EXE	aiAssignment.docx - Microsoft Word
+VirtualBox.exe	Oracle VM VirtualBox Manager
 sidebar.exe	CPU Meter
 explorer.exe	Program Manager
-wmplayer.exe	Default IME

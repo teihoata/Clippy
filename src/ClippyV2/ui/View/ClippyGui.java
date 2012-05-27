@@ -2,6 +2,13 @@
  *
  */
 package ClippyV2.ui.View;
+import Clippy.WordRecognizer;
+import Clippy.MyMovieBehavior;
+import Clippy.WordsListener;
+import Clippy.MyBehavior;
+import Clippy.MyMusicBehavior;
+import Clippy.MyDesktopBehavior;
+import Clippy.MyWebsiteBehavior;
 import com.melloware.jintellitype.HotkeyListener;
 import com.melloware.jintellitype.IntellitypeListener;
 import com.melloware.jintellitype.JIntellitype;
@@ -100,14 +107,14 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         try {
             setup();
         } catch (IOException ex) {
-            Logger.getLogger(ClippyGui.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
         }
     }
     
      private void setup() throws IOException, InterruptedException
      {
          //Get the configuration from the xml resource
-        URL url = WordCollection.class.getResource("clippy.config.xml");
+        URL url = Clippy.WordRecognizer.class.getResource("clippy.config.xml");
         ConfigurationManager cm = new ConfigurationManager(url);
         wordsRecognizer = (WordRecognizer) cm.lookup("dialogManager");
         wordsRecognizer.setGui(this);

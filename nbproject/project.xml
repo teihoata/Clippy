@@ -5,8 +5,7 @@
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>ClippyAlpha1</name>
             <source-roots>
-                <root id="src.JIntelliType.dir"/>
-                <root id="src.voice.dir" name="Voice Packages"/>
+                <root id="src.voice.dir" name="Persistant Data"/>
                 <root id="src.dir"/>
             </source-roots>
             <test-roots>
