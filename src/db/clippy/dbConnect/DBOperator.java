@@ -15,6 +15,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -199,5 +202,208 @@ public class DBOperator {
             conn.close();
         }
 
+    }
+    
+    public void storeWebSite(List<String> webList) {
+        try {
+            StoreEveryThing("website", webList);
+        } catch (SQLException ex) {
+            Logger.getLogger(DBOperator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void storeMusic(List<String> musicList) {
+        try {
+            StoreEveryThing("music", musicList);
+        } catch (SQLException ex) {
+            Logger.getLogger(DBOperator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void storeMovie(List<String> movieList) {
+        try {
+            StoreEveryThing("movie", movieList);
+        } catch (SQLException ex) {
+            Logger.getLogger(DBOperator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void StoreEveryThing(String type, List<String> sList) throws SQLException {
+        Connection conn = getConnection();
+
+        PreparedStatement stmt = null;
+        try {
+            // set autocommit off to manual control transaction
+            conn.setAutoCommit(false);
+            String sql = "INSERT INTO USERINFO VALUES(?, ?, ?)";
+            // transaction #2
+            stmt = conn.prepareStatement(sql);
+            Iterator<String> iter = sList.iterator();
+            
+            while (iter.hasNext()) {
+                stmt.setString(1, UUID.randomUUID().toString());
+                stmt.setString(2, type);
+                stmt.setString(3, iter.next());
+                stmt.execute();
+            }
+
+            conn.commit();
+            conn.setAutoCommit(true);
+        } catch (SQLException ex) {
+            // operation failed
+            conn.rollback();
+        } finally {
+            stmt.close();
+            conn.close();
+        }
+
+    }
+    
+    private List<String> GetEverything(String key) throws SQLException {
+        List<String> result = new ArrayList<>();
+        // get preference type, perference configration from userinfo Table
+        String sql_pre = "SELECT userinfo.preference FROM userinfo WHERE userinfo.preference_type = ?";
+        Connection conn = getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = conn.prepareStatement(sql_pre);
+            stmt.setString(1, key);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String pre_val = rs.getString("preference");
+                result.add(pre_val);
+            }
+        } finally {
+            if (null != rs) {
+                rs.close();
+            }
+            stmt.close();
+            conn.close();
+        }
+
+        return result;
+    }
+    
+    public List<String> getMusics() {
+        List<String> res = new ArrayList<>();
+        try {
+            res = GetEverything("music");
+        } catch (SQLException ex) {
+            Logger.getLogger(DBOperator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
+    
+    public List<String> getWebSites() {
+        List<String> res = new ArrayList<>();
+        try {
+            return GetEverything("website");
+        } catch (SQLException ex) {
+            Logger.getLogger(DBOperator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
+    
+    public List<String> getMovies() {
+        List<String> res = new ArrayList<>();
+        try {
+            return GetEverything("movie");
+        } catch (SQLException ex) {
+            Logger.getLogger(DBOperator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
+    
+    public void removeWebsite(String website) {
+        try {
+            removePreference("website", website);
+        } catch (SQLException ex) {
+            Logger.getLogger(DBOperator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void removeMusic(String music) {
+        try {
+            removePreference("music", music);
+        } catch (SQLException ex) {
+            Logger.getLogger(DBOperator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void removeMovie(String movie) {
+        try {
+            removePreference("movie", movie);
+        } catch (SQLException ex) {
+            Logger.getLogger(DBOperator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void removePreference(String key, String pref) throws SQLException {
+        Connection conn = getConnection();
+        PreparedStatement pstmt = null;
+
+        String sql = "DELETE FROM userInfo WHERE userInfo.preference_type = ? and userInfo.preference = ?";
+        try {
+            conn.setAutoCommit(false);
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, key);
+            pstmt.setString(2, pref);
+            pstmt.executeUpdate();
+            
+            conn.commit();
+            conn.setAutoCommit(true);
+        } catch (SQLException ex) {
+            conn.rollback();
+        } finally {
+            pstmt.close();
+            conn.close();
+        }
+
+    }
+    
+    public void removeAllMusic() {
+        try {
+            removeAll("music");
+        } catch (SQLException ex) {
+            Logger.getLogger(DBOperator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void removeAllMovie() {
+        try {
+            removeAll("movie");
+        } catch (SQLException ex) {
+            Logger.getLogger(DBOperator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void removeAllWebsite() {
+        try {
+            removeAll("website");
+        } catch (SQLException ex) {
+            Logger.getLogger(DBOperator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void removeAll(String key) throws SQLException {
+        Connection conn = getConnection();
+        PreparedStatement pstmt = null;
+
+        String sql = "DELETE FROM userInfo WHERE userInfo.preference_type = ? ";
+        try {
+            conn.setAutoCommit(false);
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, key);
+            pstmt.executeUpdate();
+            
+            conn.commit();
+            conn.setAutoCommit(true);
+        } catch (SQLException ex) {
+            conn.rollback();
+        } finally {
+            pstmt.close();
+            conn.close();
+        }
     }
 }

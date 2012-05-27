@@ -6,6 +6,7 @@ package ClippyV2.ui.View;
 
 import com.sun.speech.engine.recognition.BaseRecognizer;
 import com.sun.speech.engine.recognition.BaseRuleGrammar;
+import db.clippy.dbConnect.DBOperator;
 import edu.cmu.sphinx.jsgf.JSGFGrammarException;
 import edu.cmu.sphinx.jsgf.JSGFGrammarParseException;
 import edu.cmu.sphinx.result.Result;
@@ -32,6 +33,8 @@ import org.apache.commons.io.FileUtils;
         private Collection files;
         private File selectedFile;
         private ClippyGui gui;
+        
+        private DBOperator dbo = new DBOperator();// added by Ray
         /**
          * Creates a music behavior
          */
@@ -42,8 +45,9 @@ import org.apache.commons.io.FileUtils;
             playList.add("pause");
             playList.add("volume up");
             playList.add("volume down");
-            File playListFile = new File("./src/PersistantData/playlist.txt");
-            FileWriter write = new FileWriter(playListFile);
+            dbo.removeAllMovie();
+//            File playListFile = new File("./src/PersistantData/playlist.txt");
+//            FileWriter write = new FileWriter(playListFile);
             File file = new File("C:\\Users\\" + System.getProperty("user.name") + "\\Videos\\");
             String[] extensions =
             {
@@ -55,10 +59,11 @@ import org.apache.commons.io.FileUtils;
                 File file1 = (File) iterator.next();
                 String fileName = file1.getName().substring(0, file1.getName().indexOf('.'));
                 fileName = fileName.replaceAll("[^A-Za-z]", " ");
-                write.write(fileName);  
+//                write.write(fileName);  
                 playList.add(fileName);
             }
-            write.close();
+            dbo.storeMovie(playList);
+//            write.close();
         }
 
         /**
@@ -126,8 +131,8 @@ import org.apache.commons.io.FileUtils;
         
     @Override
         public boolean processResult(String result)
-        {
-            boolean processed = false;
+    {
+        boolean processed = false;
                 if (result.startsWith("watch "))
                 {
                     String substring = result.substring(6);
@@ -223,8 +228,9 @@ import org.apache.commons.io.FileUtils;
                         }
                     }
                 }
-                return processed;
-        }
+              return processed;  
+            }
+        
 
         @Override
         public String onRecognize(Result result) throws GrammarException
@@ -232,10 +238,7 @@ import org.apache.commons.io.FileUtils;
             String next = super.onRecognize(result);;
             trace("Recognize result: " + result.getBestFinalResultNoFiller());
             String listen = result.getBestFinalResultNoFiller();
-            if(processResult(listen))
-            {
-                next = "processed";
-            }
+            processResult(listen);
             return next;
         }  
     }

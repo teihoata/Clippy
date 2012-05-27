@@ -7,14 +7,12 @@ import com.melloware.jintellitype.IntellitypeListener;
 import com.melloware.jintellitype.JIntellitype;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
 import ClippyV2.ui.*;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -267,7 +265,8 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
                  if (voiceBtn.isEnabled()) {
                     voiceBtn.setEnabled(false);
                     startListening();
-                }   
+                }
+                 voiceState = false;
             }
         });
         lpane.add(voiceBtn, new Integer(2), 0);

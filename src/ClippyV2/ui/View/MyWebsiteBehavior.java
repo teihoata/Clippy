@@ -7,11 +7,14 @@ import com.sun.speech.engine.recognition.BaseRecognizer;
 import com.sun.speech.engine.recognition.BaseRuleGrammar;
 import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
+import db.clippy.dbConnect.DBOperator;
 import edu.cmu.sphinx.jsgf.JSGFGrammarException;
 import edu.cmu.sphinx.jsgf.JSGFGrammarParseException;
 import edu.cmu.sphinx.result.Result;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.speech.recognition.GrammarException;
@@ -28,19 +31,19 @@ public class MyWebsiteBehavior extends MyBehavior {
     ArrayList<String> websiteList; //holds the names of current websites
     private int count; //number of rules within the dialog
     private ArrayList<String> menuList;
-    private ClippyGui gui;
 
+    // added by Ray
+    private DBOperator dbo = new DBOperator();
+    
     /**
      * Simple Constructor
      */
     public MyWebsiteBehavior(ClippyGui gui)
     {
         super(gui);
-        this.gui = gui;
         count = 1;
     }
     
-    @Override
     public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
     {
         super.onEntry();
@@ -54,24 +57,30 @@ public class MyWebsiteBehavior extends MyBehavior {
 
         RuleGrammar ruleGrammar = new BaseRuleGrammar(recognizer, getGrammar().getRuleGrammar());
         websiteList = new ArrayList<>();
-        try
-        {     
-            BufferedReader empdtil = new BufferedReader(new FileReader("./websites.txt"));
+//        try
+//        { 
+            // changed by Ray
+//            BufferedReader empdtil = new BufferedReader(new FileReader("./websites.txt"));
+            List<String> websites = dbo.getWebSites();  // added by Ray
+            
             String detail = "";
-            while ((detail = empdtil.readLine()) != null)
+// changed by Ray           while ((detail = empdtil.readLine()) != null)
+            Iterator<String> it = websites.iterator();
+            while (it.hasNext())
             {
+                detail = it.next();
                 try{
                     detail = detail.substring(detail.indexOf(".")+1, detail.indexOf("." , detail.indexOf(".") + 1));
                 }
                 catch(StringIndexOutOfBoundsException e){}
                 websiteList.add(detail);
             }
-            empdtil.close();
-        }
-        catch (IOException ex)
-        {
-            System.out.println(ex.getMessage());
-        }
+//            empdtil.close();
+//        }
+//        catch (IOException ex)
+//        {
+//            System.out.println(ex.getMessage());
+//        }
 
         String ruleName = "web";
             for (String app : websiteList)
@@ -97,7 +106,7 @@ public class MyWebsiteBehavior extends MyBehavior {
         // now lets commit the changes
         getGrammar().commitChanges();
         this.setList(menuList);
-        gui.setCurrentBehavior(this);
+        
         grammarChanged();
     }
     
@@ -135,29 +144,27 @@ public class MyWebsiteBehavior extends MyBehavior {
         }
     }
     
-    @Override
     public boolean processResult(String result)
     {
         boolean processed = false;
+        List<String> websites = dbo.getWebSites();
          if(result.equalsIgnoreCase("remove website"))
         {
-            
+            processed = true;
         }
         else if(result.equalsIgnoreCase("add new website"))
         {
             try {
-                FileWriter print = null;
                     String websiteName = (String) JOptionPane.showInputDialog(null, "Enter the address of your website starting with 'www.'", "Add Website", JOptionPane.INFORMATION_MESSAGE, null, null, "www.");
                     if(websiteName != null || !websiteName.isEmpty() || !websiteName.equalsIgnoreCase("www."))
                     {
-                        File file = new File("./websites.txt");
-                        print = new FileWriter(file, true);
-                        BufferedWriter bufferWritter = new BufferedWriter(print);
-                        bufferWritter.write("\n" + websiteName);
-                        bufferWritter.close();
+                        websites.add(websiteName);
+                        dbo.removeAllWebsite();
+                        dbo.storeWebSite(websites);
                         onEntry();
+                        processed = true;
                         help();
-                    }
+                    }  
             } catch (JSGFGrammarParseException ex) {
                 Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
             } catch (JSGFGrammarException ex) {
@@ -165,19 +172,16 @@ public class MyWebsiteBehavior extends MyBehavior {
             } catch (IOException ex) {
                 Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
             }
-            processed = true;
         }
         else if (result.startsWith("open"))
         {
-            BufferedReader empdtil = null;
             String url = "";
             String nameOfCurrentWebsite = "";
-            try
-            {
-                empdtil = new BufferedReader(new FileReader("./websites.txt"));
                 String detail = "";
-            while ((detail = empdtil.readLine()) != null)
+                Iterator<String> it = websites.iterator();
+                while (it.hasNext())
             {
+                detail = it.next();
                 String currentWebsite = detail;
                 
                 try{
@@ -192,7 +196,6 @@ public class MyWebsiteBehavior extends MyBehavior {
                 catch(StringIndexOutOfBoundsException e){}
                 websiteList.add(detail);
             }
-            empdtil.close();
                 try
                 {
                     java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
@@ -207,13 +210,7 @@ public class MyWebsiteBehavior extends MyBehavior {
                 {
                     System.out.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
                 }
-
-            }
-            catch (IOException ex)
-            {
-                Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
-            } 
-            processed = true;
+                processed = true;
         }
          return processed;
     }
@@ -230,10 +227,7 @@ public class MyWebsiteBehavior extends MyBehavior {
         String tag = super.onRecognize(result);
         String listen = result.getBestFinalResultNoFiller();
         trace("Recognize result: " + result.getBestFinalResultNoFiller());
-        if(processResult(listen))
-            {
-                tag = "processed";
-            }
+        processResult(listen);
         return tag;
     }
 }
