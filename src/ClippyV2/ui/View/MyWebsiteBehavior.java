@@ -227,7 +227,10 @@ public class MyWebsiteBehavior extends MyBehavior {
         String tag = super.onRecognize(result);
         String listen = result.getBestFinalResultNoFiller();
         trace("Recognize result: " + result.getBestFinalResultNoFiller());
-        processResult(listen);
+        if(processResult(listen))
+        {
+            tag = "processed";
+        }
         return tag;
     }
 }

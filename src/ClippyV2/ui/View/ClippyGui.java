@@ -18,6 +18,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  * The GUI of the Clippy Project 
@@ -53,6 +55,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
     private boolean exitState;
     private boolean voiceState;
     private Font txtFont = new Font("Arial", Font.BOLD, 14);
+    private Font smallFont = new Font("Arial", Font.BOLD, 10);
     private VoiceMenu voiceMenu;
     private WordRecognizer wordsRecognizer;
     private MyBehavior currentBehavior;
@@ -420,7 +423,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         clippyTxt.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
         clippyTxt.setAlignmentY(JTextArea.CENTER_ALIGNMENT);
         clippyTxt.setBorder(null);
-        clippyTxt.setSize(105,30);
+        clippyTxt.setSize(105,35);
         clippyTxt.setLocation(25, 45);
         clippyTxt.setOpaque(false);
         lpane.add(clippyTxt, new Integer(1), 0);
@@ -432,6 +435,8 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      */
     public void setClippyTxt(String text){  
         clippyTxt.setText(text);   
+        javax.swing.Timer time = new Timer(1000, null);
+        time.start();
     }
     
     /**

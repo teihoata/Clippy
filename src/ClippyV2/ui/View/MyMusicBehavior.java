@@ -158,6 +158,7 @@ import org.apache.commons.io.FileUtils;
                         if (fileName.equalsIgnoreCase(substring))
                         {
                             System.out.println("Name of found file: " + file1.getName());
+                            gui.setClippyTxt("opening " + file1.getName());
                             selectedFile = file1;
                             processed = true;
                         }
@@ -195,6 +196,7 @@ import org.apache.commons.io.FileUtils;
                     {
                         try
                         {
+                            gui.setClippyTxt("pause");
                             Process process = new ProcessBuilder("./Windows Control/UniversalMediaRemote.exe", "Play").start();
                         }
                         catch (IOException ex)
@@ -209,6 +211,7 @@ import org.apache.commons.io.FileUtils;
                         {
                             try
                             {
+                                gui.setClippyTxt("increasing volume");
                                 for (int i = 0; i < 10; i++)
                                 {
                                     Process process = new ProcessBuilder("./Windows Control/UniversalMediaRemote.exe", "VUp").start();
@@ -224,6 +227,7 @@ import org.apache.commons.io.FileUtils;
                         {
                             if (result.equalsIgnoreCase("volume down"))
                             {
+                                gui.setClippyTxt("decreasing volume");
                                 try
                                 {
                                     for (int i = 0; i < 10; i++)

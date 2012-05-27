@@ -208,7 +208,9 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
                 else if (tag.equals("time")) {
                     DateFormat dateFormat = new SimpleDateFormat("HH:mm");
                     Calendar cal = Calendar.getInstance();
-                    Thread speak = new Speak(dateFormat.format(cal.getTime()));
+                    String time = dateFormat.format(cal.getTime());
+                    Thread speak = new Speak(time);
+                    gui.setClippyTxt(time);
                     speak.start();
                 }
                 else if(tag.equals("search"))
@@ -263,6 +265,7 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
             System.out.println("Result = " + result);
             String tag = super.onRecognize(result);
             String listen = result.getBestFinalResultNoFiller();
+            String end = "";
             if (tag != null)
             {
 
@@ -289,20 +292,26 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
                 else if(listen.equalsIgnoreCase("scroll up"))
         {
            sendCommand("scroll up");
+           end = "processed";
         }
         else if(listen.equalsIgnoreCase("scroll down"))
         {
             sendCommand("scroll down");
+            end = "processed";
         }
                 else if (listen.equalsIgnoreCase("close active program")) {
                     sendCommand("close");
                     help();
+                    end = "processed";
                 }
                 else if (tag.equals("time")) {
                     DateFormat dateFormat = new SimpleDateFormat("HH:mm");
                     Calendar cal = Calendar.getInstance();
-                    Thread speak = new Speak(dateFormat.format(cal.getTime()));
+                    String time = dateFormat.format(cal.getTime());
+                    Thread speak = new Speak(time);
+                    gui.setClippyTxt(time);
                     speak.start();
+                    end = "processed";
                 }
                 else if(tag.equals("search"))
                 {
@@ -340,7 +349,7 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
                     {
                     } 
             }
-            return "";
+            return end;
         }
         
             /**

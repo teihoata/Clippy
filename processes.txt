@@ -3,30 +3,14 @@ wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
-netbeans.exe	ScreenReader - NetBeans IDE 7.1.1
-explorer.exe	ClippyAlpha1
+netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
+chrome.exe	Blackboard Academic Suite - Google Chrome
+cmd.exe	MINGW32:~/Documents/NetBeansProjects/ClippyAlpha1
+WinRAR.exe	changedCode.zip - WinRAR (only 8 days left to buy a license)
+explorer.exe	View
 explorer.exe	teihoata-Clippy-bcfa12b
-explorer.exe	ClippyAlpha1
 WinRAR.exe	Thunder2USB.zip - WinRAR (only 9 days left to buy a license)
-chrome.exe	[ROM][Cool Sense 3.6][26 May] Cool ICS v2 |TWEAKS|FASTEST|450+ MB RAM|EXT4 ALIGNMENT - Page 12 - xda-developers - Google Chrome
 dllhost.exe	pole.jpg - Windows Photo Viewer
-notepad++.exe	C:\Users\Marzipan\Downloads\Diablo.III-SKIDROW\skidrow.nfo - Notepad++
 sidebar.exe	CPU Meter
 explorer.exe	Program Manager
-java.exe	Default IME
-explorer.exe	Start
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-netbeans.exe	ScreenReader - NetBeans IDE 7.1.1
-explorer.exe	ClippyAlpha1
-explorer.exe	teihoata-Clippy-bcfa12b
-explorer.exe	ClippyAlpha1
-WinRAR.exe	Thunder2USB.zip - WinRAR (only 9 days left to buy a license)
-chrome.exe	[ROM][Cool Sense 3.6][26 May] Cool ICS v2 |TWEAKS|FASTEST|450+ MB RAM|EXT4 ALIGNMENT - Page 12 - xda-developers - Google Chrome
-dllhost.exe	pole.jpg - Windows Photo Viewer
-notepad++.exe	C:\Users\Marzipan\Downloads\Diablo.III-SKIDROW\skidrow.nfo - Notepad++
-sidebar.exe	CPU Meter
-explorer.exe	Program Manager
-java.exe	Default IME
+wmplayer.exe	Default IME

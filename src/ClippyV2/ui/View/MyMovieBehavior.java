@@ -142,11 +142,11 @@ import org.apache.commons.io.FileUtils;
                     {
                         File file1 = (File) iterator.next();
                         String fileName = file1.getName().substring(0, file1.getName().indexOf('.')).replaceAll("[^A-Za-z]", " ").replaceAll("\\s+", " ").trim();
-//                        System.out.println("Comparing " + fileName.toLowerCase() + " and " + substring);a
                         if (fileName.equalsIgnoreCase(substring))
                         {
-                            System.out.println("Name of found file: " + file1.getName());
+                            gui.setClippyTxt("opening " + file1.getName());
                             selectedFile = file1;
+                            processed = true;
                             
                         }
                     }
@@ -176,7 +176,6 @@ import org.apache.commons.io.FileUtils;
                         }
 
                     }
-                    processed = true;
                 }
                 else
                 {
@@ -238,7 +237,10 @@ import org.apache.commons.io.FileUtils;
             String next = super.onRecognize(result);;
             trace("Recognize result: " + result.getBestFinalResultNoFiller());
             String listen = result.getBestFinalResultNoFiller();
-            processResult(listen);
+            if(processResult(listen))
+            {
+                next = "processed";
+            }
             return next;
         }  
     }
