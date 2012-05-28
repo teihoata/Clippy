@@ -7,15 +7,18 @@ package ClippyV2.ui.View;
 import Clippy.WordRecognizer;
 import Clippy.MyBehavior;
 import ClippyV2.ui.Frame;
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.BevelBorder;
 
 /**
  *
@@ -27,6 +30,7 @@ public class VoiceMenu extends Frame {
     private JPanel voicePnl = new JPanel();
     private MyBehavior behavior;
     private WordRecognizer wordsRecognizer;
+    private JLabel label = new JLabel();
     
     public VoiceMenu(MyBehavior behavior){
         super(350,300,350,600);
@@ -61,7 +65,17 @@ public class VoiceMenu extends Frame {
         };
         voiceTxt.addMouseListener(mouseListener);
         voiceScroll.setBounds(0, 0, 350, 300);
-        voicePnl.add(voiceScroll);
+        
+      label = new JLabel("menu", JLabel.CENTER); 
+      label.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+      voiceScroll.setColumnHeaderView(label);
+      voicePnl.add(voiceScroll);
+      new ComponentMover(this, label);
+    }
+    
+    public void setHeaderUpdate(String update)
+    {
+        label.setText(update);
     }
     
     public void setVoiceMenu(ArrayList txt){
