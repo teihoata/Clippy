@@ -136,16 +136,12 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         currentBehavior = menu;
         
         setHeader("Loading IntelliJ");
-        voiceMenu.setSingleMenuItem("Loading IntelliJ");
         initJIntellitype();
 
         setHeader("Loading Dialogs");
-        voiceMenu.setSingleMenuItem("Loading dialogs ...");
         wordsRecognizer.allocate();
 
         setHeader("Running  ...");
-        voiceMenu.setSingleMenuItem("Running  ...");
-
         wordsRecognizer.addWordListener(new WordsListener() {
 
             public void notify(String word) {
