@@ -737,10 +737,13 @@ class DialogNodeBehavior {
     
     public String onRecognizeByString(String result) throws GrammarException
         {
+            System.out.println("Result = " + result);
             String tag = getTagStringFromString(result);
+            System.out.println("Tag = " + tag);
             String listen = result;
             if (tag != null)
             {
+
                 System.out.println("\n "
                         + result + '\n');
 

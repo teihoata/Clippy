@@ -49,7 +49,7 @@ public class MyWebsiteBehavior extends MyBehavior {
     {
         super.onEntry();
         menuList = new ArrayList<>();
-        addDefaultListWithoutCurrent(menuList, "surf the web");
+        addDefaultListWithoutCurrent(menuList, "browse internet");
         BaseRecognizer recognizer = new BaseRecognizer(getGrammar().getGrammarManager());
         try {
             recognizer.allocate();

@@ -80,7 +80,6 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         isIdle = true;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         currentBehavior.setDefaultList();
-        currentBehavior.updateList();
     }
     
     
@@ -134,16 +133,12 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         wordsRecognizer.addNode("desktop", desktop);
         wordsRecognizer.addNode("web", website);
         currentBehavior = menu;
-        
-        setHeader("Loading IntelliJ");
         voiceMenu.setSingleMenuItem("Loading IntelliJ");
         initJIntellitype();
 
-        setHeader("Loading Dialogs");
         voiceMenu.setSingleMenuItem("Loading dialogs ...");
         wordsRecognizer.allocate();
 
-        setHeader("Running  ...");
         voiceMenu.setSingleMenuItem("Running  ...");
 
         wordsRecognizer.addWordListener(new WordsListener() {
@@ -157,12 +152,6 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         voiceMenu.setWordsRecognizer(wordsRecognizer);
         //currentBehavior.setDefaultList();
      }
-     
-          
-    public void setHeader(String update)
-    {
-        voiceMenu.setHeaderUpdate(update);
-    }
      
      public MyBehavior getCurrentBehavior()
      {
@@ -403,7 +392,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
        // Test Clippy Image
         //System.out.println(fileName);    
     }
-   
+    
     /**
      * Generate a specified image 
      * @param imgName 
@@ -462,6 +451,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      * @param enabled true if button is enabled otherwise false
      */
     public void setBtnEnabled(boolean enabled){
+        exitBtn.setEnabled(enabled);
         exeBtn.setEnabled(enabled);
         helpBtn.setEnabled(enabled);
         searchBtn.setEnabled(enabled);

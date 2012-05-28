@@ -9,7 +9,7 @@ grammar menu;
 public <command> =      
                         play music       { goto_music } |
                         tell me the time  { time } |
-                        surf the web         {goto_web} |
+                        browse internet         {goto_web} |
                         watch movies           { goto_movies } |
                         computer control     {goto_desktop} |
                         get directions      {directions} |

@@ -13,6 +13,6 @@ import <menu.command>;
 public <commands> = 
                         <standard_commands> |
                         tell me the time  { time } |
-                        surf the web         {goto_web} |
+                        browse internet         {goto_web} |
                         computer control     {goto_desktop} |
                         watch movies          { goto_movies } ;

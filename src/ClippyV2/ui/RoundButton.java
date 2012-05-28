@@ -1,7 +1,10 @@
 package ClippyV2.ui;
 
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,12 +22,11 @@ public class RoundButton extends JButton {
   */
   public RoundButton(ImageIcon img) {
     super(img);
-    setBackground(Color.white);
+    setBackground(Color.lightGray);
 // Creates a circle 
     Dimension size = getPreferredSize();
     size.width = size.height = Math.max(size.width, size.height);
     setPreferredSize(size);
-    setFocusPainted(false);
 // Round button can be paintable
     setContentAreaFilled(false);
   }
@@ -34,20 +36,16 @@ public class RoundButton extends JButton {
    * @param g graphics color  
    */
   protected void paintComponent(Graphics g) {
-      Graphics2D g2d = (Graphics2D) g;
     if (getModel().isArmed()) {
-      g2d.setColor(Color.gray);
+      g.setColor(Color.gray);
     } else {
-      g2d.setColor(getBackground());
+      g.setColor(getBackground());
     }
-    g2d.fillOval(0, 0, getSize().width-1, 
+    g.fillOval(0, 0, getSize().width-1, 
       getSize().height-1);
-    
-    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-    RenderingHints.VALUE_ANTIALIAS_ON);
 
 // Paints the label
-    super.paintComponent(g2d);
+    super.paintComponent(g);
   }
 
   /**
