@@ -1,14 +1,10 @@
 explorer.exe	Start
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-chrome.exe	Linux & Java tips: using Class.getResource() load resource file in Eclipse - Google Chrome
-notepad++.exe	C:\Users\Marzipan\Desktop\teihoata-Clippy-bcfa12b\src\ClippyV2\ui\View\WordCollection.java - Notepad++
-explorer.exe	View
+chrome.exe	repaint after jlabel is changed - Google Search - Google Chrome
+chrome.exe	Untitled - Google Chrome
+mspaint.exe	Untitled - Paint
 WINWORD.EXE	Assignment 2012 (2).docx (Protected View) - Microsoft Word
 WINWORD.EXE	aiAssignment.docx - Microsoft Word
-VirtualBox.exe	Oracle VM VirtualBox Manager
+VirtualBox.exe	WindowsXP [Running] - Oracle VM VirtualBox
 sidebar.exe	CPU Meter
 explorer.exe	Program Manager

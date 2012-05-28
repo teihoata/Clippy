@@ -54,13 +54,18 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
         private String menu;
         private ClippyGui gui;
         
+        public MyBehavior()
+        {
+            //Constructor used for testing class methods
+        }
+        
         public MyBehavior(ClippyGui gui)
         {
             this.gui = gui;
             defaultMenuOptions = new ArrayList<>();
             defaultMenuOptions.add("main menu");
             defaultMenuOptions.add("computer control");
-            defaultMenuOptions.add("browse internet");
+            defaultMenuOptions.add("surf the web");
             defaultMenuOptions.add("play music");
             defaultMenuOptions.add("watch movies");
             defaultMenuOptions.add("tell me the time");
@@ -78,24 +83,31 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
         public void setDefaultList()
         {
             list = new ArrayList<>();
-            list.add(" ======== " + "menu" + " =======\n");
             list.add("close clippy");
-            list.add("browse internet");
+            list.add("surf the web");
             list.add("computer control");
             list.add("play music");
             list.add("watch movies");
             list.add("get directions");
             list.add("google search");
             list.add("tell me the time");
-            updateList();
             try{
                 gui.setCurrentBehavior(this);
+                gui.setCurrentMenu(list);
             }
             catch(Exception e){
                 
             }
         }
         
+        /**
+         * Used for testing
+         * @return the default menu 
+         */
+        private ArrayList<String> getDefaultList()
+        {
+            return defaultMenuOptions;
+        }
         
         public void addDefaultListWithoutCurrent(ArrayList<String> list, String current)
         {
@@ -109,9 +121,8 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
         
         public void addTitle()
         {
-            menu = " ======== " + getGrammarName() + " =======\n";
+            menu = "";
             list.add(0, menu);
-            
         }
         
         public void updateList()
@@ -145,8 +156,10 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
         {
             super.onEntry();
             gui.setCurrentBehavior(this);
-            setDefaultList();
-            
+            if(this.getName().equalsIgnoreCase("menu"))
+            {
+                setDefaultList();
+            }
         }
         
         
@@ -157,8 +170,8 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
          */
         protected void help()
         {
-            menu = " ======== " + getGrammarName() + " =======\n";
-            //gui.setCurrentMenu(menu);
+            menu = "";
+            gui.setHeader(getGrammarName());
         }
         
         public String getCurrentMenuOptions()
@@ -168,118 +181,19 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
             
         public String onRecognizeByString(String result) throws GrammarException
         {
-            System.out.println("Result = " + result);
             String tag = getTagStringFromString(result);
-            System.out.println("Tag = " + tag);
             String listen = result;
-            if (tag != null)
-            {
-                System.out.println("\n "
-                        + result + '\n');
-
-                if (tag.equals("exit"))
-                {
-
-                    System.out.println("Goodbye! Thanks for visiting!\n");
-                    gui.exitClippy();
-                }
-                else if(tag.equals("menu"))
-                {
-                    setDefaultList();
-                    return "menu";
-                }
-                else if (tag.equals("help"))
-                {
-                    help();
-                }
-                else if(listen.equalsIgnoreCase("scroll up"))
-        {
-           sendCommand("scroll up");
-        }
-        else if(listen.equalsIgnoreCase("scroll down"))
-        {
-            sendCommand("scroll down");
-        }
-                else if (listen.equalsIgnoreCase("close active program")) {
-                    sendCommand("close");
-                    help();
-                }
-                else if (tag.equals("time")) {
-                    DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-                    Calendar cal = Calendar.getInstance();
-                    String time = dateFormat.format(cal.getTime());
-                    Thread speak = new Speak(time);
-                    gui.setClippyTxt(time);
-                    speak.start();
-                }
-                else if(tag.equals("search"))
-                {
-                    String search = JOptionPane.showInputDialog(null, "Enter text to search");
-                try { Map<String, String> map = GoogleSearch.getSearchResult(search);
-         Iterator it = map.keySet().iterator(); while (it.hasNext()) { String
-          key = it.next().toString(); System.out.println(key + " <==> " +
-          map.get(key)); } } 
-                catch (IOException ex) { } 
-                catch (JSONException ex) { } 
-                }
-                else if(tag.equals("directions"))
-                {
-                    NavMenu navMenu = new NavMenu();
-                    navMenu.pack();
-                    navMenu.setVisible(true);
-                }
-                else if (tag.startsWith("goto_")) {
-                    System.out.println("Got heree");
-                    return tag.replaceFirst("goto_", "");
-                }
-            }
-            else
-            {
-                try
-                    {
-                        AePlayWave aw = new AePlayWave("./models/siri_notHeard.wav");
-                        aw.start();
-                    }
-                    catch (Exception e)
-                    {
-                    } 
-            }
-            return "";
-        }
-        
-   
-
-        /**
-         * Executed when the recognizer generates a result. Returns the name of
-         * the next dialog node to become active, or null if we should stay in
-         * this node
-         *
-         * @param result the recongition result
-         * @return the name of the next dialog node or null if control should
-         * remain in the current node.
-         */
-    @Override
-        public String onRecognize(Result result) throws GrammarException
-        {
-            System.out.println("Result = " + result);
-            String tag = super.onRecognize(result);
-            String listen = result.getBestFinalResultNoFiller();
             String end = "";
             if (tag != null)
             {
-
-                System.out.println("\n "
-                        + result.getBestFinalResultNoFiller() + '\n');
-
                 if (tag.equals("exit"))
                 {
-
                     System.out.println("Goodbye! Thanks for visiting!\n");
                     gui.exitClippy();
-  
                 }
                 else if(tag.equals("menu"))
                 {   
+                    setDefaultList();
                     return "menu";
                 }
                 else if (tag.equals("help"))
@@ -349,6 +263,27 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior {
                     } 
             }
             return end;
+        }
+        
+   
+
+        /**
+         * Executed when the recognizer generates a result. Returns the name of
+         * the next dialog node to become active, or null if we should stay in
+         * this node
+         *
+         * @param result the recongition result
+         * @return the name of the next dialog node or null if control should
+         * remain in the current node.
+         */
+    @Override
+        public String onRecognize(Result result) throws GrammarException
+        {
+            System.out.println("Result = " + result);
+            String tag = super.onRecognize(result);
+            String listen = result.getBestFinalResultNoFiller();
+            String onRecognizeByString = onRecognizeByString(listen);
+            return onRecognizeByString;
         }
         
             /**
