@@ -62,6 +62,10 @@ public class Speak extends Thread
                     break;
                 }
             }
+            if(t.isAlive())
+            {
+                t.interrupt();
+            }
         }
         else
         {
