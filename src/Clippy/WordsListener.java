@@ -7,7 +7,8 @@ package Clippy;
 /**
  * An interface for word listeners
  */
- public interface WordsListener {
+public interface WordsListener
+{
 
     /**
      * Invoked when a new word is recognized

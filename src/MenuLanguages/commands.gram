@@ -8,5 +8,4 @@ grammar commands;
 
 public <standard_commands> =
                       main menu    { goto_menu } |
-                      scroll up |
-                      scroll down;
+                      read menu;

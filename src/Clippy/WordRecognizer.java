@@ -3,8 +3,6 @@ package Clippy;
 /**
  * Manages the speech recognition for Word Collection
  */
-
-
 import ClippyV2.ui.View.ClippyGui;
 import ClippyV2.ui.View.NavMenu;
 import com.sun.speech.engine.recognition.BaseRecognizer;
@@ -31,11 +29,11 @@ import javax.speech.recognition.RuleParse;
 import javax.swing.JOptionPane;
 import org.json.JSONException;
 
-
 /**
  * @author Marcus Ball
  */
-public class WordRecognizer implements Runnable, Configurable {
+public class WordRecognizer implements Runnable, Configurable
+{
 
     public static boolean recording = false;
     public static boolean waitingForStop = false;
@@ -54,11 +52,11 @@ public class WordRecognizer implements Runnable, Configurable {
     @S4Component(type = JSGFGrammar.class)
     public final static String PROP_JSGF_GRAMMAR = "jsgfGrammar";
     @S4Component(type = Microphone.class)
-    public final static String PROP_MICROPHONE = "microphone";  
+    public final static String PROP_MICROPHONE = "microphone";
     @S4Component(type = Recognizer.class)
     public final static String PROP_RECOGNIZER = "recognizer";
     private ClippyGui gui;
-    
+
     /**
      * Creates the WordRecognizer.
      *
@@ -77,8 +75,7 @@ public class WordRecognizer implements Runnable, Configurable {
             ConfigurationManager cm = new ConfigurationManager(url);
             recognizer = (Recognizer) cm.lookup("recognizer");
             microphone = (Microphone) cm.lookup("microphone");
-        }
-        catch (PropertyException e)
+        } catch (PropertyException e)
         {
             throw new IOException("Problem configuring WordRecognizer " + e);
         }
@@ -108,7 +105,6 @@ public class WordRecognizer implements Runnable, Configurable {
         microphone.stopRecording();
     }
 
-
     /**
      * Releases recognition resources
      */
@@ -120,7 +116,7 @@ public class WordRecognizer implements Runnable, Configurable {
             recognizer.deallocate();
         }
     }
-    
+
     public void enterNextNode(String nextState)
     {
         try
@@ -141,14 +137,13 @@ public class WordRecognizer implements Runnable, Configurable {
             {
                 gui.getCurrentBehavior().processResult(nextState);
                 try
-                    {
-                        AePlayWave aw = new AePlayWave("./models/siri_notHeard.wav");
-                        aw.start();
-                    }
-                    catch (Exception e)
-                    {
-                        System.out.println("Couldn't find siri_notHeard.wav");
-                    }
+                {
+                    AePlayWave aw = new AePlayWave("./models/siri_notHeard.wav");
+                    aw.start();
+                } catch (Exception e)
+                {
+                    System.out.println("Couldn't find siri_notHeard.wav");
+                }
                 fireListeners(null);
             }
             else
@@ -163,19 +158,21 @@ public class WordRecognizer implements Runnable, Configurable {
                 }
                 else
                 {
-                    Thread speakMenuName = new Clippy.MyBehavior.Speak("Entering " + node.getName());
+                    Thread speakMenuName = new Speak("Entering " + node.getName());
                     speakMenuName.start();
-                    curNode = node;  
+                    curNode = node;
                     curNode.enter();
                 }
             }
-    }   catch (GrammarException | IOException | JSGFGrammarParseException | JSGFGrammarException ex) {
+        } catch (GrammarException | IOException | JSGFGrammarParseException | JSGFGrammarException ex)
+        {
             Logger.getLogger(WordRecognizer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     /**
-     * Performs a single recognition, called when the button is pressed or JIntelli
-     * JIntellitype is initialised
+     * Performs a single recognition, called when the button is pressed or
+     * JIntelli JIntellitype is initialised
      */
     @Override
     public void run()
@@ -183,10 +180,12 @@ public class WordRecognizer implements Runnable, Configurable {
         microphone.clear();
         microphone.startRecording();
         //play the entry sound to signify to the user that recognition has started
-        try {
+        try
+        {
             AePlayWave aw = new AePlayWave("./models/siri_entry.wav");
             aw.start();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             System.out.println("Couldn't find siri entry sound");
         }
         //Try to recognise
@@ -205,26 +204,24 @@ public class WordRecognizer implements Runnable, Configurable {
             try
             {
                 nextStateName = curNode.recognize();
-            }
-            catch (NullPointerException e)
+            } catch (NullPointerException e)
             {
             }
             System.out.println("Next state name: " + nextStateName);
             //if it doesn't understand what you say
             if (nextStateName == null || nextStateName.isEmpty())
-            {    
+            {
                 try
-                    {
-                        AePlayWave aw = new AePlayWave("./models/siri_notHeard.wav");
-                        aw.start();
-                        gui.runErrorSte();
-                    }
-                    catch (Exception e)
-                    {
-                    }
+                {
+                    AePlayWave aw = new AePlayWave("./models/siri_notHeard.wav");
+                    aw.start();
+                    gui.runErrorSte();
+                } catch (Exception e)
+                {
+                }
                 fireListeners(null);
             }
-            else if(nextStateName.equalsIgnoreCase("processed"))
+            else if (nextStateName.equalsIgnoreCase("processed"))
             {
                 System.out.println("Got here");
                 fireListeners(null);
@@ -242,25 +239,21 @@ public class WordRecognizer implements Runnable, Configurable {
                 }
                 else
                 {
-                    Thread speakMenuName = new Clippy.MyBehavior.Speak("Entering " + node.getName());
+                    Thread speakMenuName = new Speak("Entering " + node.getName());
                     speakMenuName.start();
-                    curNode = node;  
+                    curNode = node;
                     curNode.enter();
                 }
             }
-        }
-        catch (IOException ioe)
+        } catch (IOException ioe)
         {
             error("problem loading grammar in state " + curNode.getName()
                     + ' ' + ioe);
-        }
-        catch (JSGFGrammarParseException ex)
+        } catch (JSGFGrammarParseException ex)
         {
-        }
-        catch (JSGFGrammarException ex)
+        } catch (JSGFGrammarException ex)
         {
-        }
-        catch (GrammarException ex)
+        } catch (GrammarException ex)
         {
         }
         microphone.stopRecording();
@@ -309,7 +302,7 @@ public class WordRecognizer implements Runnable, Configurable {
     public void newProperties(PropertySheet ps) throws PropertyException
     {
         logger = ps.getLogger();
-        grammar =(JSGFGrammar) ps.getComponent(PROP_JSGF_GRAMMAR);
+        grammar = (JSGFGrammar) ps.getComponent(PROP_JSGF_GRAMMAR);
         microphone = (Microphone) ps.getComponent(PROP_MICROPHONE);
         recognizer = (Recognizer) ps.getComponent(PROP_RECOGNIZER);
     }
@@ -341,7 +334,7 @@ public class WordRecognizer implements Runnable, Configurable {
         }
         initialNode = getNode(name);
         curNode = initialNode;
-        ((MyBehavior)curNode.behavior).help();
+        ((MyBehavior) curNode.behavior).help();
     }
 
     /**
@@ -455,14 +448,16 @@ public class WordRecognizer implements Runnable, Configurable {
         this.recognizer = recognizer;
     }
 
-    public void setGui(ClippyGui gui) {
+    public void setGui(ClippyGui gui)
+    {
         this.gui = gui;
     }
 
     /**
      * Represents a node in the dialog
      */
-    class DialogNode {
+    class DialogNode
+    {
 
         private DialogNodeBehavior behavior;
         private String name;
@@ -519,11 +514,12 @@ public class WordRecognizer implements Runnable, Configurable {
             trace("Recognize " + name);
             return behavior.onRecognize(result);
         }
-        
+
         String recognizeByString(String result) throws GrammarException
         {
             return behavior.onRecognizeFromString(result);
         }
+
         /**
          * Exits the node
          */
@@ -569,12 +565,15 @@ public class WordRecognizer implements Runnable, Configurable {
             return WordRecognizer.this;
         }
     }
+
 }
+
 /**
  * Provides the default behavior for dialog node. Applications will typically
  * extend this class and override methods as appropriate
  */
-class DialogNodeBehavior {
+class DialogNodeBehavior
+{
 
     private WordRecognizer.DialogNode node;
 
@@ -618,12 +617,12 @@ class DialogNodeBehavior {
         trace("Recognize tag   : " + tagString);
         return tagString;
     }
-    
+
     public boolean processResult(String result)
     {
         return false;
     }
-    
+
     /*
      * Called with the recognition results. Should return a string representing
      * the name of the next node.
@@ -631,7 +630,6 @@ class DialogNodeBehavior {
     public String onRecognizeFromString(String result) throws GrammarException
     {
         String tagString = getTagStringFromString(result);
-        
         trace("Recognize result: " + result);
         trace("Recognize tag   : " + tagString);
         return onRecognizeByString(result);
@@ -689,8 +687,7 @@ class DialogNodeBehavior {
         try
         {
             jsapiRecognizer.allocate();
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -698,15 +695,14 @@ class DialogNodeBehavior {
         RuleParse ruleParse = ruleGrammar.parse(resultText, null);
         return ruleParse;
     }
-    
+
     RuleParse getRuleParseFromString(String result) throws GrammarException
     {
         BaseRecognizer jsapiRecognizer = new BaseRecognizer(getGrammar().getGrammarManager());
         try
         {
             jsapiRecognizer.allocate();
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -714,7 +710,7 @@ class DialogNodeBehavior {
         RuleParse ruleParse = ruleGrammar.parse(result, null);
         return ruleParse;
     }
-    
+
     String getTagStringFromString(String result) throws GrammarException
     {
         RuleParse ruleParse = getRuleParseFromString(result);
@@ -734,66 +730,11 @@ class DialogNodeBehavior {
         }
         return sb.toString().trim();
     }
-    
+
     public String onRecognizeByString(String result) throws GrammarException
-        {
-            String tag = getTagStringFromString(result);
-            String listen = result;
-            if (tag != null)
-            {
-                System.out.println("\n "
-                        + result + '\n');
-
-                if (tag.equals("exit"))
-                {
-
-                    System.out.println("Goodbye! Thanks for visiting!\n");
-                    //gui.exitClippy();
-                }
-                else if(tag.equals("menu"))
-                {
-                    return "menu";
-                }
-                else if (tag.equals("time")) {
-                    DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-                    Calendar cal = Calendar.getInstance();
-                    Thread speak = new MyBehavior.Speak(dateFormat.format(cal.getTime()));
-                    speak.start();
-                }
-                else if(tag.equals("search"))
-                {
-                    String search = JOptionPane.showInputDialog(null, "Enter text to search");
-                try { Map<String, String> map = GoogleSearch.getSearchResult(search);
-         Iterator it = map.keySet().iterator(); while (it.hasNext()) { String
-          key = it.next().toString(); System.out.println(key + " <==> " +
-          map.get(key)); } } 
-                catch (IOException ex) { } 
-                catch (JSONException ex) { } 
-                }
-                else if(tag.equals("directions"))
-                {
-                    NavMenu navMenu = new NavMenu();
-                    navMenu.pack();
-                    navMenu.setVisible(true);
-                }
-                else if (tag.startsWith("goto_")) {
-                    System.out.println("Got heree");
-                    return tag.replaceFirst("goto_", "");
-                }
-            }
-            else
-            {
-                try
-                    {
-                        AePlayWave aw = new AePlayWave("./models/siri_notHeard.wav");
-                        aw.start();
-                    }
-                    catch (Exception e)
-                    {
-                    } 
-            }
-            return "";
-        }
+    {
+        return "";
+    }
 
     /**
      * Gets a space delimited string of tags representing the result
@@ -837,7 +778,8 @@ class DialogNodeBehavior {
  * A Dialog node behavior that loads a completely new grammar upon entry into
  * the node
  */
-class NewGrammarDialogNodeBehavior extends DialogNodeBehavior {
+class NewGrammarDialogNodeBehavior extends DialogNodeBehavior
+{
 
     /**
      * creates a NewGrammarDialogNodeBehavior
@@ -858,7 +800,7 @@ class NewGrammarDialogNodeBehavior extends DialogNodeBehavior {
     {
         super.onEntry();
         getGrammar().loadJSGF(getGrammarName());
-        
+
     }
 
     /**

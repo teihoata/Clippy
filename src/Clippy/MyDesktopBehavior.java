@@ -26,13 +26,14 @@ import javax.speech.recognition.RuleGrammar;
  *
  * @author Marcus Ball
  */
-public class MyDesktopBehavior extends MyBehavior {
+public class MyDesktopBehavior extends MyBehavior
+{
 
     ArrayList<String> processTitles; //holds the names of current running windows
     private int count; //number of rules within the dialog
     private ClippyGui gui;
     private ArrayList<String> optionsList;
-    
+
     /**
      * Simple Constructor
      */
@@ -42,16 +43,18 @@ public class MyDesktopBehavior extends MyBehavior {
         this.gui = gui;
         count = 1;
     }
-    
+
     @Override
     public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
     {
         super.onEntry();
         optionsList = new ArrayList<>();
         BaseRecognizer recognizer = new BaseRecognizer(getGrammar().getGrammarManager());
-        try {
+        try
+        {
             recognizer.allocate();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
         }
 
         RuleGrammar ruleGrammar = new BaseRuleGrammar(recognizer, getGrammar().getRuleGrammar());
@@ -68,19 +71,22 @@ public class MyDesktopBehavior extends MyBehavior {
             try
             {
                 //wait for all processes to be found and written to file
-                while (process.waitFor() != 0) {}
-            }
-            catch (InterruptedException ex)
+                while (process.waitFor() != 0)
+                {
+                }
+            } catch (InterruptedException ex)
             {
             }
             BufferedReader empdtil = new BufferedReader(new FileReader("./processes.txt"));
             String detail = new String();
             while ((detail = empdtil.readLine()) != null)
             {
-                try{
+                try
+                {
                     detail = detail.substring(0, detail.indexOf("exe"));
+                } catch (StringIndexOutOfBoundsException e)
+                {
                 }
-                catch(StringIndexOutOfBoundsException e){}
                 String[] words = detail.split(" ");
                 detail = "";
                 for (int i = 0; i < 2; i++)
@@ -94,8 +100,7 @@ public class MyDesktopBehavior extends MyBehavior {
                 processTitles.add(detail);
             }
             empdtil.close();
-        }
-        catch (IOException ex)
+        } catch (IOException ex)
         {
             System.out.println(ex.getMessage());
         }
@@ -106,66 +111,72 @@ public class MyDesktopBehavior extends MyBehavior {
         optionsList.add("scroll down");
         optionsList.add("maxmize window");
         optionsList.add("minimize window");
-        
+
         String ruleName = "application";
-            for (String app : processTitles)
+        for (String app : processTitles)
+        {
+            app = app.replaceAll("[^A-Za-z&&[^']]", " ");
+            if (!optionsList.contains("switch to " + app))
             {
-                app = app.replaceAll("[^A-Za-z&&[^']]", " ");
-                if(!optionsList.contains("switch to " + app))
-                {
-                    optionsList.add("switch to " + app);
-                }
-                addGrammar(ruleGrammar, ruleName, "switch to " + app);
+                optionsList.add("switch to " + app);
             }
-            
-            addGrammar(ruleGrammar, ruleName, "close active program");
-            addGrammar(ruleGrammar, ruleName, "scroll up");
-            addGrammar(ruleGrammar, ruleName, "scroll down");
-            addGrammar(ruleGrammar, ruleName, "minimize window");
-            addGrammar(ruleGrammar, ruleName, "maximize window");
-        
+            addGrammar(ruleGrammar, ruleName, "switch to " + app);
+        }
+
+        addGrammar(ruleGrammar, ruleName, "close active program");
+        addGrammar(ruleGrammar, ruleName, "scroll up");
+        addGrammar(ruleGrammar, ruleName, "scroll down");
+        addGrammar(ruleGrammar, ruleName, "minimize window");
+        addGrammar(ruleGrammar, ruleName, "maximize window");
+
         // now lets commit the changes
         getGrammar().commitChanges();
-        grammarChanged();
+//        grammarChanged();
         this.setList(optionsList);
         gui.setCurrentBehavior(this);
     }
-    
+
     /**
-     * Adds the grammar rule to the list of dynamic grammars for desktop behavior
+     * Adds the grammar rule to the list of dynamic grammars for desktop
+     * behavior
+     *
      * @param ruleGrammar
      * @param ruleName
-     * @param grammarName 
+     * @param grammarName
      */
     private void addGrammar(RuleGrammar ruleGrammar, String ruleName, String grammarName)
     {
-        try {
+        try
+        {
             String newRuleName = ruleName + count;
-                    Rule newRule = null;
-                    newRule = ruleGrammar.ruleForJSGF(grammarName
-                            + " { " + newRuleName + " }");
-                    ruleGrammar.setRule(newRuleName, newRule, true);
-                    ruleGrammar.setEnabled(newRuleName, true);
-                    count++;
-        } catch (GrammarException ex) {
+            Rule newRule = null;
+            newRule = ruleGrammar.ruleForJSGF(grammarName
+                    + " { " + newRuleName + " }");
+            ruleGrammar.setRule(newRuleName, newRule, true);
+            ruleGrammar.setEnabled(newRuleName, true);
+            count++;
+        } catch (GrammarException ex)
+        {
             System.out.println("Trouble with the grammar ");
         }
     }
-    
+
     /**
      * sends the command to be executed by ClippyAlpha executable
-     * @param command 
+     *
+     * @param command
      */
     private void sendCommand(String command)
     {
-        try {
+        try
+        {
             Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", command).start();
-        } catch (IOException ex) 
+        } catch (IOException ex)
         {
             System.out.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
         }
     }
-    
+
     @Override
     public boolean processResult(String result)
     {
@@ -180,21 +191,24 @@ public class MyDesktopBehavior extends MyBehavior {
                 String switchApp = "";
                 while ((detail = empdtil.readLine()) != null)
                 {
-                    try{
-                    detail = detail.substring(0 , detail.indexOf(".exe"));
-                    }catch(StringIndexOutOfBoundsException e){}
+                    try
+                    {
+                        detail = detail.substring(0, detail.indexOf(".exe"));
+                    } catch (StringIndexOutOfBoundsException e)
+                    {
+                    }
                     String[] words = detail.split(" ");
                     String combined = "";
-                for (int i = 0; i < 2; i++)
-                {
-                    combined += words[i] + " ";
-                    if (words.length < 2)
+                    for (int i = 0; i < 2; i++)
                     {
-                        break;
+                        combined += words[i] + " ";
+                        if (words.length < 2)
+                        {
+                            break;
+                        }
                     }
-                }   
-                combined = combined.trim();
-                String listen2 = result.substring(10).trim();
+                    combined = combined.trim();
+                    String listen2 = result.substring(10).trim();
                     if (combined.equalsIgnoreCase(listen2))
                     {
                         switchApp = detail;
@@ -210,38 +224,36 @@ public class MyDesktopBehavior extends MyBehavior {
                     voice.allocate();
                     voice.speak("opened " + switchApp);
                     voice.deallocate();
-                }
-                catch (IOException ex)
+                } catch (IOException ex)
                 {
                     System.out.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
                 }
 
-            }
-            catch (IOException ex)
+            } catch (IOException ex)
             {
                 Logger.getLogger(MyDesktopBehavior.class.getName()).log(Level.SEVERE, null, ex);
-            } 
+            }
             processed = true;
         }
-        else if(result.equalsIgnoreCase("minimize window"))
+        else if (result.equalsIgnoreCase("minimize window"))
         {
             sendCommand("minimize");
             processed = true;
         }
-        else if(result.equalsIgnoreCase("maximize window"))
+        else if (result.equalsIgnoreCase("maximize window"))
         {
             sendCommand("maximize");
             processed = true;
         }
         return processed;
     }
-    
 
     /**
      * Called when Clippy recognises an input
+     *
      * @param result
      * @return
-     * @throws GrammarException 
+     * @throws GrammarException
      */
     @Override
     public String onRecognize(Result result) throws GrammarException
@@ -249,10 +261,10 @@ public class MyDesktopBehavior extends MyBehavior {
         String tag = super.onRecognize(result);
         String listen = result.getBestFinalResultNoFiller();
         trace("Recognize result: " + result.getBestFinalResultNoFiller());
-        if(processResult(listen))
-            {
-                tag = "processed";
-            }
+        if (processResult(listen))
+        {
+            tag = "processed";
+        }
         return tag;
     }
 }

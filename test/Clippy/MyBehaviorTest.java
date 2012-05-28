@@ -163,14 +163,4 @@ public class MyBehaviorTest {
         String result = instance.onRecognize(result_2);
         assertEquals(expResult, result);
     }
-
-    /**
-     * Test of grammarChanged method, of class MyBehavior.
-     */
-    @Test
-    public void testGrammarChanged() {
-        System.out.println("grammarChanged");
-        MyBehavior instance = null;
-        instance.grammarChanged();
-    }
 }

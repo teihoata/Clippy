@@ -75,6 +75,7 @@ public class VoiceMenu extends Frame {
     
     public void setHeaderUpdate(String update)
     {
+        //update = update.toUpperCase();
         label.setText(update);
     }
     

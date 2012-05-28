@@ -1,7 +1,13 @@
 explorer.exe	Start
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-chrome.exe	repaint after jlabel is changed - Google Search - Google Chrome
-chrome.exe	Untitled - Google Chrome
+chrome.exe	java - Showing "JOptionPane.showMessageDialog" without stopping flow of execution - Stack Overflow - Google Chrome
+explorer.exe	dict
+notepad++.exe	C:\Users\Marzipan\Documents\NetBeansProjects\ClippyAlpha1\models\acoustic\voxforge\etc\cmudict.0.7a - Notepad++
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+cmd.exe	MINGW32:~/Documents/NetBeansProjects/ClippyAlpha1
 mspaint.exe	Untitled - Paint
 WINWORD.EXE	Assignment 2012 (2).docx (Protected View) - Microsoft Word
 WINWORD.EXE	aiAssignment.docx - Microsoft Word

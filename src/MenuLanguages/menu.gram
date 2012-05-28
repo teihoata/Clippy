@@ -7,6 +7,7 @@ grammar menu;
 
 //Set commands for main menu
 public <command> =      
+                        read menu |
                         play music       { goto_music } |
                         tell me the time  { time } |
                         surf the web         {goto_web} |
