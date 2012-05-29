@@ -1,7 +1,8 @@
 explorer.exe	Start
+chrome.exe	Worker Threads and SwingWorker (The Java™ Tutorials > Creating a GUI With JFC/Swing > Concurrency in Swing) - Google Chrome
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-chrome.exe	Cat Gifts by Cat lovers for Cat lovers for over 25 years - Google Chrome
 cmd.exe	MINGW32:~/Documents/NetBeansProjects/ClippyAlpha1
+explorer.exe	freetts
 mspaint.exe	Untitled - Paint
 WINWORD.EXE	Assignment 2012 (2).docx (Protected View) - Microsoft Word
 WINWORD.EXE	aiAssignment.docx - Microsoft Word
