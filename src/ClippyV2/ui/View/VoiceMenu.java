@@ -7,17 +7,14 @@ package ClippyV2.ui.View;
 import Clippy.WordRecognizer;
 import Clippy.MyBehavior;
 import ClippyV2.ui.Frame;
-import java.awt.Color;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
 /**

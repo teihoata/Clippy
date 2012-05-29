@@ -18,10 +18,10 @@ public class Speak extends Thread
 
     private ArrayList<String> list;
     private String sentence;
-    private String result;
 
     public Speak(String sentence)
     {
+        sentence = sentence.replaceAll("[^A-Za-z&&[^']]", " ");
         this.sentence = sentence;
     }
 
@@ -54,6 +54,10 @@ public class Speak extends Thread
                 String voiceName = "kevin16";
                 VoiceManager voiceManager = VoiceManager.getInstance();
                 Voice voice = voiceManager.getVoice(voiceName);
+                voice.setPitch(115.0f);
+                voice.setPitchRange(12.0f);
+                voice.setPitchShift(1.0f);
+                voice.setRate(150f);
                 voice.allocate();
                 voice.speak(string);
                 voice.deallocate();
@@ -69,6 +73,7 @@ public class Speak extends Thread
         }
         else
         {
+            
             String voiceName = "kevin16";
             VoiceManager voiceManager = VoiceManager.getInstance();
             Voice voice = voiceManager.getVoice(voiceName);

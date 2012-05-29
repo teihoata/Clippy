@@ -29,6 +29,7 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior
     private ArrayList<String> defaultMenuOptions;
     private String menu;
     private ClippyGui gui;
+    private Map<String, String> searchResults;
     
     public MyBehavior()
     {
@@ -118,6 +119,12 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior
     {
         return true;
     }
+    
+    public Map<String, String> getSearchResults()
+    {
+        System.out.println("returning searchResults " + searchResults.size());
+        return this.searchResults;
+    }
 
     /**
      * Executed when we are ready to recognize
@@ -196,32 +203,26 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior
                 speak.start();
                 end = "processed";
             }
-            else if (tag.equals("search"))
+            else if(tag.equals("search"))
             {
                 Thread searchSpeak = new Speak("Google Search. Enter what you want searched.");
-                searchSpeak.start();
-                String search = JOptionPane.showInputDialog(null, "Enter text to search");
-                if (search != null && !search.isEmpty())
-                {
-                    try
-                    {                        
-                        Thread speak = new Speak("Searching " + search);
-                        speak.start();
-                        gui.setClippyTxt("Searching " + search);
-                        Map<String, String> map = GoogleSearch.getSearchResult(search);
-                        Iterator it = map.keySet().iterator();                        
-                        while (it.hasNext())
-                        {                            
-                            String key = it.next().toString();                            
-                            System.out.println(key + " <==> " + map.get(key));
-                        }                        
-                    } catch (IOException ex)
-                    {
-                    } catch (JSONException ex)
-                    {
-                    }                    
-                }
-                end = "processed";
+        searchSpeak.start();
+        String search = JOptionPane.showInputDialog(null, "Enter text to search");
+        if (search != null && !search.isEmpty())
+        {
+            try
+            {
+                Thread speak = new Speak("Searching " + search);
+                speak.start();
+                gui.setClippyTxt("Searching " + search);
+                gui.getSearchBehavior().setSearchList(GoogleSearch.getSearchResult(search));
+                end = "search";
+            } catch (IOException ex)
+            {
+            } catch (JSONException ex)
+            {
+            }
+        }
             }
             else if (tag.equals("directions"))
             {

@@ -131,7 +131,6 @@ public class WordRecognizer implements Runnable, Configurable
                 lastNode = curNode;
             }
             String nextStateName = curNode.recognizeByString(nextState);
-            System.out.println("Next state Name: " + nextStateName);
             //if it doesn't understand what you say
             if (nextStateName == null || nextStateName.isEmpty())
             {

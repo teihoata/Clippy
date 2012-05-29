@@ -2,13 +2,7 @@
  *
  */
 package ClippyV2.ui.View;
-import Clippy.WordRecognizer;
-import Clippy.MyMovieBehavior;
-import Clippy.WordsListener;
-import Clippy.MyBehavior;
-import Clippy.MyMusicBehavior;
-import Clippy.MyDesktopBehavior;
-import Clippy.MyWebsiteBehavior;
+import Clippy.*;
 import com.melloware.jintellitype.HotkeyListener;
 import com.melloware.jintellitype.IntellitypeListener;
 import com.melloware.jintellitype.JIntellitype;
@@ -68,6 +62,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
     private MyBehavior currentBehavior;
     private JLayeredPane lpane = new JLayeredPane();
     private Thread newThread;
+    private MyGoogleSearchBehavior search;
     
     /**
      * Constructor for class ClippyGUI
@@ -125,6 +120,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         MyBehavior movie = new MyMovieBehavior(this);
         MyBehavior desktop = new MyDesktopBehavior(this);
         MyBehavior website = new MyWebsiteBehavior(this);
+        search = new MyGoogleSearchBehavior(this);
         
         //Add each menu node to the words to be recognised
         wordsRecognizer.addNode("menu", menu);
@@ -133,6 +129,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         wordsRecognizer.addNode("movies", movie);
         wordsRecognizer.addNode("desktop", desktop);
         wordsRecognizer.addNode("web", website);
+        wordsRecognizer.addNode("search", search);
         currentBehavior = menu;
         
         setHeader("Loading IntelliJ");
@@ -163,6 +160,11 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      public MyBehavior getCurrentBehavior()
      {
          return currentBehavior;
+     }
+     
+     public MyGoogleSearchBehavior getSearchBehavior()
+     {
+         return this.search;
      }
      
      public void setCurrentMenu(ArrayList menu)
