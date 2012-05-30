@@ -1,16 +1,16 @@
 explorer.exe	Start
-explorer.exe	View Available Networks (Tooltip)
-ImgBurn.exe	ImgBurn Log
-ImgBurn.exe	ImgBurn
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-rundll32.exe	Sound
+chrome.exe	Clippy/src/Clippy/MyBehavior.java at 458b95aadd402d69163f92ce9917c77fb6e46ff0 · teihoata/Clippy - Google Chrome
+explorer.exe	View
+notepad++.exe	C:\Users\Marzipan\Desktop\Gawing-Clippy-56327d8\src\ClippyV2\ui\View\MyDesktopBehavior.java - Notepad++
+explorer.exe	View Available Networks (Tooltip)
+cmd.exe	MINGW32:~/Documents/NetBeansProjects/ClippyAlpha1
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
 wmplayer.exe	Windows Media Player
-netbeans.exe	ClippyAlpha1
+explorer.exe	cli - Search Results in Downloads
+FolderSize.exe	Folder Size 2.0.0.0
 sidebar.exe	CPU Meter
-chrome.exe	Twitter / Home - Google Chrome
-ImgBurn.exe	Verify
+FolderSize.exe	Folder Size 2.0.0.0
 explorer.exe	Program Manager
-explorer.exe	Default IME

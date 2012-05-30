@@ -245,6 +245,16 @@ public class MyDesktopBehavior extends MyBehavior
             sendCommand("maximize");
             processed = true;
         }
+        else if(result.equalsIgnoreCase("scroll up"))
+        {
+           sendCommand("scroll up");
+           processed = true;
+        }
+        else if(result.equalsIgnoreCase("scroll down"))
+        {
+            sendCommand("scroll down");
+            processed = true;
+        }
         return processed;
     }
 

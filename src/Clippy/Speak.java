@@ -72,8 +72,7 @@ public class Speak extends Thread
             }
         }
         else
-        {
-            
+        { 
             String voiceName = "kevin16";
             VoiceManager voiceManager = VoiceManager.getInstance();
             Voice voice = voiceManager.getVoice(voiceName);

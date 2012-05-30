@@ -143,6 +143,23 @@ public class MyWebsiteBehavior extends MyBehavior
         }
     }
     
+     /**
+     * sends the command to be executed by ClippyAlpha executable
+     *
+     * @param command
+     */
+    private void sendCommand(String command)
+    {
+        try
+        {
+            Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", command).start();
+        } catch (IOException ex)
+        {
+            System.out.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
+        }
+    }
+    
+    
     /**
      * Processes the result of the WebSite command of the user 
      * @param result the users command 
@@ -165,6 +182,16 @@ public class MyWebsiteBehavior extends MyBehavior
         else if (result.startsWith("open"))
         {
             openWebsite(result,websites);
+        }
+        else if(result.equalsIgnoreCase("scroll up"))
+        {
+           sendCommand("scroll up");
+           processed = true;
+        }
+        else if(result.equalsIgnoreCase("scroll down"))
+        {
+            sendCommand("scroll down");
+            processed = true;
         }
          return processed;
     }
