@@ -9,6 +9,13 @@
  * WARRANTIES.
  *
  */
+
+/**
+ * Edited by Marcus Ball
+ * Changed createGrammarNode method to catch when dictionary doesn't contain word
+ * Adds translation using AddGrammar method
+ */
+
 package edu.cmu.sphinx.linguist.language.grammar;
 
 import Clippy.AddGrammar;

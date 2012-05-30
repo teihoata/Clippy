@@ -67,9 +67,7 @@ public class MyGoogleSearchBehavior extends MyBehavior
             System.err.println("Couldn't allocate recognizer resources");
         }
         RuleGrammar ruleGrammar = new BaseRuleGrammar(recognizer, getGrammar().getRuleGrammar());
-        
-        addDefaultListWithoutCurrent(optionsList, "");
-        
+
         String ruleName = "search";
         Iterator it = searchResult.keySet().iterator();
         int i = 1;
@@ -90,8 +88,9 @@ public class MyGoogleSearchBehavior extends MyBehavior
             addGrammar(ruleGrammar, ruleName, "open result " + i);
             i++;
         }
-
-        optionsList.add(0, "read results");
+        
+        optionsList.add(0, "main menu");
+        optionsList.add(1, "read results");
         addGrammar(ruleGrammar, ruleName, "read results");
         // now lets commit the changes
         getGrammar().commitChanges();

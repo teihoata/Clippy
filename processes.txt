@@ -1,13 +1,16 @@
 explorer.exe	Start
+explorer.exe	View Available Networks (Tooltip)
+ImgBurn.exe	ImgBurn Log
+ImgBurn.exe	ImgBurn
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
 rundll32.exe	Sound
-cmd.exe	MINGW32:~/Documents/NetBeansProjects/ClippyAlpha1
-explorer.exe	lib
-WinRAR.exe	commons-validator-1.4.0-bin.zip - WinRAR (only 5 days left to buy a license)
-VirtualBox.exe	WindowsXP [Running] - Oracle VM VirtualBox
-WINWORD.EXE	Assignment 2012 (2).docx (Protected View) - Microsoft Word
-WINWORD.EXE	aiAssignment.docx - Microsoft Word
-WINWORD.EXE	Bowans Report.docx (Protected View) - Microsoft Word
-chrome.exe	Commit History · teihoata/Clippy - Google Chrome
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+wmplayer.exe	Windows Media Player
+netbeans.exe	ClippyAlpha1
 sidebar.exe	CPU Meter
+chrome.exe	Twitter / Home - Google Chrome
+ImgBurn.exe	Verify
 explorer.exe	Program Manager
+explorer.exe	Default IME
