@@ -15,12 +15,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 /**
  * The GUI of the Clippy Project 
@@ -51,13 +47,13 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
     private boolean errorState;
     private boolean exitState;
     private Font txtFont = new Font("Arial", Font.BOLD, 14);
-    private Font smallFont = new Font("Arial", Font.BOLD, 10);
     private VoiceMenu voiceMenu;
     private WordRecognizer wordsRecognizer;
     private MyBehavior currentBehavior;
     private JLayeredPane lpane = new JLayeredPane();
     private Thread newThread;
     private MyGoogleSearchBehavior search;
+    private boolean micEnabled;
     
     /**
      * Constructor for class ClippyGUI
@@ -71,6 +67,7 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         currentBehavior.setDefaultList();
         currentBehavior.updateList();
+        micEnabled = true;
     }
     
     
@@ -180,9 +177,9 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      
      private void updateMenu(final String word) {
         SwingUtilities.invokeLater(new Runnable() {
-
+            @Override
             public void run() {
-                voiceBtn.setEnabled(true);
+                voiceBtn.setEnabled(micEnabled);
             }
         });
     }
@@ -293,7 +290,12 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
             setClippyTxt("Listening...");
         }
         else {
-            voiceMenu.setSingleMenuItem("Sorry, can't find the microphone on your computer.");
+            Thread speak = new Thread("No Microphone found.");
+            speak.start();
+            setClippyTxt("Couldn't find microphone");
+            micEnabled = false;
+            voiceBtn.setEnabled(false);
+            
         }
     }
     
