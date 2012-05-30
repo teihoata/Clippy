@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Wed May 30 00:01:34 NZST 2012:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-0137-9878-fb09-0000007df598 
+Wed May 30 18:44:22 NZST 2012:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-0137-9c7c-eecc-0000007bfb50 
 on database directory C:\Users\Marzipan\Documents\NetBeansProjects\ClippyAlpha1\ClippyDB  with class loader sun.misc.Launcher$AppClassLoader@9fef6f 
 Loaded from file:/C:/Users/Marzipan/Documents/NetBeansProjects/ClippyAlpha1/lib/derby.jar
 java.vendor=Oracle Corporation

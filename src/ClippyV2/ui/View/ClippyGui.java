@@ -43,10 +43,6 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
     private JLabel speechLbl = new JLabel();
     private JTextArea exeTxt = new JTextArea();
     private JTextArea clippyTxt;
-  
-    private Button searchBtn = new Button("Search");
-    private Button exeBtn = new Button("Execute");
-    private Button helpBtn = new Button("Help");
     private RoundButton exitBtn = new RoundButton(exitIcon);
     private RoundButton voiceBtn = new RoundButton(micIcon);
     private RoundButton editBtn = new RoundButton(editIcon);
@@ -54,7 +50,6 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
     private boolean exeState;
     private boolean errorState;
     private boolean exitState;
-    private boolean voiceState;
     private Font txtFont = new Font("Arial", Font.BOLD, 14);
     private Font smallFont = new Font("Arial", Font.BOLD, 10);
     private VoiceMenu voiceMenu;
@@ -280,12 +275,10 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
             @Override
             public void actionPerformed(ActionEvent e){
                 isIdle = false;
-                voiceState = true;
                  if (voiceBtn.isEnabled()) {
                     voiceBtn.setEnabled(false);
                     startListening();
                 }
-                 voiceState = false;
             }
         });
         lpane.add(voiceBtn, new Integer(2), 0);
@@ -296,7 +289,6 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
      */
     private void startListening() {
         if (wordsRecognizer.microphoneOn()) {
-            setBtnEnabled(false);
             genImage("clippySearch");
             setClippyTxt("Listening...");
         }
@@ -455,26 +447,15 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         time.start();
     }
     
-    /**
-     * Enable the user to enable buttons and disable them 
-     * @param enabled true if button is enabled otherwise false
-     */
-    public void setBtnEnabled(boolean enabled){
-        exeBtn.setEnabled(enabled);
-        helpBtn.setEnabled(enabled);
-        searchBtn.setEnabled(enabled);
-    }
+   
     /**
      * Set the visibility of the GUI components 
      * @param visible true if components are visible otherwise false
      */
     private void setComVisible(boolean visible){
          exitBtn.setVisible(visible);
-         exeBtn.setVisible(visible);
-         searchBtn.setVisible(visible);
          editBtn.setVisible(visible);
          voiceBtn.setVisible(visible);
-         helpBtn.setVisible(visible);
     }
 
     /**
@@ -511,13 +492,11 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
         setClippyTxt("What? Speak Again?");
         javax.swing.Timer time = new Timer(3000, null);
         time.start();
-        System.out.println("gfgffgfg");
     }
     
     /**
      * Run the overall Clippy interface events 
-     */
-    
+     */  
     public void runClippy() throws InterruptedException{
         if(isIdle){
            threadIdle();  
@@ -536,15 +515,11 @@ public class ClippyGui extends Frame implements Runnable, IntellitypeListener, H
             runErrorSte();
             errorState = false;             
         }
-        else if(voiceState){
-            voiceBtn.setEnabled(false);
-        }
         else{
               
         }       
         Thread idleThread = new Thread();
         idleThread.sleep(3800); 
-        setBtnEnabled(true);
         isIdle = true;
         runClippy();
     }

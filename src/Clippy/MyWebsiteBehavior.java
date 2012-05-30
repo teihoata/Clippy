@@ -7,22 +7,25 @@ import ClippyV2.ui.View.ClippyGui;
 import ClippyV2.ui.View.WebMenu;
 import com.sun.speech.engine.recognition.BaseRecognizer;
 import com.sun.speech.engine.recognition.BaseRuleGrammar;
-import com.sun.speech.freetts.Voice;
-import com.sun.speech.freetts.VoiceManager;
 import db.clippy.dbConnect.DBOperator;
 import edu.cmu.sphinx.jsgf.JSGFGrammarException;
 import edu.cmu.sphinx.jsgf.JSGFGrammarParseException;
 import edu.cmu.sphinx.result.Result;
-import java.io.*;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.speech.EngineException;
+import javax.speech.EngineStateError;
 import javax.speech.recognition.GrammarException;
 import javax.speech.recognition.Rule;
 import javax.speech.recognition.RuleGrammar;
 import javax.swing.JOptionPane;
+import org.apache.commons.validator.UrlValidator;
 
 /**
  *
@@ -32,10 +35,12 @@ import javax.swing.JOptionPane;
 public class MyWebsiteBehavior extends MyBehavior
 {
 
+    private final int OPENGAP = 5;
     ArrayList<String> websiteList; //holds the names of current websites
     private int count; //number of rules within the dialog
-    private ArrayList<String> menuList;
-    private boolean processed;
+    private ArrayList<String> menuList; //list of strings for the web menu
+    private boolean processed; //tells the program that an action was processed
+    private ClippyGui gui;
     // added by Ray
     private DBOperator dbo = new DBOperator();
 
@@ -45,33 +50,46 @@ public class MyWebsiteBehavior extends MyBehavior
     public MyWebsiteBehavior(ClippyGui gui)
     {
         super(gui);
+        this.gui = gui;
         count = 1;
     }
 
+    /**
+     * OnEntry called when this menu node is entered i.e. selected
+     * @throws IOException
+     * @throws JSGFGrammarParseException
+     * @throws JSGFGrammarException 
+     */
+    @Override
     public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
     {
         super.onEntry();
         menuList = new ArrayList<>();
+        //Add other menu options to the current list
         addDefaultListWithoutCurrent(menuList, "surf the web");
+        //Set up the recognizer
         BaseRecognizer recognizer = new BaseRecognizer(getGrammar().getGrammarManager());
         try
         {
             recognizer.allocate();
-        } catch (Exception e)
+        } catch (EngineException | EngineStateError ex)
         {
+            System.err.println("Couldn't initiate recognizer engine");
         }
-
+        //Initiate grammar rules for web behavior
         RuleGrammar ruleGrammar = new BaseRuleGrammar(recognizer, getGrammar().getRuleGrammar());
+        
         websiteList = new ArrayList<>();
+        
         List<String> websites = dbo.getWebSites();  // added by Ray
 
-        String detail = "";
         Iterator<String> it = websites.iterator();
         while (it.hasNext())
         {
-            detail = it.next();
+            String detail = it.next();
             try
             {
+                //Get the website name between the www. and the .com/org/etc
                 detail = detail.substring(detail.indexOf(".") + 1, detail.indexOf(".", detail.indexOf(".") + 1));
             } catch (StringIndexOutOfBoundsException e)
             {
@@ -79,6 +97,7 @@ public class MyWebsiteBehavior extends MyBehavior
             websiteList.add(detail);
         }
 
+        //Dynamically create the new rules for web behavior
         String ruleName = "web";
         for (String app : websiteList)
         {
@@ -88,6 +107,7 @@ public class MyWebsiteBehavior extends MyBehavior
                 addGrammar(ruleGrammar, ruleName, "open " + app);
             }
         }
+        //Add unique menu options to the menu list and understandable grammar
         menuList.add("add new website");
         menuList.add("remove website");
         menuList.add("scroll up");
@@ -104,7 +124,7 @@ public class MyWebsiteBehavior extends MyBehavior
     }
 
    /**
-     * Adds the grammar rule to the list of dynamic grammars for desktop behavior
+     * Adds the grammar rule to the list of dynamic grammars for website behavior
      * @param ruleGrammar
      * @param ruleName
      * @param grammarName 
@@ -120,20 +140,6 @@ public class MyWebsiteBehavior extends MyBehavior
             count++;
         } catch (GrammarException ex) {
             System.out.println("Trouble with the grammar ");
-        }
-    }
-    
-    /**
-     * sends the command to be executed by ClippyAlpha executable
-     * @param command 
-     */
-    private void sendCommand(String command)
-    {
-        try {
-            Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", command).start();
-        } catch (IOException ex) 
-        {
-            System.out.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
         }
     }
     
@@ -168,21 +174,22 @@ public class MyWebsiteBehavior extends MyBehavior
      */
     public void removeWebsiteFromList(String website)
     {
-                dbo.removeWebsite(website);
-                try {
-                    onEntry();
-                } 
-                catch (IOException | JSGFGrammarParseException | JSGFGrammarException ex) {
-                    Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        dbo.removeWebsite(website);
+        try
+        {
+            onEntry();
+        } catch (IOException | JSGFGrammarParseException | JSGFGrammarException ex)
+        {
+            Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
     /**
      * Creates an input dialog that displays the saved WebSites from the database 
      * and allows the user to remove a WebSite from the database by inputting the link 
      * @param websites the WebSite database  
      */
-    public void removeWebsite(List websites){
+    private void removeWebsite(List websites){
         
         WebMenu web = new WebMenu(websites, this);
         web.pack();
@@ -194,23 +201,60 @@ public class MyWebsiteBehavior extends MyBehavior
      * Creates an input dialog that allows the user to add a WebSite to the database by inputting the link 
      * @param websites the WebSite database  
      */
-    public void addWebsite(List websites)
+    private void addWebsite(List websites)
     {
-        try {
-            String websiteName = (String) JOptionPane.showInputDialog(null, "Enter the address of your website starting with 'www.'", "Add Website", JOptionPane.INFORMATION_MESSAGE, null, null, "www.");
-            if(websiteName != null || !websiteName.isEmpty() || !websiteName.equalsIgnoreCase("www."))
+        String websiteName = (String) JOptionPane.showInputDialog(null, "Enter the address of your website starting with 'www.'", "Add Website", JOptionPane.INFORMATION_MESSAGE, null, null, "www.");
+        //Add www to start if not already there
+        if (websiteName.indexOf("www.") == -1)
+        {
+            websiteName = "www." + websiteName;
+        }
+        //Add http to start
+        if (websiteName.indexOf("http://") == -1)
+        {
+            websiteName = "http://" + websiteName;
+        }
+        //testing schemes
+        String[] schemes =
+        {
+            "http", "https"
+        };
+        //Validates the url using commons validator library
+        UrlValidator urlValidator = new UrlValidator(schemes);
+        if (urlValidator.isValid(websiteName))
+        {
+            try
             {
-                websites.add(websiteName);
-                dbo.removeAllWebsite();
-                dbo.storeWebSite(websites);
-                onEntry();
-                processed = true;
-                help();
-            }  
-        } 
-        catch (JSGFGrammarParseException | JSGFGrammarException | IOException | NullPointerException ex) {
-            Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
-        }   
+                //Don't add duplicates
+                if(!websites.contains(websiteName))
+                {
+                    websites.add(websiteName);
+                    dbo.removeAllWebsite();
+                    dbo.storeWebSite(websites);
+                    onEntry();
+                    processed = true;
+                    help();
+                }
+                else
+                {
+                    gui.setClippyTxt("Address already Exists");
+                }
+            } catch (IOException ex)
+            {
+                Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JSGFGrammarParseException ex)
+            {
+                Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JSGFGrammarException ex)
+            {
+                Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else
+        {
+            gui.setClippyTxt("Invalid Address");
+        }
+
     }
     /**
      * Searches through the WebSite database for the chosen WebSite and opens it
@@ -224,32 +268,39 @@ public class MyWebsiteBehavior extends MyBehavior
         Iterator<String> it = websites.iterator();
         while (it.hasNext())
         {
-            detail = it.next();
-            String currentWebsite = detail;
-                
-            try {
-                detail = detail.substring(detail.indexOf(".")+1, detail.indexOf("." , detail.indexOf(".") + 1));
-                if(result.substring(result.indexOf("open")+5).equalsIgnoreCase(detail))
-                {
-                    url = currentWebsite;
-                    nameOfCurrentWebsite = detail;
+            try
+            {
+                detail = it.next();
+                String currentWebsite = detail;
+                System.out.println("detail " + detail); 
+                URL urlAddress = new URL(detail);
+                System.out.println("host " + urlAddress.getAuthority());
+                try {
+                    detail = detail.substring(detail.indexOf(".")+1, detail.indexOf("." , detail.indexOf(".") + 1));
+                    if(result.substring(result.indexOf("open") + OPENGAP).equalsIgnoreCase(detail))
+                    {
+                        url = currentWebsite;
+                        nameOfCurrentWebsite = detail;
+                        System.out.println("Got here");
+                    }
                 }
-            }
+                    
+                catch(StringIndexOutOfBoundsException e){
                 
-            catch(StringIndexOutOfBoundsException e){
-            
+                }
+                websiteList.add(detail);
+            } catch (MalformedURLException ex)
+            {
+                Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
             }
-            websiteList.add(detail);
         }
         try
         {
             java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
             String voiceName = "kevin16";
-            VoiceManager voiceManager = VoiceManager.getInstance();              
-            Voice voice = voiceManager.getVoice(voiceName);
-            voice.allocate();
-            voice.speak("opened " + nameOfCurrentWebsite);
-            voice.deallocate();
+            System.out.println("URL" + url);
+            Thread speak = new Thread("opened " + nameOfCurrentWebsite);
+            speak.start();
         }
         catch (IOException ex)
         {

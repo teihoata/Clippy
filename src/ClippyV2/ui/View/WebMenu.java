@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author Marcus Ball
+ * @author Marcus 
  */
 public class WebMenu extends Frame {
     private ArrayList<String> webArray = new ArrayList();
