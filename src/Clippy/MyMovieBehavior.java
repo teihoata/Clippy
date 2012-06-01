@@ -13,7 +13,6 @@ import edu.cmu.sphinx.jsgf.JSGFGrammarParseException;
 import edu.cmu.sphinx.result.Result;
 import java.awt.Desktop;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,8 +47,6 @@ public class MyMovieBehavior extends MyBehavior
         playList.add("volume up");
         playList.add("volume down");
         dbo.removeAllMovie();
-//            File playListFile = new File("./src/PersistantData/playlist.txt");
-//            FileWriter write = new FileWriter(playListFile);
         File file = new File("C:\\Users\\" + System.getProperty("user.name") + "\\Videos\\");
         String[] extensions =
         {
@@ -60,12 +57,10 @@ public class MyMovieBehavior extends MyBehavior
         {
             File file1 = (File) iterator.next();
             String fileName = file1.getName().substring(0, file1.getName().indexOf('.'));
-            fileName = fileName.replaceAll("[^A-Za-z]", " ");
-//                write.write(fileName);  
+            fileName = fileName.replaceAll("[^A-Za-z]", " ");  
             playList.add(fileName);
         }
         dbo.storeMovie(playList);
-//            write.close();
     }
 
     /**
@@ -227,7 +222,6 @@ public class MyMovieBehavior extends MyBehavior
     public String onRecognize(Result result) throws GrammarException
     {
         String next = super.onRecognize(result);;
-        trace("Recognize result: " + result.getBestFinalResultNoFiller());
         String listen = result.getBestFinalResultNoFiller();
         if (processResult(listen))
         {

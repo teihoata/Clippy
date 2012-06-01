@@ -22,6 +22,10 @@ public class SSHAEncrypt {
     private static SSHAEncrypt inst = new SSHAEncrypt("SHA-1");
     private MessageDigest sha = null;
 
+    private SSHAEncrypt() {
+        
+    }
+    
     public static SSHAEncrypt getInstance() {
         return inst;
     }

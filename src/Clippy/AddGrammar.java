@@ -1,18 +1,26 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Handles the adding of new grammar to clippys dictionary
  */
 package Clippy;
 
-import java.io.*;
 import com.sun.speech.freetts.lexicon.LetterToSound;
 import com.sun.speech.freetts.lexicon.LetterToSoundImpl;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
+/** 
+ * @author Marcus Ball
+ */
 public class AddGrammar
 {
 
-    LetterToSound lts = null;
+    private LetterToSound lts = null;
 
+    /**
+     * Default Constructor
+     */
     public AddGrammar()
     {
         try
@@ -21,10 +29,15 @@ public class AddGrammar
             lts = new LetterToSoundImpl(file.toURI().toURL(), true);
         } catch (IOException e)
         {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 
+    /**
+     * Writes the word to the dictionary file
+     * @param word
+     * @throws IOException 
+     */
     private void writeToDictionary(String word) throws IOException
     {
         File dictionary = new File("./models/acoustic/voxforge/etc/cmudict.0.7a");
@@ -33,20 +46,28 @@ public class AddGrammar
         out.close();
     }
 
+    /**
+     * Changing the word to a valid grammar string
+     * @param word
+     * @throws IOException 
+     */
     public void changeWordToGrammar(String word) throws IOException
     {
-        String[] ltspM_phone_array;
-        ltspM_phone_array = lts.getPhones(word, null);
-
+        String[] arrayStr;
+        arrayStr = lts.getPhones(word, null);
+        //All words in dictionary are upper case
         String result = "\n" + word.toUpperCase() + "\t";
-        for (int i = 0; i < ltspM_phone_array.length; i++)
+        for (int i = 0; i < arrayStr.length; i++)
         {
-            ltspM_phone_array[i] = ltspM_phone_array[i].toString().replaceAll("[^A-Za-z]", " ");
-            if (ltspM_phone_array[i].toString().equalsIgnoreCase("AX"))
+            //Must format the string to follow the default sphinx 4 grammar
+            //No Special characters
+            arrayStr[i] = arrayStr[i].toString().replaceAll("[^A-Za-z]", " ");
+            //Grammar that have AX are pronounced AH in sphinx
+            if (arrayStr[i].toString().equalsIgnoreCase("AX"))
             {
-                ltspM_phone_array[i] = "AH";
+                arrayStr[i] = "AH";
             }
-            result += ltspM_phone_array[i].toString().toUpperCase() + " ";
+            result += arrayStr[i].toString().toUpperCase() + " ";
         }
         writeToDictionary(result);
     }

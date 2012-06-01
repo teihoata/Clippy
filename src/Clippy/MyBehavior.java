@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Menu Behavior, is extended by all other menus
+ * Extends the new grammar 
  */
 package Clippy;
 
@@ -13,32 +13,40 @@ import edu.cmu.sphinx.result.Result;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Map;
 import javax.speech.recognition.GrammarException;
 import javax.swing.JOptionPane;
-import org.json.JSONException;
 
 /**
- *
- * @author Marzipan
+ * @author Marcus Ball
  */
-public class MyBehavior extends NewGrammarDialogNodeBehavior
+public class MyBehavior extends NewGrammarBehavior
 {
-    
-    private ArrayList<String> list;
-    private ArrayList<String> defaultMenuOptions;
-    private String menu;
+
+    private ArrayList<String> list; //holds the current grammar menu
+    private ArrayList<String> defaultMenuOptions; //default menu options
+    private String menu; //holds the title of the menu
     private ClippyGui gui;
-    private Map<String, String> searchResults;
-    
-    public MyBehavior()
-    {
-        //Constructor used for testing class methods
-    }
-    
+    private Map<String, String> searchResults; //Used by the google search results
+
+    /**
+     * Constructor
+     *
+     * @param ClippyGui gui
+     */
     public MyBehavior(ClippyGui gui)
     {
         this.gui = gui;
+        setDefaultMenuOptions();
+    }
+
+    /**
+     * Sets the menu list options
+     */
+    private void setDefaultMenuOptions()
+    {
         defaultMenuOptions = new ArrayList<>();
         defaultMenuOptions.add("read menu");
         defaultMenuOptions.add("main menu");
@@ -48,14 +56,22 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior
         defaultMenuOptions.add("watch movies");
         defaultMenuOptions.add("tell me the time");
     }
-    
+
+    /**
+     * Sets the menu list
+     *
+     * @param list
+     */
     public void setList(ArrayList<String> list)
     {
         this.list = list;
         addTitle();
         updateList();
     }
-    
+
+    /**
+     * Sets the default main menu option
+     */
     public void setDefaultList()
     {
         list = new ArrayList<>();
@@ -74,20 +90,16 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior
             gui.setCurrentMenu(list);
         } catch (Exception e)
         {
-            
+            System.err.println("Cannot set the next menu option " + e.getMessage());
         }
     }
 
     /**
-     * Used for testing
+     * Adds the main menu options to the list without the current menu option
      *
-     * @return the default menu
+     * @param list to add menu options too
+     * @param current name of current option
      */
-    private ArrayList<String> getDefaultList()
-    {
-        return defaultMenuOptions;
-    }
-    
     public void addDefaultListWithoutCurrent(ArrayList<String> list, String current)
     {
         for (String string : defaultMenuOptions)
@@ -95,47 +107,79 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior
             if (!string.equalsIgnoreCase(current))
             {
                 list.add(string);
-            }            
+            }
         }
     }
-    
+
+    /**
+     * Adds the title to the list
+     */
     public void addTitle()
     {
         menu = "";
         list.add(0, menu);
     }
-    
+
+    /**
+     * Updates the current menu on the gui
+     */
     public void updateList()
     {
         gui.setCurrentMenu(list);
     }
-    
+
+    /**
+     * Returns the current menu list options
+     *
+     * @return
+     */
     public ArrayList getCurrentList()
     {
         return list;
     }
-    
+
+    /**
+     * process result which is overridden by child methods
+     *
+     * @param result
+     * @return
+     */
+    @Override
     public boolean processResult(String result)
     {
-        return true;
+        return false;
     }
-    
+
+    /**
+     * maps out the search results
+     *
+     * @return
+     */
     public Map<String, String> getSearchResults()
     {
-        System.out.println("returning searchResults " + searchResults.size());
+        //Uncomment to read search results in terminal
+        //System.out.println("returning searchResults " + searchResults.size());
         return this.searchResults;
     }
 
     /**
      * Executed when we are ready to recognize
      */
+    @Override
     public void onReady()
     {
         super.onReady();
         menu = "";
-        help();
+        reset();
     }
-    
+
+    /**
+     * Called upon entering the node
+     *
+     * @throws IOException
+     * @throws JSGFGrammarParseException
+     * @throws JSGFGrammarException
+     */
     @Override
     public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
     {
@@ -148,25 +192,36 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior
     }
 
     /**
-     * Displays the help message for this node. Currently we display the name of
-     * the node and the list of sentences that can be spoken.
+     * Resets the current menu and the title
      */
-    protected void help()
+    protected void reset()
     {
         menu = "";
         gui.setHeader(getGrammarName());
     }
-    
+
+    /**
+     * gets the current menu
+     *
+     * @return
+     */
     public String getCurrentMenuOptions()
     {
         return this.menu;
     }
-    
+
+    /**
+     * Called by the list and after processing the voice. Processes the result
+     *
+     * @param result string version of the result
+     * @return the next menu name or whether the data was processed
+     * @throws GrammarException
+     */
     @Override
     public String onRecognizeByString(String result) throws GrammarException
     {
+        //Get the tag associated with the string
         String tag = getTagStringFromString(result);
-        String listen = result;
         String end = "";
         if (tag != null)
         {
@@ -177,20 +232,20 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior
                 end = "processed";
             }
             else if (tag.equals("menu"))
-            {                
+            {
                 setDefaultList();
                 end = "menu";
             }
-            else if (listen.equalsIgnoreCase("read menu"))
+            else if (result.equalsIgnoreCase("read menu"))
             {
                 Thread speak = new Speak(list);
                 speak.start();
                 end = "processed";
             }
-            else if (listen.equalsIgnoreCase("close active program"))
+            else if (result.equalsIgnoreCase("close active program"))
             {
                 sendCommand("close");
-                help();
+                reset();
                 end = "processed";
             }
             else if (tag.equals("time"))
@@ -199,30 +254,29 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior
                 Calendar cal = Calendar.getInstance();
                 String time = dateFormat.format(cal.getTime());
                 Thread speak = new Speak(time);
-                gui.setClippyTxt(time);
                 speak.start();
+                gui.setClippyTxt(time);
                 end = "processed";
             }
-            else if(tag.equals("search"))
+            else if (tag.equals("search"))
             {
                 Thread searchSpeak = new Speak("Google Search. Enter what you want searched.");
-        searchSpeak.start();
-        String search = JOptionPane.showInputDialog(null, "Enter text to search");
-        if (search != null && !search.isEmpty())
-        {
-            try
-            {
-                Thread speak = new Speak("Searching " + search);
-                speak.start();
-                gui.setClippyTxt("Searching " + search);
-                gui.getSearchBehavior().setSearchList(GoogleSearch.getSearchResult(search));
-                end = "search";
-            } catch (IOException ex)
-            {
-            } catch (JSONException ex)
-            {
-            }
-        }
+                searchSpeak.start();
+                String search = JOptionPane.showInputDialog(null, "Enter text to search");
+                if (search != null && !search.isEmpty())
+                {
+                    try
+                    {
+                        Thread speak = new Speak("Searching " + search);
+                        speak.start();
+                        gui.setClippyTxt("Searching " + search);
+                        gui.getSearchBehavior().setSearchList(GoogleSearch.getSearchResult(search));
+                        end = "search";
+                    } catch (Exception ex)
+                    {
+                        System.err.println("Couldn't " + ex.getMessage());
+                    } 
+                }
             }
             else if (tag.equals("directions"))
             {
@@ -245,17 +299,16 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior
             } catch (Exception e)
             {
                 System.err.println("Couldn't find siri_notHeard.wac in models folder");
-            }            
+            }
         }
         return end;
     }
 
     /**
-     * Executed when the recognizer generates a result. Returns the name of the
-     * next dialog node to become active, or null if we should stay in this node
+     * Executed when the recognizer generates a result
      *
      * @param result the recongition result
-     * @return the name of the next dialog node or null if control should remain
+     * @return the name of the next menu node or null if control should remain
      * in the current node.
      */
     @Override
@@ -270,15 +323,15 @@ public class MyBehavior extends NewGrammarDialogNodeBehavior
 
     /**
      * sends the command to be executed by ClippyAlpha executable
-     *
+     * used by multiple children
      * @param command
      */
-    private void sendCommand(String command)
+    public void sendCommand(String command)
     {
         try
         {
             Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", command).start();
-        } catch (IOException ex)        
+        } catch (IOException ex)
         {
             System.out.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
         }

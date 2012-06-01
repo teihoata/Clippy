@@ -1,6 +1,5 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * A class used primarily for voice feedback using the FreeTTS engine
  */
 package Clippy;
 
@@ -11,20 +10,28 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author Marzipan
+ * @author Marcus Ball
  */
 public class Speak extends Thread
 {
-
+    //list of strings to read out one after the other
     private ArrayList<String> list;
+    //or a single string or sentence of strings to read
     private String sentence;
 
+    /**
+     * Constructor for single string reading
+     * @param sentence 
+     */
     public Speak(String sentence)
     {
-        sentence = sentence.replaceAll("[^A-Za-z&&[^']]", " ");
         this.sentence = sentence;
     }
 
+    /**
+     * Constructor for lists of string readings
+     * @param list 
+     */
     public Speak(ArrayList<String> list)
     {
         this.list = list;
@@ -36,8 +43,12 @@ public class Speak extends Thread
         speak();
     }
 
+    /**
+     * Speaks the list or single string given
+     */
     private synchronized void speak()
     {
+        //if it is a list
         if (list != null)
         {
             Thread t = new Thread(new Runnable()
@@ -57,7 +68,7 @@ public class Speak extends Thread
                 voice.setPitch(115.0f);
                 voice.setPitchRange(12.0f);
                 voice.setPitchShift(1.0f);
-                voice.setRate(150f);
+                voice.setRate(140f);
                 voice.allocate();
                 voice.speak(string);
                 voice.deallocate();

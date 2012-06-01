@@ -1,6 +1,5 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Interface used for creating word listeners
  */
 package Clippy;
 
@@ -11,7 +10,7 @@ public interface WordsListener
 {
 
     /**
-     * Invoked when a new word is recognized
+     * Called when a new word is recognized
      */
     void notify(String word);
 }

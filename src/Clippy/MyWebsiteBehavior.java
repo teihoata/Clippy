@@ -139,26 +139,9 @@ public class MyWebsiteBehavior extends MyBehavior
             ruleGrammar.setEnabled(newRuleName, true);
             count++;
         } catch (GrammarException ex) {
-            System.out.println("Trouble with the grammar ");
+            System.err.println("Trouble with the grammar ");
         }
     }
-    
-     /**
-     * sends the command to be executed by ClippyAlpha executable
-     *
-     * @param command
-     */
-    private void sendCommand(String command)
-    {
-        try
-        {
-            Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", command).start();
-        } catch (IOException ex)
-        {
-            System.out.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
-        }
-    }
-    
     
     /**
      * Processes the result of the WebSite command of the user 
@@ -197,7 +180,7 @@ public class MyWebsiteBehavior extends MyBehavior
     }
     
     /**
-     * 
+     * Removes the website name from the database
      */
     public void removeWebsiteFromList(String website)
     {
@@ -207,7 +190,7 @@ public class MyWebsiteBehavior extends MyBehavior
             onEntry();
         } catch (IOException | JSGFGrammarParseException | JSGFGrammarException ex)
         {
-            Logger.getLogger(MyWebsiteBehavior.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Error entering the current website list");
         }
     }
 
@@ -260,7 +243,7 @@ public class MyWebsiteBehavior extends MyBehavior
                     dbo.storeWebSite(websites);
                     onEntry();
                     processed = true;
-                    help();
+                    reset();
                 }
                 else
                 {
@@ -299,16 +282,13 @@ public class MyWebsiteBehavior extends MyBehavior
             {
                 detail = it.next();
                 String currentWebsite = detail;
-                System.out.println("detail " + detail); 
                 URL urlAddress = new URL(detail);
-                System.out.println("host " + urlAddress.getAuthority());
                 try {
                     detail = detail.substring(detail.indexOf(".")+1, detail.indexOf("." , detail.indexOf(".") + 1));
                     if(result.substring(result.indexOf("open") + OPENGAP).equalsIgnoreCase(detail))
                     {
                         url = currentWebsite;
                         nameOfCurrentWebsite = detail;
-                        System.out.println("Got here");
                     }
                 }
                     
@@ -324,14 +304,12 @@ public class MyWebsiteBehavior extends MyBehavior
         try
         {
             java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
-            String voiceName = "kevin16";
-            System.out.println("URL" + url);
-            Thread speak = new Thread("opened " + nameOfCurrentWebsite);
+            Thread speak = new Speak("opened " + nameOfCurrentWebsite);
             speak.start();
         }
         catch (IOException ex)
         {
-            System.out.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
+            System.err.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
         }
         processed = true;  
     }
@@ -347,7 +325,6 @@ public class MyWebsiteBehavior extends MyBehavior
     {
         String tag = super.onRecognize(result);
         String listen = result.getBestFinalResultNoFiller();
-        trace("Recognize result: " + result.getBestFinalResultNoFiller());
         if(processResult(listen))
         {
             tag = "processed";

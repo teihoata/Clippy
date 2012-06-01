@@ -1,19 +1,12 @@
 package Clippy;
 
 /*
- * To change this template, choose Tools | Templates and open the template in
- * the editor.
+ * Source code used to play Clippys wav sounds
+ * http://www.anyexample.com/programming/java/java_play_wav_sound_file.xml
  */
 import java.io.File;
 import java.io.IOException;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.*;
 
 public class AePlayWave extends Thread
 {
@@ -32,12 +25,6 @@ public class AePlayWave extends Thread
     {
         filename = wavfile;
         curPosition = Position.NORMAL;
-    }
-
-    public AePlayWave(String wavfile, Position p)
-    {
-        filename = wavfile;
-        curPosition = p;
     }
 
     public void run()

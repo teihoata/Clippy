@@ -11,13 +11,13 @@ import edu.cmu.sphinx.jsgf.JSGFGrammarParseException;
 import edu.cmu.sphinx.result.Result;
 import java.awt.Desktop;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
+import javax.speech.EngineException;
+import javax.speech.EngineStateError;
 import javax.speech.recognition.GrammarException;
 import javax.speech.recognition.Rule;
 import javax.speech.recognition.RuleGrammar;
@@ -25,14 +25,14 @@ import org.apache.commons.io.FileUtils;
 
 /**
  *
- * @author Marzipan
+ * @author Marcus Ball
  */
 public class MyMusicBehavior extends MyBehavior
 {
 
-    private ArrayList<String> songList = new ArrayList<String>();
-    private Collection files;
-    private File selectedFile;
+    private ArrayList<String> songList; //holds the list of menu options
+    private Collection files; //stores all music files
+    private File selectedFile; //current selected file
     private ClippyGui gui;
 
     /**
@@ -42,12 +42,11 @@ public class MyMusicBehavior extends MyBehavior
     {
         super(gui);
         this.gui = gui;
+        songList = new ArrayList<String>();
         songList.add("pause");
         songList.add("play next song");
         songList.add("volume up");
         songList.add("volume down");
-
-        System.out.println("C:\\Users\\" + System.getProperty("user.name") + "\\Music\\");
         File file = new File("C:\\Users\\" + System.getProperty("user.name") + "\\Music\\");
         String[] extensions =
         {
@@ -60,7 +59,6 @@ public class MyMusicBehavior extends MyBehavior
             String fileName = file1.getName().substring(0, file1.getName().indexOf('.'));
             fileName = fileName.replaceAll("[^A-Za-z&&[^']]", " ");
             songList.add(fileName);
-            System.out.println("File = " + file1.getName().substring(0, file1.getName().indexOf('.')));
         }
     }
 
@@ -70,6 +68,7 @@ public class MyMusicBehavior extends MyBehavior
      * @throws JSGFGrammarException
      * @throws JSGFGrammarParseException
      */
+    @Override
     public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
     {
         super.onEntry();
@@ -77,14 +76,13 @@ public class MyMusicBehavior extends MyBehavior
         try
         {
             recognizer.allocate();
-        } catch (Exception e)
+        } catch (EngineException | EngineStateError e)
         {
+            System.err.println("Couldn't allocate recognizer " + e.getMessage());
         }
-
         RuleGrammar ruleGrammar = new BaseRuleGrammar(recognizer, getGrammar().getRuleGrammar());
 
         // now lets add a rule for each song in the play list
-
         String ruleName = "song";
         int count = 1;
         ArrayList<String> listOfOptions = new ArrayList<>();
@@ -135,6 +133,11 @@ public class MyMusicBehavior extends MyBehavior
         gui.setCurrentBehavior(this);
     }
 
+    /**
+     * Processes the result given
+     * @param result
+     * @return 
+     */
     @Override
     public boolean processResult(String result)
     {
@@ -142,129 +145,94 @@ public class MyMusicBehavior extends MyBehavior
         if (result.startsWith("play") && !result.equalsIgnoreCase("play next song"))
         {
             String substring = result.substring(5);
-            System.out.println(substring);
-            selectedFile = null;
-            for (Iterator iterator = files.iterator(); iterator.hasNext();)
-            {
-                File file1 = (File) iterator.next();
-                String fileName = file1.getName().substring(0, file1.getName().indexOf('.')).replaceAll("[^A-Za-z&&[^']]", " ").replaceAll("\\s+", " ").trim();
-                if (fileName.equalsIgnoreCase(substring))
-                {
-                    System.out.println("Name of found file: " + file1.getName());
-                    gui.setClippyTxt("opening " + file1.getName());
-                    selectedFile = file1;
-                    processed = true;
-                }
-            }
+            processed = playMusic(substring);
+        }
+        else if (result.equalsIgnoreCase("pause"))
+        {
             try
             {
-                System.out.println("File Path : " + selectedFile.getAbsoluteFile() + "\\");
-                Desktop.getDesktop().open(new File(selectedFile.getAbsoluteFile() + "\\"));
-            } catch (Exception ex)
+                gui.setClippyTxt("pause");
+                new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", "Play").start();
+            } catch (IOException ex)
             {
-                System.out.println(ex.getMessage() + "\n Will now try to open using windows media player executeable in program files x86");
-                try
-                {
-                    Process process = new ProcessBuilder("C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe", selectedFile.getAbsolutePath()).start();
-                } catch (IOException ex1)
-                {
-                    System.out.println("Didn't work, Trying one last option");
-                    try
-                    {
-                        Process process = new ProcessBuilder("C:\\Program Files\\Windows Media Player\\wmplayer.exe", selectedFile.getAbsolutePath()).start();
-                    } catch (IOException ex2)
-                    {
-                        System.out.println("Sorry cannot open music files");
-                    }
-                }
-
+                System.err.println("Couldn't find Media Control Program in root/windows control/");
             }
+            processed = true;
         }
-        else
+        else if (result.equalsIgnoreCase("volume up"))
         {
-            if (result.equalsIgnoreCase("pause"))
+            try
             {
-                try
-                {
-                    gui.setClippyTxt("pause");
-                    Process process = new ProcessBuilder("./Windows Control/UniversalMediaRemote.exe", "Play").start();
-                } catch (IOException ex)
-                {
-                    System.out.println("Couldn't find Media Control Program in root/windows control/");
-                }
+                gui.setClippyTxt("increasing volume");
+                new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", "VUp").start();
+            } catch (IOException ex)
+            {
+                System.err.println("Couldn't find Remote.exe file");
+            }
+            processed = true;
+        }
+        else if (result.equalsIgnoreCase("volume down"))
+        {
+            gui.setClippyTxt("decreasing volume");
+            try
+            {
+                new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", "VDown").start();
+            } catch (IOException ex)
+            {
+            }
+            processed = true;
+        }
+        else if (result.equalsIgnoreCase("play next song"))
+        {
+            gui.setClippyTxt("playing next song");
+            ArrayList<File> list = new ArrayList(files);
+            selectedFile = list.get((int) (Math.random() * list.size()));
+            String fileName = selectedFile.getName().substring(0, selectedFile.getName().indexOf('.')).replaceAll("[^A-Za-z&&[^']]", " ").replaceAll("\\s+", " ").trim();
+            processed = playMusic(fileName);
+        }
+        return processed;
+    }
+
+    /**
+     * plays the given file name
+     * @param songToPlay
+     * @return 
+     */
+    private boolean playMusic(String songToPlay)
+    {
+        boolean processed = false;
+        selectedFile = null;
+        for (Iterator iterator = files.iterator(); iterator.hasNext();)
+        {
+            File file1 = (File) iterator.next();
+            String fileName = file1.getName().substring(0, file1.getName().indexOf('.')).replaceAll("[^A-Za-z&&[^']]", " ").replaceAll("\\s+", " ").trim();
+            if (fileName.equalsIgnoreCase(songToPlay))
+            {
+                gui.setClippyTxt("opening " + file1.getName());
+                selectedFile = file1;
                 processed = true;
             }
-            else
+        }
+        try
+        {
+            Desktop.getDesktop().open(new File(selectedFile.getAbsoluteFile() + "\\"));
+            //Problems with windows media player not allowing access to playing songs
+            //had to resort to using it directly from the executables location
+        } catch (Exception ex)
+        {
+            System.err.println(ex.getMessage() + "\n Will now try to open using windows media player executeable in program files x86");
+            try
             {
-                if (result.equalsIgnoreCase("volume up"))
+                Process process = new ProcessBuilder("C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe", selectedFile.getAbsolutePath()).start();
+            } catch (IOException ex1)
+            {
+                System.err.println("Didn't work, Trying one last option");
+                try
                 {
-                    try
-                    {
-                        gui.setClippyTxt("increasing volume");
-                        for (int i = 0; i < 10; i++)
-                        {
-                            Process process = new ProcessBuilder("./Windows Control/UniversalMediaRemote.exe", "VUp").start();
-                        }
-
-                    } catch (IOException ex)
-                    {
-                    }
-                    processed = true;
-                }
-                else
+                    Process process = new ProcessBuilder("C:\\Program Files\\Windows Media Player\\wmplayer.exe", selectedFile.getAbsolutePath()).start();
+                } catch (IOException ex2)
                 {
-                    if (result.equalsIgnoreCase("volume down"))
-                    {
-                        gui.setClippyTxt("decreasing volume");
-                        try
-                        {
-                            for (int i = 0; i < 10; i++)
-                            {
-                                Process process = new ProcessBuilder("./Windows Control/UniversalMediaRemote.exe", "VDown").start();
-                            }
-
-                        } catch (IOException ex)
-                        {
-                        }
-                        processed = true;
-                    }
-                    else if (result.equalsIgnoreCase("play next song"))
-                    {
-                        System.out.println("playing next song");
-                        ArrayList<File> list = new ArrayList(files);
-                        System.out.println(list.size());
-                        selectedFile = list.get((int) (Math.random() * list.size()));
-                        try
-                        {
-                            try
-                            {
-                                System.out.println("File Path : " + selectedFile.getAbsoluteFile() + "\\");
-                                Desktop.getDesktop().open(new File(selectedFile.getAbsoluteFile() + "\\"));
-                            } catch (Exception ex)
-                            {
-                                System.out.println(ex.getMessage() + "\n Will now try to open using windows media player executeable in program files x86");
-                                try
-                                {
-
-                                    Process process = new ProcessBuilder("C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe", selectedFile.getAbsolutePath()).start();
-                                } catch (IOException ex1)
-                                {
-                                    System.out.println("Didn't work :( Trying one last option");
-                                    try
-                                    {
-                                        Process process = new ProcessBuilder("C:\\Program Files\\Windows Media Player\\wmplayer.exe", selectedFile.getAbsolutePath()).start();
-                                    } catch (IOException ex2)
-                                    {
-                                        System.out.println("Sorry cannot open music files");
-                                    }
-                                }
-
-                            }
-                        } catch (Exception ex)
-                        {
-                        }
-                        processed = true;
-                    }
+                    System.err.println("Sorry cannot open music files");
                 }
             }
         }
@@ -275,8 +243,6 @@ public class MyMusicBehavior extends MyBehavior
     public String onRecognize(Result result) throws GrammarException
     {
         String next = super.onRecognize(result);
-        System.out.println("next = " + next);
-        trace("Recognize result: " + result.getBestFinalResultNoFiller());
         String listen = result.getBestFinalResultNoFiller();
         if (processResult(listen))
         {

@@ -1,6 +1,5 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Parent Frame class which sets the common UI for Clippy
  */
 package ClippyV2.ui;
 
@@ -15,7 +14,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 /**
- *
+ * A Class that creates a customizable frame for the interface 
  * @author GavinC
  */
 public abstract class Frame extends JFrame {
@@ -24,7 +23,14 @@ public abstract class Frame extends JFrame {
     private int xSize = 0;
     private int ySize = 0;
     protected Dialog clipDialog = null;
-
+    
+    /**
+     * Constructor for class Frame 
+     * @param sizeX the length of the frame 
+     * @param sizeY the height of the frame 
+     * @param locatX the x location of where you want to set the frame 
+     * @param locatY the y location of where you want to set the frame 
+     */
     public Frame(int sizeX, int sizeY, int locatX, int locatY){
         super();
         xSize = sizeX;
@@ -45,14 +51,27 @@ public abstract class Frame extends JFrame {
         createExitBtn();
     }
     
+    /**
+     * Gets the background color of the frame 
+     * @return the background color 
+     */
     public Color getBgColor(){
         return backgroundColor;
     }
     
+    /**
+     * Sets the new size of the frame 
+     * @param x the new width of the frame
+     * @param y the new height of the frame
+     */
     public void setNewSize(int x, int y){
         this.setPreferredSize(new Dimension(x,y));
     }
     
+    /**
+     * Sets the layout, mover and bounds of a panel and adds it to the frame
+     * @param pnl the selected panel 
+     */
     public void setPnl(JComponent pnl){
         new ComponentMover(this, pnl);
         pnl.setLayout(null);
@@ -60,18 +79,23 @@ public abstract class Frame extends JFrame {
         this.add(pnl);
     }
     
+    /**
+     * Gets a created exit button 
+     * @return exit button 
+     */
     public Button getExitBtn(){
         return exitButton;
     }
     
+    /**
+     * Creates a default exit button that closes the frame
+     */
     public final void createExitBtn(){
         exitButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){ 
                dispose();
             }     
-        });
-                    
-    }
-    
+        });           
+    }  
 }

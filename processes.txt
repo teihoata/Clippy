@@ -1,16 +1,15 @@
 explorer.exe	Start
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
-chrome.exe	Clippy/src/Clippy/MyBehavior.java at 458b95aadd402d69163f92ce9917c77fb6e46ff0 · teihoata/Clippy - Google Chrome
+chrome.exe	Twitter / Home - Google Chrome
+uTorrent.exe	µTorrent 3.1.3
+VirtualBox.exe	Oracle VM VirtualBox Manager
 explorer.exe	View
-notepad++.exe	C:\Users\Marzipan\Desktop\Gawing-Clippy-56327d8\src\ClippyV2\ui\View\MyDesktopBehavior.java - Notepad++
-explorer.exe	View Available Networks (Tooltip)
-cmd.exe	MINGW32:~/Documents/NetBeansProjects/ClippyAlpha1
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-explorer.exe	cli - Search Results in Downloads
-FolderSize.exe	Folder Size 2.0.0.0
+notepad++.exe	C:\Users\Marzipan\Desktop\teihoata-Clippy-bcfa12b\src\ClippyV2\ui\View\Interface.java - Notepad++
+WinRAR.exe	classeswithaddeddocumentation.zip - WinRAR (only 3 days left to buy a license)
+mspaint.exe	Untitled - Paint
+VirtualBox.exe	WindowsXP [Running] - Oracle VM VirtualBox
+WINWORD.EXE	bowans report.docx - Microsoft Word
+WINWORD.EXE	Bowans Report.docx (Protected View) - Microsoft Word
+WINWORD.EXE	Assignment 2012 (3).docx (Protected View) - Microsoft Word
 sidebar.exe	CPU Meter
-FolderSize.exe	Folder Size 2.0.0.0
 explorer.exe	Program Manager

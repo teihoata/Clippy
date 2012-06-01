@@ -9,6 +9,7 @@ package db.clippy.Vo;
  * @author Ray
  */
 public class PreferenceVo {
+    private String uuid;
     private String type;
     private String value;
 
@@ -38,6 +39,20 @@ public class PreferenceVo {
      */
     public void setValue(String value) {
         this.value = value;
+    }
+
+    /**
+     * @return the uuid
+     */
+    public String getUuid() {
+        return uuid;
+    }
+
+    /**
+     * @param uuid the uuid to set
+     */
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
     
 }

@@ -6,6 +6,11 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 /**
+ * Code found http://tips4java.wordpress.com/2009/06/14/moving-windows/
+ * implemented by Marcus
+ */
+
+/**
  *  This class allows you to move a Component by using a mouse. The Component
  *  moved can be a high level Window (ie. Window, Frame, Dialog) in which case
  *  the Window is moved within the desktop. Or the Component can belong to a

@@ -1,5 +1,5 @@
 /*
- * This class controls the desktop behavior and how it interacts with the system
+ * This class controls the google searching behavior
  */
 package Clippy;
 
@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.speech.recognition.GrammarException;
 import javax.speech.recognition.Rule;
 import javax.speech.recognition.RuleGrammar;
@@ -28,13 +26,14 @@ import javax.speech.recognition.RuleGrammar;
 public class MyGoogleSearchBehavior extends MyBehavior
 {
 
+    private final int SKIP_RESULT = 7;
     ArrayList<String> processTitles; //holds the names of current running windows
     private int count; //number of rules within the dialog
     private ClippyGui gui;
     private Map<String, String> searchResult;
-    private HashMap<String, Object> urlMap;
+    private HashMap<String, Object> urlMap; //holds a url for each result
     private ArrayList<String> optionsList;
-    private ArrayList<String> readingList;
+    private ArrayList<String> readingList; //holds the result string to read
 
     /**
      * Simple Constructor
@@ -46,16 +45,26 @@ public class MyGoogleSearchBehavior extends MyBehavior
         count = 0;
     }
     
+    /**
+     * Sets the search list 
+     * @param searchResult 
+     */
     public void setSearchList(Map<String, String> searchResult)
     {
         this.searchResult = searchResult;
     }
 
+    /**
+     * Called on entry of google search
+     * @throws IOException
+     * @throws JSGFGrammarParseException
+     * @throws JSGFGrammarException 
+     */
     @Override
     public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
     {
         super.onEntry();
-        urlMap = new HashMap<String, Object>();
+        urlMap = new HashMap<>();
         this.optionsList = new ArrayList<>();
         this.readingList = new ArrayList<>();
         BaseRecognizer recognizer = new BaseRecognizer(getGrammar().getGrammarManager());
@@ -70,37 +79,32 @@ public class MyGoogleSearchBehavior extends MyBehavior
 
         String ruleName = "search";
         Iterator it = searchResult.keySet().iterator();
-        int i = 1;
+        //Go through all results and add the result to the menu and add grammar
+        //for each result
+        int resultNum = 1;
         while (it.hasNext())
         {
             String key = it.next().toString();
-            URL url = new URL(searchResult.get(key));
-            String urlStr = url.getHost();
-            urlStr = urlStr.substring(urlStr.indexOf("."), urlStr.indexOf(".", urlStr.lastIndexOf(".")));
-                
-            urlStr = urlStr.replaceAll("[^A-Za-z&&[^']]", " ");
-            
-            String option = "<html>" + i + ".<br>Say \" open result " + i + "\" to open this result<br><br>Description:<br> " + key + 
+            String option = "<html>" + resultNum + ".<br>Say \" open result " + resultNum + "\" to open this result<br><br>Description:<br> " + key + 
                     "<br><br>URL:<br>" + searchResult.get(key) + "<br>";
             optionsList.add(option);
-            readingList.add("Result " + i + ". Description. " + key + ". U R L " + searchResult.get(key) + ".");
-            urlMap.put("" + i, searchResult.get(key));
-            addGrammar(ruleGrammar, ruleName, "open result " + i);
-            i++;
+            readingList.add("Result " + resultNum + ". Description. " + key + ". U R L " + searchResult.get(key) + ".");
+            urlMap.put("" + resultNum, searchResult.get(key));
+            addGrammar(ruleGrammar, ruleName, "open result " + resultNum);
+            resultNum++;
         }
-        
+        //Add only two other options in the menu
         optionsList.add(0, "main menu");
         optionsList.add(1, "read results");
         addGrammar(ruleGrammar, ruleName, "read results");
         // now lets commit the changes
         getGrammar().commitChanges();
-//        grammarChanged();
         this.setList(optionsList);
         gui.setCurrentBehavior(this);
     }
 
     /**
-     * Adds the grammar rule to the list of dynamic grammars for desktop
+     * Adds the grammar rule to the list of dynamic grammar google search
      * behavior
      *
      * @param ruleGrammar
@@ -120,18 +124,23 @@ public class MyGoogleSearchBehavior extends MyBehavior
             count++;
         } catch (GrammarException ex)
         {
-            System.out.println("Trouble with the grammar ");
+            System.err.println("Trouble with the grammar " + ex.getMessage());
         }
     }
 
+    /**
+     * Processes the result
+     * @param result
+     * @return 
+     */
     @Override
     public boolean processResult(String result)
     {
         boolean processed = false;
+        //if the result is spoken
         if (result.startsWith("open"))
         {
-            Object get = urlMap.get(result.substring(result.indexOf("result") + 7));
-            System.out.println("website: " + get.toString());
+            Object get = urlMap.get(result.substring(result.indexOf("result") + SKIP_RESULT));
             String chosenWebsite = get.toString();
             try
             {
@@ -142,11 +151,13 @@ public class MyGoogleSearchBehavior extends MyBehavior
             }
             processed = true;
         }
+        //If the result it double clicked
         else if(result.startsWith("<html>"))
         {
+            //Get the number of the result from the result string
             String selection = result.substring(result.indexOf(">") + 1, result.indexOf(">") + 2);
+            //Get that url from the number result
             Object get = urlMap.get(String.valueOf(selection));
-            System.out.println("website: " + get.toString());
             String chosenWebsite = get.toString();
             try
             {
@@ -178,7 +189,6 @@ public class MyGoogleSearchBehavior extends MyBehavior
     {
         String tag = super.onRecognize(result);
         String listen = result.getBestFinalResultNoFiller();
-        trace("Recognize result: " + result.getBestFinalResultNoFiller());
         if (processResult(listen))
         {
             tag = "processed";

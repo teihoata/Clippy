@@ -20,6 +20,9 @@ public class DBConnection {
     public String driver = "org.apache.derby.jdbc.EmbeddedDriver";
     public String protocol = "jdbc:derby:";
 
+    /**
+     * private construction function
+     */
     private DBConnection() {
         try {
             this.InitialDB();
@@ -28,10 +31,18 @@ public class DBConnection {
         }
     }
 
+    /**
+     * get an instance of DBConnection
+     * @return 
+     */
     public static DBConnection getInstance() {
         return dbc;
     }
 
+    /**
+     * establish a connection
+     * @return 
+     */
     public Connection getConnect() {
         Connection conn = null;
 
@@ -87,8 +98,8 @@ public class DBConnection {
      */
     private void createTable() throws SQLException {
         try (Connection con = this.getConnect(); Statement s = con.createStatement()) {
-            s.execute("create table userDB(uid varchar(50), username varchar(50), password varchar(50))");
-            s.execute("create table userInfo(uid varchar(50), preference_type varchar(50), preference varchar(100))");
+            s.execute("create table userDB(uid varchar(50), username varchar(50), password varchar(50),unique(username))");
+            s.execute("create table userInfo(uid varchar(50), preference_type varchar(50), preference varchar(100),unique(uid))");
         }
     }
     

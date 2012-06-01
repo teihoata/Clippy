@@ -6,8 +6,6 @@ package Clippy;
 import ClippyV2.ui.View.ClippyGui;
 import com.sun.speech.engine.recognition.BaseRecognizer;
 import com.sun.speech.engine.recognition.BaseRuleGrammar;
-import com.sun.speech.freetts.Voice;
-import com.sun.speech.freetts.VoiceManager;
 import edu.cmu.sphinx.jsgf.JSGFGrammarException;
 import edu.cmu.sphinx.jsgf.JSGFGrammarParseException;
 import edu.cmu.sphinx.result.Result;
@@ -16,8 +14,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.speech.EngineException;
+import javax.speech.EngineStateError;
 import javax.speech.recognition.GrammarException;
 import javax.speech.recognition.Rule;
 import javax.speech.recognition.RuleGrammar;
@@ -44,21 +42,30 @@ public class MyDesktopBehavior extends MyBehavior
         count = 1;
     }
 
+    /**
+     * Called on entry to this node
+     * @throws IOException
+     * @throws JSGFGrammarParseException
+     * @throws JSGFGrammarException 
+     */
     @Override
     public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException
     {
         super.onEntry();
+        //create a new option list on entry
         optionsList = new ArrayList<>();
         BaseRecognizer recognizer = new BaseRecognizer(getGrammar().getGrammarManager());
         try
         {
             recognizer.allocate();
-        } catch (Exception e)
+        } catch (EngineException | EngineStateError e)
         {
+            System.err.println("Couldn't allocate recognizer: " + e.getMessage());
         }
-
+        //Create new grammar rules for this behavior
         RuleGrammar ruleGrammar = new BaseRuleGrammar(recognizer, getGrammar().getRuleGrammar());
         //use processes.txt to hold the current open windows
+        //will replace with a database if possible
         File file = new File("./processes.txt");
         if (file.exists())
         {
@@ -67,6 +74,8 @@ public class MyDesktopBehavior extends MyBehavior
         processTitles = new ArrayList<>();
         try
         {
+            //Execute my application which collects all the open window file names
+            //and prints them to processes.txt in the root
             Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", "get open windows").start();
             try
             {
@@ -76,7 +85,9 @@ public class MyDesktopBehavior extends MyBehavior
                 }
             } catch (InterruptedException ex)
             {
+                System.err.println("Interrupted waiting for get open windows");
             }
+            //Read the results from the text file
             BufferedReader empdtil = new BufferedReader(new FileReader("./processes.txt"));
             String detail = new String();
             while ((detail = empdtil.readLine()) != null)
@@ -89,6 +100,7 @@ public class MyDesktopBehavior extends MyBehavior
                 }
                 String[] words = detail.split(" ");
                 detail = "";
+                //Only read the process names in two word blocks
                 for (int i = 0; i < 2; i++)
                 {
                     detail += words[i] + " ";
@@ -97,12 +109,13 @@ public class MyDesktopBehavior extends MyBehavior
                         break;
                     }
                 }
+                //Add all process names to the arraylist
                 processTitles.add(detail);
             }
             empdtil.close();
         } catch (IOException ex)
         {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
 
         addDefaultListWithoutCurrent(optionsList, "computer control");
@@ -113,8 +126,10 @@ public class MyDesktopBehavior extends MyBehavior
         optionsList.add("minimize window");
 
         String ruleName = "application";
+        //Add the grammar of all the current processes
         for (String app : processTitles)
         {
+            //format the names for processing
             app = app.replaceAll("[^A-Za-z&&[^']]", " ");
             if (!optionsList.contains("switch to " + app))
             {
@@ -122,7 +137,7 @@ public class MyDesktopBehavior extends MyBehavior
             }
             addGrammar(ruleGrammar, ruleName, "switch to " + app);
         }
-
+        //add grammar for the specific options
         addGrammar(ruleGrammar, ruleName, "close active program");
         addGrammar(ruleGrammar, ruleName, "scroll up");
         addGrammar(ruleGrammar, ruleName, "scroll down");
@@ -131,8 +146,9 @@ public class MyDesktopBehavior extends MyBehavior
 
         // now lets commit the changes
         getGrammar().commitChanges();
-//        grammarChanged();
+        // set the list to the options
         this.setList(optionsList);
+        // set the behavior
         gui.setCurrentBehavior(this);
     }
 
@@ -162,21 +178,10 @@ public class MyDesktopBehavior extends MyBehavior
     }
 
     /**
-     * sends the command to be executed by ClippyAlpha executable
-     *
-     * @param command
+     * processes the result given by voice or list selection
+     * @param result
+     * @return 
      */
-    private void sendCommand(String command)
-    {
-        try
-        {
-            Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", command).start();
-        } catch (IOException ex)
-        {
-            System.out.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
-        }
-    }
-
     @Override
     public boolean processResult(String result)
     {
@@ -218,20 +223,16 @@ public class MyDesktopBehavior extends MyBehavior
                 try
                 {
                     Process process = new ProcessBuilder("./Windows Control/ClippyAlpha2.exe", "switch", "\"" + switchApp + "\"").start();
-                    String voiceName = "kevin16";
-                    VoiceManager voiceManager = VoiceManager.getInstance();
-                    Voice voice = voiceManager.getVoice(voiceName);
-                    voice.allocate();
-                    voice.speak("opened " + switchApp);
-                    voice.deallocate();
+                    Thread speak = new Speak("opened " + switchApp);
+                    speak.start();
                 } catch (IOException ex)
                 {
-                    System.out.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
+                    System.err.println("Couldn't find ClippyAlpha2.exe in Windows Control in root");
                 }
 
             } catch (IOException ex)
             {
-                Logger.getLogger(MyDesktopBehavior.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println("Couldn't find processes.txt in root");
             }
             processed = true;
         }
@@ -270,7 +271,6 @@ public class MyDesktopBehavior extends MyBehavior
     {
         String tag = super.onRecognize(result);
         String listen = result.getBestFinalResultNoFiller();
-        trace("Recognize result: " + result.getBestFinalResultNoFiller());
         if (processResult(listen))
         {
             tag = "processed";

@@ -14,7 +14,7 @@ public class RoundButton extends JButton {
     
     Shape btnShape;
  /**
-  * 
+  * Constructor for class RoundButton 
   * @param img the image icon of the button
   */
   public RoundButton(ImageIcon img) {
@@ -60,9 +60,13 @@ public class RoundButton extends JButton {
       getSize().height-1);
   }
   
+  /**
+   * Checks to see if the button has changed shape 
+   * @param x buttons length 
+   * @param y buttons height
+   * @return the new shape of the button
+   */
   public boolean contains(int x, int y) {
-// If the button has changed size, 
-   // make a new shape object.
     if (btnShape == null || 
       !btnShape.getBounds().equals(getBounds())) {
       btnShape = new Ellipse2D.Float(0, 0, 
