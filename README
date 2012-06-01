@@ -4,6 +4,7 @@ Clippy is run by importing the project into netbeans, importing the libraries fo
 
 Code within the ClippyAlpha2.exe used for windows application control below:
 
+
 #include <IE.au3>
 $asResult = StringRegExp($CMDLINE[1], "read email", 1) 
 If @error == 0 Then
@@ -13,7 +14,7 @@ If @error == 0 Then
    ;MsgBox (0,"Display",$array[1])
    ;MsgBox (0,"Display",$array[2])
    For $i = 1 To $array[0]
-    StringRegExp($array[$i], "quickflix", 1) 
+	  StringRegExp($array[$i], "quickflix", 1) 
     If @error == 0 Then
         MsgBox(0, "found a google", $array[$i])
     EndIf
@@ -29,6 +30,31 @@ If @error == 0 Then
 	WinWaitActive("Untitled - Notepad")
 	Send($CMDLINE[2])
 	;WinActivate("[CLASS:Notepad]", "")
+ EndIf
+ 
+ $asResult = StringRegExp($CMDLINE[1], "VUp", 1) 
+If @error == 0 Then
+	Send("{VOLUME_UP}");
+ EndIf
+ 
+ $asResult = StringRegExp($CMDLINE[1], "VDown", 1) 
+If @error == 0 Then
+	Send("{VOLUME_DOWN}");
+ EndIf
+ 
+ $asResult = StringRegExp($CMDLINE[1], "Play", 1) 
+If @error == 0 Then
+	Send("{MEDIA_PLAY_PAUSE}");
+ EndIf
+ 
+ $asResult = StringRegExp($CMDLINE[1], "scroll up", 1) 
+If @error == 0 Then
+    Send ( "{PGUP}")
+ EndIf
+ 
+  $asResult = StringRegExp($CMDLINE[1], "scroll down", 1) 
+If @error == 0 Then
+    Send ( "{PGDN}")
  EndIf
  
  $asResult = StringRegExp($CMDLINE[1], "chrome", 1) 
@@ -61,7 +87,7 @@ If @error == 0 Then
 	WinActivate($CMDLINE[2])
 	  EndIf
    ; $opened = WinActivate("[CLASS:Chrome_WidgetWin_0]", "")
- EndIf
+EndIf
  
  $asResult = StringRegExp($CMDLINE[1], "google", 1) 
  If @error == 0 Then
@@ -101,7 +127,17 @@ EndIf
 $asResult = StringRegExp($CMDLINE[1], "close", 1) 
 If @error == 0 Then
    WinClose("[ACTIVE]", "")
-   EndIf
+EndIf
+
+$asResult = StringRegExp($CMDLINE[1], "minimize", 1) 
+If @error == 0 Then
+   WinSetState("[ACTIVE]", "", @SW_MINIMIZE)
+EndIf
+
+$asResult = StringRegExp($CMDLINE[1], "maximize", 1) 
+If @error == 0 Then
+   WinSetState("[ACTIVE]", "", @SW_MAXIMIZE)
+EndIf
 
 $asResult = StringRegExp($CMDLINE[1], "switch", 1) 
 If @error == 0 Then
